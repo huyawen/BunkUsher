@@ -29,12 +29,10 @@ import com.meiaomei.bankusher.fragment.VipRemarkFragment;
 import com.meiaomei.bankusher.fragment.VipServerFragment;
 import com.meiaomei.bankusher.manager.BankUsherDB;
 import com.meiaomei.bankusher.service.MyService;
-import com.meiaomei.bankusher.utils.DateUtils;
 import com.meiaomei.bankusher.utils.DeviceInfoUtils;
 import com.meiaomei.bankusher.utils.FileUtils;
 import com.meiaomei.bankusher.utils.JsonUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -57,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     SettingFragment settingFragment;
     VipRemarkFragment vipRemarkFragment;
     DbUtils dbUtils;
-    final  String TAG=getClass().getName();
+    final String TAG = getClass().getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,13 +82,13 @@ public class MainActivity extends AppCompatActivity {
         FileUtils.deleteFile(Environment.getExternalStorageDirectory());
         BankUsherDB.creatNewTable();
         getAppUserPermission();
-        if (!DeviceInfoUtils.isServiceWork(MainActivity.this,"com.meiaomei.bankusher.service.MyService")) {
+        if (!DeviceInfoUtils.isServiceWork(MainActivity.this, "com.meiaomei.bankusher.service.MyService")) {
             Intent intent = new Intent(this, MyService.class);
             startService(intent);
         }
 
         //测试  json-----------
-        PushMessage.Body body=new PushMessage.Body();
+        PushMessage.Body body = new PushMessage.Body();
         body.setId("111");
         body.setBithday(new Date().getTime());
         body.setC4("2");
@@ -104,14 +102,14 @@ public class MainActivity extends AppCompatActivity {
         body.setUserLevelName("黄金");
         body.setUserName("蝴蝶");
 
-        PushMessage.Header header=new PushMessage.Header();
+        PushMessage.Header header = new PushMessage.Header();
         header.setImgBaseUrl("tupianjichulujing");
         header.setMessageType("record");
-        PushMessage message=new PushMessage();
+        PushMessage message = new PushMessage();
         message.setBody(body);
         message.setHeader(header);
-        String jsons=JsonUtils.GsonString(message);
-        String SSS=jsons;
+        String jsons = JsonUtils.GsonString(message);
+        String SSS = jsons;
 
     }
 
@@ -218,16 +216,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     //------------------------给fragment添加点击事件------------------------------------------
     public interface MyTouchListener {
-        public void onTouchEvent(MotionEvent event);
+         void onTouchEvent(MotionEvent event);
     }
+
     // 保存MyTouchListener接口的列表
     private ArrayList<MyTouchListener> myTouchListeners = new ArrayList<MainActivity.MyTouchListener>();
 
     /**
      * 提供给Fragment通过getActivity()方法来注册自己的触摸事件的方法
+     *
      * @param listener
      */
     public void registerMyTouchListener(MyTouchListener listener) {
@@ -236,10 +235,11 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 提供给Fragment通过getActivity()方法来取消注册自己的触摸事件的方法
+     *
      * @param listener
      */
     public void unRegisterMyTouchListener(MyTouchListener listener) {
-        myTouchListeners.remove( listener );
+        myTouchListeners.remove(listener);
     }
 
     /**
