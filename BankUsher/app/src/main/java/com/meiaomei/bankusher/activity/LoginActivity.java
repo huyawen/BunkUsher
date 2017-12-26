@@ -1,27 +1,17 @@
 package com.meiaomei.bankusher.activity;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.RemoteViews;
 
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.meiaomei.bankusher.R;
 import com.meiaomei.bankusher.manager.BankUsherDB;
-
-import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -59,9 +49,9 @@ public class LoginActivity extends AppCompatActivity {
         return onTouchEvent(ev);
     }
 
-    public  boolean isShouldHideInput(View v, MotionEvent event) {
+    public boolean isShouldHideInput(View v, MotionEvent event) {
         if (v != null && (v instanceof EditText)) {
-            int[] leftTop = { 0, 0 };
+            int[] leftTop = {0, 0};
             //获取输入框当前的location位置
             v.getLocationInWindow(leftTop);
             int left = leftTop[0];
