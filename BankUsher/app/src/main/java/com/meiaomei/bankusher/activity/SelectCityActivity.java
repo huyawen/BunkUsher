@@ -40,8 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class SelectCityActivity extends AppCompatActivity
-        implements LetterListView.OnTouchingLetterChangedListener, AbsListView.OnScrollListener {
+public class SelectCityActivity extends AppCompatActivity implements LetterListView.OnTouchingLetterChangedListener, AbsListView.OnScrollListener {
 
     private Toolbar toolbar;
 
