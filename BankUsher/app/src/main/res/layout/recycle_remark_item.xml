@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_item_cb"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:clickable="true"
+        android:focusable="true">
+
+        <CheckBox
+            android:id="@+id/cb_item"
+            android:duplicateParentState="true"
+            android:clickable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@null"
+            android:button="@drawable/check_box_select" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_catch_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="抓拍时间" />
+
+    <TextView
+        android:id="@+id/tv_viporder"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="VIP级别" />
+
+    <TextView
+        android:id="@+id/tv_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text="证件号" />
+
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:text="姓名" />
+
+    <!--  android:duplicateParentState="true" 点击状态跟随父布局-->
+    <RelativeLayout
+        android:id="@+id/rl_item_detail"
+        android:layout_width="0dp"
+        android:clickable="true"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <ImageButton
+            android:id="@+id/ig_detail"
+            android:clickable="false"
+            android:duplicateParentState="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/clear_item_selecet" />
+    </RelativeLayout>
+
+</LinearLayout>

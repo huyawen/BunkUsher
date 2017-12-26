@@ -1,0 +1,461 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rl_root"
+    tools:context="com.meiaomei.bankusher.fragment.VipRemarkFragment">
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/x50"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/x20">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x40"
+            android:layout_weight="1"
+            android:padding="@dimen/x20">
+
+            <TextView
+                android:id="@+id/tv_add1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tv_time1"
+                android:paddingBottom="@dimen/x6"
+                android:paddingTop="@dimen/x6"
+                android:text="贵宾姓名："
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/et_name"
+                android:layout_width="@dimen/x400"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_add1"
+                android:layout_alignTop="@+id/tv_add1"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_toEndOf="@+id/tv_add1"
+                android:background="@drawable/square"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/x10"
+                android:hint="请输入贵宾姓名"
+                android:textColorHint="@color/colortext_no_check"
+                android:textColor="@color/alertTextContent"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_time1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_add1"
+                android:layout_marginTop="@dimen/x40"
+                android:paddingBottom="@dimen/x6"
+                android:paddingTop="@dimen/x6"
+                android:text="开始时间："
+                android:textSize="15sp" />
+
+
+            <com.meiaomei.bankusher.view.ClearTextView
+                android:id="@+id/tv_time2"
+                android:layout_width="@dimen/x400"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tv_time1"
+                android:layout_alignLeft="@+id/et_name"
+                android:layout_alignTop="@+id/tv_time1"
+                android:layout_below="@+id/et_name"
+                android:background="@drawable/square"
+                android:drawableRight="@mipmap/clear"
+                android:paddingRight="@dimen/x12"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/x10"
+                android:hint="请选择开始时间"
+                android:textColorHint="@color/colortext_no_check"
+                android:textColor="@color/alertTextContent"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/bt_quary"
+                android:layout_width="@dimen/x160"
+                android:layout_height="@dimen/x80"
+                android:layout_alignLeft="@id/tv_time2"
+                android:layout_below="@+id/tv_time2"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x60"
+                android:background="@drawable/bt_select"
+                android:text="查询"
+                android:textColor="@color/color_white" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/x40"
+            android:layout_weight="1"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_class1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x30"
+                android:paddingBottom="@dimen/x6"
+                android:paddingTop="@dimen/x6"
+                android:text="VIP级别："
+                android:textSize="15sp" />
+
+            <com.meiaomei.bankusher.view.spinner.MySpinerView
+                android:id="@+id/sp_viporder"
+                android:layout_width="@dimen/x400"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/tv_class1"
+                android:layout_alignTop="@+id/tv_class1"
+                android:layout_toRightOf="@+id/tv_end_time1"
+                android:background="@drawable/square"
+                android:gravity="center_vertical"
+                android:textColorHint="@color/colortext_no_check"
+                android:textColor="@color/alertTextContent"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_end_time1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_class1"
+                android:layout_below="@+id/tv_class1"
+                android:layout_marginTop="@dimen/x40"
+                android:paddingBottom="@dimen/x6"
+                android:paddingTop="@dimen/x6"
+                android:text="结束时间："
+                android:textSize="15sp" />
+
+            <com.meiaomei.bankusher.view.ClearTextView
+                android:id="@+id/tv_end_time2"
+                android:layout_width="@dimen/x400"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_end_time1"
+                android:layout_alignLeft="@+id/sp_viporder"
+                android:layout_alignTop="@+id/tv_end_time1"
+                android:layout_below="@+id/sp_viporder"
+                android:layout_toRightOf="@+id/tv_end_time1"
+                android:background="@drawable/square"
+                android:drawableRight="@mipmap/clear"
+                android:paddingRight="@dimen/x12"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/x10"
+                android:hint="请选择结束时间"
+                android:textColorHint="@color/colortext_no_check"
+                android:textColor="@color/alertTextContent"
+                android:textSize="15sp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll1"
+        android:layout_marginBottom="@dimen/x16">
+
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x60"
+            android:text="资源管理"
+            android:textSize="19sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x40"
+            android:layout_toLeftOf="@+id/bt_export_aline"
+            android:background="@drawable/white_border">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="已选中:" />
+
+            <TextView
+                android:id="@+id/num"
+                android:layout_width="@dimen/x44"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/colortext_check" />
+
+            <TextView
+                android:id="@+id/tiao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="条" />
+        </LinearLayout>
+
+        <RadioButton
+            android:id="@+id/bt_export_aline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x60"
+            android:layout_toLeftOf="@+id/bt_export_all"
+            android:background="@drawable/white_border"
+            android:button="@null"
+            android:drawableLeft="@drawable/export_aline_select"
+            android:drawablePadding="@dimen/x14"
+            android:padding="@dimen/x10"
+            android:text="导出所选"
+            android:textColor="@drawable/execl_select" />
+
+        <RadioButton
+            android:id="@+id/bt_export_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x30"
+            android:background="@drawable/white_border"
+            android:button="@null"
+            android:drawableLeft="@drawable/export_all_select"
+            android:drawablePadding="@dimen/x14"
+            android:padding="@dimen/x10"
+            android:text="批量导出"
+            android:textColor="@drawable/execl_select" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_vip_remark"
+        android:layout_width="@dimen/x360"
+        android:layout_height="@dimen/x200"
+        android:layout_below="@+id/rl1"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_marginTop="@dimen/x20"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/liu" />
+
+    <TextView
+        android:id="@+id/tv_remark_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="姓名："
+        android:layout_alignBaseline="@+id/tv_remark_name_value"
+        android:layout_alignBottom="@+id/tv_remark_name_value"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/tv_remark_name_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_vip_remark"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_toRightOf="@+id/tv_remark_name"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/tv_remark_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_remark_name"
+        android:layout_marginTop="@dimen/x10"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="电话：" />
+
+    <TextView
+        android:id="@+id/tv_remark_phone_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_remark_name_value"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_toRightOf="@+id/tv_remark_phone"
+        android:layout_toLeftOf="@+id/ll_list"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="" />
+
+
+
+    <TextView
+        android:id="@+id/tv_remark_viporder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_remark_phone_value"
+        android:layout_marginTop="@dimen/x10"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="VIP级别：" />
+
+    <TextView
+        android:id="@+id/tv_remark_viporder_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_remark_phone_value"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_toRightOf="@+id/tv_remark_viporder"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="" />
+
+    <LinearLayout
+        android:id="@+id/ll_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl1"
+        android:layout_marginLeft="@dimen/x16"
+        android:layout_alignTop="@+id/iv_vip_remark"
+        android:layout_toRightOf="@id/iv_vip_remark"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_item_head"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/background"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rl_all"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="选择"
+                    android:visibility="gone" />
+
+                <CheckBox
+                    android:id="@+id/cb_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@null"
+                    android:button="@drawable/check_box_select"
+                    android:visibility="visible" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_catch_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="抓拍时间" />
+
+            <TextView
+                android:id="@+id/tv_catch_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="VIP级别" />
+
+            <TextView
+                android:id="@+id/tv_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="证件号" />
+
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:gravity="center"
+                android:text="姓名" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/ig_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="操作" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6">
+        </android.support.v7.widget.RecyclerView>
+
+        <!--无数据显示-->
+        <RelativeLayout
+            android:id="@+id/rl_norecord"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/no_record"
+                android:layout_marginTop="@dimen/x40"
+                android:layout_width="@dimen/x316"
+                android:layout_height="@dimen/x316"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/no_record" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/no_record"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/x30"
+                android:text="没有合适的记录"
+                android:textColor="@color/color_line_dark"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,486 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.meiaomei.bankusher.fragment.FaceTakeFragment">
+
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/x50"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/x20">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x40"
+            android:layout_weight="1"
+            android:padding="@dimen/x20">
+
+            <TextView
+                android:id="@+id/tv_add1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/tv_time1"
+                android:paddingBottom="@dimen/x6"
+                android:paddingTop="@dimen/x6"
+                android:text="抓拍地点："
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/et_face_address"
+                android:layout_width="@dimen/x400"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_add1"
+                android:layout_alignTop="@+id/tv_add1"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_toEndOf="@+id/tv_add1"
+                android:background="@drawable/square"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:hint="请输入抓拍地点"
+                android:paddingLeft="@dimen/x10"
+                android:textColor="@color/alertTextContent"
+                android:textColorHint="@color/colortext_no_check"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tv_time1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_add1"
+                android:layout_marginTop="@dimen/x40"
+                android:paddingBottom="@dimen/x6"
+                android:paddingTop="@dimen/x6"
+                android:text="开始时间："
+                android:textSize="15sp" />
+
+
+            <com.meiaomei.bankusher.view.ClearTextView
+                android:id="@+id/tv_face_start_time"
+                android:layout_width="@dimen/x400"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tv_time1"
+                android:layout_alignLeft="@+id/et_face_address"
+                android:layout_alignTop="@+id/tv_time1"
+                android:layout_below="@+id/et_face_address"
+                android:background="@drawable/square"
+                android:clickable="true"
+                android:drawableRight="@mipmap/clear"
+                android:gravity="center_vertical"
+                android:hint="请选择开始时间"
+                android:paddingLeft="@dimen/x10"
+                android:paddingRight="@dimen/x12"
+                android:textColor="@color/alertTextContent"
+                android:textColorHint="@color/colortext_no_check"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/bt_face_quary"
+                android:layout_width="@dimen/x160"
+                android:layout_height="@dimen/x80"
+                android:layout_alignLeft="@id/tv_face_start_time"
+                android:layout_below="@+id/tv_face_start_time"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/x60"
+                android:background="@drawable/bt_select"
+                android:text="查询"
+                android:textColor="@color/color_white" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/x40"
+            android:layout_weight="1"
+            android:padding="@dimen/x20">
+
+            <TextView
+                android:id="@+id/tv_class1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x30"
+                android:paddingBottom="@dimen/x6"
+                android:paddingTop="@dimen/x6"
+                android:text="性别："
+                android:textSize="15sp" />
+
+            <RadioGroup
+                android:id="@+id/sex_rg"
+                android:layout_width="@dimen/x400"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_class1"
+                android:layout_alignLeft="@+id/tv_face_end_time"
+                android:layout_alignTop="@+id/tv_class1"
+                android:layout_toRightOf="@+id/tv_class1"
+                android:background="@drawable/square"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_nan"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/x16"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/check_box_select"
+                    android:drawablePadding="@dimen/x4"
+                    android:gravity="center"
+                    android:text="男"
+                    android:textColor="@color/alertTextContent" />
+
+                <RadioButton
+                    android:id="@+id/rb_nv"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/check_box_select"
+                    android:drawablePadding="@dimen/x4"
+                    android:gravity="center"
+                    android:text="女"
+                    android:textColor="@color/alertTextContent" />
+
+                <RadioButton
+                    android:id="@+id/rb_null"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="@dimen/x8"
+                    android:layout_weight="1.5"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/check_box_select"
+                    android:drawablePadding="@dimen/x4"
+                    android:gravity="center"
+                    android:text="不选"
+                    android:textColor="@color/alertTextContent" />
+
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/tv_end_time1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/tv_class1"
+                android:layout_below="@+id/tv_class1"
+                android:layout_marginTop="@dimen/x40"
+                android:paddingBottom="@dimen/x6"
+                android:paddingTop="@dimen/x6"
+                android:text="结束时间："
+                android:textSize="15sp" />
+
+            <com.meiaomei.bankusher.view.ClearTextView
+                android:id="@+id/tv_face_end_time"
+                android:layout_width="@dimen/x400"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/tv_end_time1"
+                android:layout_alignTop="@+id/tv_end_time1"
+                android:layout_below="@+id/sex_rg"
+                android:layout_toRightOf="@+id/tv_end_time1"
+                android:background="@drawable/square"
+                android:clickable="true"
+                android:drawableRight="@mipmap/clear"
+                android:gravity="center_vertical"
+                android:hint="请选择结束时间"
+                android:paddingLeft="@dimen/x10"
+                android:paddingRight="@dimen/x12"
+                android:textColor="@color/alertTextContent"
+                android:textColorHint="@color/colortext_no_check"
+                android:textSize="15sp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll1"
+        android:layout_marginBottom="@dimen/x16">
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x60"
+            android:text="资源管理"
+            android:textSize="19sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x36"
+            android:layout_toLeftOf="@+id/bt_face_export_aline"
+            android:background="@drawable/white_border">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="已选中:" />
+
+            <TextView
+                android:id="@+id/face_num"
+                android:layout_width="@dimen/x44"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/colortext_check" />
+
+            <TextView
+                android:id="@+id/tiao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="条" />
+        </LinearLayout>
+
+        <RadioButton
+            android:id="@+id/bt_face_export_aline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x60"
+            android:layout_toLeftOf="@+id/bt_face_export_all"
+            android:background="@drawable/white_border"
+            android:button="@null"
+            android:drawableLeft="@drawable/export_aline_select"
+            android:drawablePadding="@dimen/x14"
+            android:padding="@dimen/x10"
+            android:text="导出所选"
+            android:textColor="@drawable/execl_select" />
+
+        <RadioButton
+            android:id="@+id/bt_face_export_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/x30"
+            android:background="@drawable/white_border"
+            android:button="@null"
+            android:drawableLeft="@drawable/export_all_select"
+            android:drawablePadding="@dimen/x14"
+            android:padding="@dimen/x10"
+            android:text="批量导出"
+            android:textColor="@drawable/execl_select" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_faceTake"
+        android:layout_width="@dimen/x360"
+        android:layout_height="@dimen/x200"
+        android:layout_below="@+id/rl1"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_marginTop="@dimen/x20"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/liu" />
+
+    <TextView
+        android:id="@+id/tv_face_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_faceTake"
+        android:layout_marginTop="@dimen/x10"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="姓名：" />
+
+    <TextView
+        android:id="@+id/tv_face_name_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_faceTake"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_toRightOf="@+id/tv_face_name"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="" />
+
+
+    <TextView
+        android:id="@+id/tv_face_sex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_face_name"
+        android:layout_marginTop="@dimen/x10"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="性别：" />
+
+    <TextView
+        android:id="@+id/tv_face_sex_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_face_name_value"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_toRightOf="@+id/tv_face_sex"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/tv_face_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_face_sex"
+        android:layout_marginTop="@dimen/x10"
+        android:gravity="center"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="抓拍地点：" />
+
+    <TextView
+        android:id="@+id/tv_face_address_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_face_sex_value"
+        android:layout_marginTop="@dimen/x10"
+        android:layout_toRightOf="@+id/tv_face_address"
+        android:layout_toLeftOf="@+id/ll_list"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/x10"
+        android:paddingLeft="@dimen/x20"
+        android:paddingRight="@dimen/x20"
+        android:paddingTop="@dimen/x10"
+        android:text="" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/iv_faceTake"
+        android:layout_below="@id/rl1"
+        android:layout_marginLeft="@dimen/x16"
+        android:layout_toRightOf="@id/iv_faceTake"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/ll_item_head"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:background="@color/background"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/x10"
+            android:paddingTop="@dimen/x10">
+
+            <RelativeLayout
+                android:id="@+id/rl_face_all"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:gravity="center">
+
+                <CheckBox
+                    android:id="@+id/cb_face_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@null"
+                    android:button="@drawable/check_box_select" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_catch_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="抓拍时间" />
+
+            <TextView
+                android:id="@+id/tv_catch_sex"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="性别" />
+
+            <TextView
+                android:id="@+id/tv_catch_address"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="抓拍地点" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/ig_detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="操作" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle_facetake"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <!--无数据显示-->
+        <RelativeLayout
+            android:id="@+id/rl_face_norecord"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/no_record"
+                android:layout_width="@dimen/x316"
+                android:layout_height="@dimen/x316"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/x40"
+                android:src="@mipmap/no_record" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/no_record"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/x30"
+                android:text="没有合适的记录"
+                android:textColor="@color/color_line_dark"
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

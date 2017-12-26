@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:background="#ffffff"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:paddingLeft="21dp"
+        >
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="提示"
+            android:textColor="#999999"
+            android:textSize="12sp"
+            />
+    </RelativeLayout>
+    <View
+        android:layout_below="@+id/titlelayout"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#B8B8B8"
+        />
+    <ScrollView
+        android:id="@+id/sv_base"
+        android:layout_weight="8"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/ly_detail"
+            android:layout_width="match_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_height="wrap_content"
+            />
+
+    </ScrollView>
+
+    <View
+        android:id="@+id/v_line"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#B8B8B8"
+        />
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_weight="2"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp">
+        <LinearLayout
+            android:id="@+id/linear_ll"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="fill_parent">
+            <Button
+                android:background="@drawable/background_select"
+                android:id="@+id/btn_cancel"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="@color/colortext_check"
+                android:textSize="14sp"  />
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center_vertical"
+                android:background="#B8B8B8"
+                />
+        </LinearLayout>
+        <Button
+            android:background="@drawable/background_select"
+            android:layout_width="0dp"
+            android:id="@+id/btn_submit_single"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="@color/colortext_check"
+            android:textSize="14sp" />
+    </LinearLayout>
+</LinearLayout>
+
+

@@ -1,0 +1,176 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="com.meiaomei.bankusher.fragment.SettingFragment">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_setting"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="3"
+        android:background="@color/color_white">
+
+        <ImageView
+            android:id="@+id/iv__setting_loge"
+            android:layout_width="@dimen/x500"
+            android:layout_height="@dimen/x100"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/black_logo" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/rl_setting"
+        android:layout_marginTop="@dimen/x80"
+        android:layout_weight="7"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/common_bg_press" />
+
+        <LinearLayout
+            android:id="@+id/rl_relase"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x130"
+            android:layout_below="@+id/setting_line1"
+            android:background="@color/color_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="版本信息："
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_version"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:text="第一版"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x60"
+                android:layout_marginRight="@dimen/x80"
+                android:background="@mipmap/rightbtn" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/common_bg_press" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="@dimen/x20"
+            android:background="@color/common_bg_press" />
+
+        <LinearLayout
+            android:id="@+id/rl_function"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x130"
+            android:layout_below="@+id/setting_line1"
+            android:background="@color/color_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="功能介绍："
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_detail"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x60"
+                android:layout_marginRight="@dimen/x80"
+                android:background="@mipmap/rightbtn" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/common_bg_press" />
+
+        <LinearLayout
+            android:id="@+id/rl_update"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x130"
+            android:layout_below="@+id/setting_line1"
+            android:background="@color/color_white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="更新说明："
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_update"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_weight="4"
+                android:gravity="center_vertical"
+                android:text=""
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/x60"
+                android:layout_marginRight="@dimen/x80"
+                android:background="@mipmap/rightbtn" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/common_bg_press" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/x40"
+            android:padding="@dimen/x6"
+            android:text="版本：V1.0"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</LinearLayout>

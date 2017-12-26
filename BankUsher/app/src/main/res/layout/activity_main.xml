@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.meiaomei.bankusher.activity.MainActivity">
+
+    <LinearLayout
+        android:id="@+id/ll_left"
+        android:background="@color/colorHintBackground"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:id="@+id/ag_logo"
+            android:layout_marginLeft="@dimen/x8"
+            android:layout_marginRight="@dimen/x8"
+            android:layout_marginTop="@dimen/x30"
+            android:src="@mipmap/ag_logo_b"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_marginTop="@dimen/x30"
+            android:paddingLeft="@dimen/x10"
+            android:paddingRight="@dimen/x10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:weightSum="4">
+
+            <RadioButton
+                android:id="@+id/button_vipserver"
+                style="@style/RadioButton"
+                android:layout_marginTop="@dimen/x12"
+                android:checked="true"
+                android:drawableLeft="@drawable/vipserver_select"
+                android:text="V I P服务"
+                android:textColor="@drawable/text_color_select" />
+
+            <RadioButton
+                android:id="@+id/button_facetake"
+                style="@style/RadioButton"
+                android:layout_marginTop="@dimen/x12"
+                android:drawableLeft="@drawable/facetake_select"
+                android:text="人脸抓拍"
+                android:textColor="@drawable/text_color_select" />
+
+            <RadioButton
+                android:id="@+id/button_vipremark"
+                style="@style/RadioButton"
+                android:layout_marginTop="@dimen/x12"
+                android:drawableLeft="@drawable/vipremark_select"
+                android:text="V I P日志"
+                android:textColor="@drawable/text_color_select" />
+
+            <RadioButton
+                android:id="@+id/button_setting"
+                style="@style/RadioButton"
+                android:layout_marginTop="@dimen/x12"
+                android:drawableLeft="@drawable/setting_select"
+                android:text="关于设置"
+                android:textColor="@drawable/text_color_select" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_right"
+        android:layout_toRightOf="@+id/ll_left"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </RelativeLayout>
+
+</RelativeLayout>

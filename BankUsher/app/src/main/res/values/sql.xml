@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+   <string name="example">
+       select * from VipCustomerModel vip inner join VisitRecordModel vis
+       on CATTLE_INFO.CATTLE_ID = F_C_RESP.CATTLE_ID
+       where F_C_RESP.FARM_ID = ?
+       and  CATTLE_INFO.CATTLE_ST = \"01\"
+       and CATTLE_INFO.CATTLE_NO = ?
+       and F_C_RESP.DEL_FLG = \'0\'
+    </string>
+
+    <!--
+    1 visitTime 2 visitAddress 4 name 5 PhoneNumber 6 sex  7 idnumber 8 viporder 9 remark 10 imgurl
+     -->
+    <string name="getAllVisitRecordByDelFlag">
+      select vis.VisitTime as firstPara,vis.VisitAddress as secondPara,
+             vip.FaceId as thirdPara,vip.Name as fourthPara,vip.PhoneNumber as fifthPara,
+             vip.Sex as sixthPara, vip.IdNumber as seventhPara,vip.VipOrder as eighthPara,
+             vip.Remark as ninthPara,vip.ImgUrl as tenthPara ,vis.VisitId as eleventhPara
+          from VipCustomerModel vip inner join VisitRecordModel vis
+          on vip.FaceId = vis.FaceId where vip.DelFlag=? order by vis.VisitTime desc
+
+    </string>
+
+    <string name="getAllVisitRecordByHandleFlag">
+      select vis.VisitTime as firstPara,vis.VisitAddress as secondPara,
+             vip.FaceId as thirdPara,vip.Name as fourthPara,vip.PhoneNumber as fifthPara,
+             vip.Sex as sixthPara, vip.IdNumber as seventhPara,vip.VipOrder as eighthPara,
+             vip.Remark as ninthPara,vip.ImgUrl as tenthPara,vis.VisitId as eleventhPara
+          from VipCustomerModel vip inner join VisitRecordModel vis
+          on vip.FaceId = vis.FaceId where vis.HandleFlag=? order by vis.VisitTime desc
+
+    </string>
+
+</resources>
