@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.meiaomei.bankusher.BankUsherApplication;
+import com.meiaomei.bankusher.activity.SettingActivity;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -386,6 +387,17 @@ public class DeviceInfoUtils {
             return "02:00:00:00:00:02";
         }
         return macAddress;
+    }
+
+
+    public static String getDevicedId(){
+        Build  bd=new Build();
+        String hardware = bd.HARDWARE;
+        String hdNum = bd.SERIAL;
+        String mac = getMacAddressNew();
+        String id=hardware + hdNum + mac;
+        String md5id=MD5Utils.md5(id);
+        return md5id;
     }
 
 

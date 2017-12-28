@@ -1,0 +1,644 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/colortext_check">
+
+    <LinearLayout
+        android:layout_width="@dimen/x1156"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ll_center_content_set"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/y30">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:drawableLeft="@mipmap/ico_list_logo"
+            android:gravity="center"
+            android:drawablePadding="15dp"
+            android:text="系统设置"
+            android:textColor="@color/color_white" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_center_content_set"
+        android:layout_width="@dimen/x1156"
+        android:layout_height="@dimen/y754"
+        android:layout_centerInParent="true"
+        android:background="@color/background"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="0.0dip"
+            android:layout_weight="1.0">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="6.0dip"
+                android:layout_marginTop="6.0dip"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/y180"
+                    android:layout_marginBottom="8.0dip"
+                    android:layout_marginTop="15.0dip"
+                    android:background="@color/color_white"
+                    android:gravity="center|left"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.0"
+                        android:gravity="center|left"
+                        android:paddingLeft="15.0dip"
+                        android:paddingRight="15.0dip"
+                        android:text="11"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/x40" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1.0"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/edtPageSize"
+                            android:layout_width="fill_parent"
+                            android:layout_height="@dimen/y120"
+                            android:layout_margin="8.0dip"
+                            android:background="@drawable/edit_bg"
+                            android:gravity="center|right"
+                            android:hint="22"
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:textColor="@color/black"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/y180"
+                    android:layout_marginBottom="8.0dip"
+                    android:layout_marginTop="15.0dip"
+                    android:background="@color/color_white"
+                    android:gravity="center|left"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="2.0"
+                        android:gravity="center|left"
+                        android:paddingLeft="15.0dip"
+                        android:paddingRight="15.0dip"
+                        android:text="33"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/x40" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1.0"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/edtRefreshTime"
+                            android:layout_width="fill_parent"
+                            android:layout_height="@dimen/y120"
+                            android:layout_margin="8.0dip"
+                            android:background="@drawable/edit_bg"
+                            android:gravity="center|right"
+                            android:hint="44"
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:textColor="@color/black"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/x700"
+                    android:layout_height="@dimen/y120"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center|left"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:gravity="center|left"
+                        android:paddingLeft="15.0dip"
+                        android:text="AppId"
+                        android:textColor="@color/alertTextContent"
+                        android:textSize="@dimen/x30" />
+
+                    <LinearLayout
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.0"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_AppId"
+                            android:layout_width="fill_parent"
+                            android:layout_height="@dimen/y90"
+                            android:layout_margin="8.0dip"
+                            android:background="@drawable/edit_bg"
+                            android:gravity="center"
+                            android:hint=""
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/x30" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/x700"
+                    android:layout_height="@dimen/y120"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center|left"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:gravity="center|left"
+                        android:paddingLeft="15.0dip"
+                        android:paddingRight="15.0dip"
+                        android:text="AppSecret"
+                        android:textColor="@color/alertTextContent"
+                        android:textSize="@dimen/x30" />
+
+                    <LinearLayout
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.0"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_AppSecret"
+                            android:layout_width="fill_parent"
+                            android:layout_height="@dimen/y90"
+                            android:layout_margin="8.0dip"
+                            android:background="@drawable/edit_bg"
+                            android:gravity="center"
+                            android:hint=""
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/x30" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/x700"
+                    android:layout_height="@dimen/y120"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center|left"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:gravity="center|left"
+                        android:paddingLeft="15.0dip"
+                        android:paddingRight="15.0dip"
+                        android:text="服务器地址"
+                        android:textColor="@color/alertTextContent"
+                        android:textSize="@dimen/x30" />
+
+                    <LinearLayout
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.0"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_ServerAddress"
+                            android:layout_width="fill_parent"
+                            android:layout_height="@dimen/y120"
+                            android:layout_margin="8.0dip"
+                            android:background="@drawable/edit_bg"
+                            android:gravity="center"
+                            android:hint="请输入服务器地址"
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:singleLine="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/x30" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/x700"
+                    android:layout_height="@dimen/y120"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center|left"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:gravity="center|left"
+                        android:paddingLeft="15.0dip"
+                        android:paddingRight="15.0dip"
+                        android:text="设备Id"
+                        android:textColor="@color/alertTextContent"
+                        android:textSize="@dimen/x30" />
+
+                    <LinearLayout
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.0"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_DeviceId"
+                            android:layout_width="fill_parent"
+                            android:layout_height="@dimen/y120"
+                            android:layout_margin="8.0dip"
+                            android:background="@drawable/edit_bg"
+                            android:gravity="center"
+                            android:hint=""
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/x30" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/x700"
+                    android:layout_height="@dimen/y120"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center|left"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:gravity="center|left"
+                        android:paddingLeft="15.0dip"
+                        android:paddingRight="15.0dip"
+                        android:text="授权码"
+                        android:textColor="@color/alertTextContent"
+                        android:textSize="@dimen/x30" />
+
+                    <LinearLayout
+                        android:layout_width="0.0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2.0"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/et_register"
+                            android:layout_width="fill_parent"
+                            android:layout_height="@dimen/y120"
+                            android:layout_margin="8.0dip"
+                            android:background="@drawable/edit_bg"
+                            android:gravity="center"
+                            android:hint="请输入授权码"
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/x30" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/viewTcpPort"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginBottom="8.0dip"
+                    android:layout_marginTop="15.0dip"
+                    android:background="@color/color_white"
+                    android:gravity="center|left"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="2.0"
+                        android:gravity="center|left"
+                        android:paddingLeft="15.0dip"
+                        android:paddingRight="15.0dip"
+                        android:text="port"
+                        android:textColor="@color/black"
+                        android:textSize="17sp" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1.0"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/edtTcpServerPort"
+                            android:layout_width="fill_parent"
+                            android:layout_height="80.0dip"
+                            android:layout_margin="8.0dip"
+                            android:background="@drawable/edit_bg"
+                            android:gravity="center|right"
+                            android:hint="22"
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:textColor="@color/black"
+                            android:textSize="17sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/y180"
+                    android:layout_marginBottom="8.0dip"
+                    android:layout_marginTop="15.0dip"
+                    android:background="@color/color_white"
+                    android:gravity="center|left"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="2.0"
+                        android:gravity="center|left"
+                        android:paddingLeft="15.0dip"
+                        android:paddingRight="15.0dip"
+                        android:text="vpn"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/x40" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1.0"
+                        android:gravity="center|right"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chkVPN"
+                            android:layout_width="wrap_content"
+                            android:layout_height="80.0dip"
+                            android:layout_marginRight="15.0dip"
+                            android:textColor="#ff3c3c3c"
+                            android:textSize="18.0sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/viewVPN"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="0.0dip"
+                    android:layout_marginTop="0.0dip"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8.0dip"
+                        android:layout_marginTop="15.0dip"
+                        android:background="@color/color_white"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="2.0"
+                            android:gravity="center|left"
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:text="vpnadress"
+                            android:textColor="@color/black"
+                            android:textSize="18sp" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1.0"
+                            android:gravity="center|left"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edtVpnAddress"
+                                android:layout_width="fill_parent"
+                                android:layout_height="80.0dip"
+                                android:layout_margin="8.0dip"
+                                android:background="@drawable/edit_bg"
+                                android:gravity="center|right"
+                                android:hint="vpn_address"
+                                android:paddingLeft="15.0dip"
+                                android:paddingRight="15.0dip"
+                                android:textColor="@color/black"
+                                android:textSize="18sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8.0dip"
+                        android:layout_marginTop="15.0dip"
+                        android:background="@color/color_white"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="2.0"
+                            android:gravity="center|left"
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:text="vpn_port"
+                            android:textColor="@color/black"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1.0"
+                            android:gravity="center|left"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edtVpnPort"
+                                android:layout_width="fill_parent"
+                                android:layout_height="@dimen/y120"
+                                android:layout_margin="8.0dip"
+                                android:background="@drawable/edit_bg"
+                                android:gravity="center|right"
+                                android:hint="454"
+                                android:paddingLeft="15.0dip"
+                                android:paddingRight="15.0dip"
+                                android:textColor="@color/black"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8.0dip"
+                        android:layout_marginTop="8.0dip"
+                        android:background="@color/color_white"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="2.0"
+                            android:gravity="center|left"
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="18dp" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1.0"
+                            android:gravity="center|left"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edtVpnUsername"
+                                android:layout_width="fill_parent"
+                                android:layout_height="80.0dip"
+                                android:layout_margin="8.0dip"
+                                android:background="@drawable/edit_bg"
+                                android:gravity="center|right"
+                                android:hint=""
+                                android:paddingLeft="15.0dip"
+                                android:paddingRight="15.0dip"
+                                android:textColor="@color/black"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8.0dip"
+                        android:layout_marginTop="15.0dip"
+                        android:background="@color/color_white"
+                        android:gravity="center|left"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="2.0"
+                            android:gravity="center|left"
+                            android:paddingLeft="15.0dip"
+                            android:paddingRight="15.0dip"
+                            android:text="password"
+                            android:textColor="@color/black"
+                            android:textSize="17sp" />
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:layout_weight="1.0"
+                            android:gravity="center|left"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/edtVpnPassword"
+                                android:layout_width="fill_parent"
+                                android:layout_height="80.0dip"
+                                android:layout_margin="8.0dip"
+                                android:background="@drawable/edit_bg"
+                                android:gravity="center|right"
+                                android:hint=""
+                                android:paddingLeft="15.0dip"
+                                android:paddingRight="15.0dip"
+                                android:textColor="@color/black"
+                                android:textSize="17sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="@dimen/y180"
+                    android:layout_marginBottom="8.0dip"
+                    android:layout_marginTop="15.0dip"
+                    android:background="@color/color_white"
+                    android:gravity="center|left"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="2.0"
+                        android:gravity="center|left"
+                        android:paddingLeft="15.0dip"
+                        android:paddingRight="15.0dip"
+                        android:text="启用铃声"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/x40" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1.0"
+                        android:gravity="center|right"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chk_ring_set"
+                            android:layout_width="wrap_content"
+                            android:layout_height="80.0dip"
+                            android:layout_marginRight="15.0dip"
+                            android:textColor="#ff3c3c3c"
+                            android:textSize="18.0sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btn_save_set"
+            android:layout_width="@dimen/x700"
+            android:layout_height="@dimen/y80"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/y20"
+            android:background="@drawable/bt_select"
+            android:text="确认修改"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/x40" />
+    </LinearLayout>
+</RelativeLayout>

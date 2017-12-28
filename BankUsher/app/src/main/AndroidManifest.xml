@@ -41,6 +41,15 @@
             android:launchMode="singleTask"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustNothing|stateHidden">
+
+        </activity>
+
+        <activity
+            android:name=".activity.LoginActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustNothing|stateHidden" >?
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,11 +57,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activity.LoginActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustNothing|stateHidden"></activity>
         <activity
             android:name=".activity.SelectCityActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -62,7 +66,7 @@
             android:name=".activity.VipRegistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustNothing|stateHidden"></activity>
+            android:windowSoftInputMode="adjustNothing|stateHidden" />
 
         <service android:name=".service.MyService" />
 
@@ -78,6 +82,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustNothing|stateHidden" />
+
+        <activity android:name=".activity.SettingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustNothing|stateHidden"></activity>
     </application>
 
 </manifest>

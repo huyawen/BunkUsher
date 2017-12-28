@@ -1,78 +1,52 @@
 package com.meiaomei.bankusher.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
-import com.lidroid.xutils.ViewUtils;
 import com.meiaomei.bankusher.R;
-import com.meiaomei.bankusher.manager.BankUsherDB;
-import com.meiaomei.bankusher.view.ClearEditText;
-import com.meiaomei.bankusher.view.EtpEditText;
+import com.meiaomei.bankusher.utils.DeviceInfoUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends AppCompatActivity {
+public class SettingActivity extends AppCompatActivity {
 
-    @BindView(R.id.username)
-    ClearEditText username;
-    @BindView(R.id.password)
-    EtpEditText password;
-    @BindView(R.id.login_imbtn)
-    ImageButton loginImbtn;
-    @BindView(R.id.tv_forgetpwd)
-    TextView tv_setting;
-
+    @BindView(R.id.et_AppId)
+    EditText etAppId;
+    @BindView(R.id.et_AppSecret)
+    EditText etAppSecret;
+    @BindView(R.id.et_ServerAddress)
+    EditText etServerAddress;
+    @BindView(R.id.et_DeviceId)
+    EditText etDeviceId;
+    @BindView(R.id.et_register)
+    EditText etRegister;
+    @BindView(R.id.btn_save_set)
+    Button btnSaveSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
-        ViewUtils.inject(this);
-        BankUsherDB.creatNewTable();//创建数据库表
 
-        loginImbtn.setOnClickListener(new MyClicListener());
-        tv_setting.setOnClickListener(new MyClicListener());
-
+        initView();
     }
 
-
-    class MyClicListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.username:
-
-                    break;
-
-                case R.id.password:
-
-                    break;
-
-                case R.id.login_imbtn:
-                    break;
-
-                case R.id.tv_forgetpwd:
-                    Intent intent = new Intent(LoginActivity.this, SettingActivity.class);
-                    startActivity(intent);
-//                    finish();
-                    break;
-            }
-        }
+    private void initView() {
+        etDeviceId.setText(DeviceInfoUtils.getDevicedId());
+        etDeviceId.setFocusable(false);
     }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -94,9 +68,9 @@ public class LoginActivity extends AppCompatActivity {
         return onTouchEvent(ev);
     }
 
-    public boolean isShouldHideInput(View v, MotionEvent event) {
+    public  boolean isShouldHideInput(View v, MotionEvent event) {
         if (v != null && (v instanceof EditText)) {
-            int[] leftTop = {0, 0};
+            int[] leftTop = { 0, 0 };
             //获取输入框当前的location位置
             v.getLocationInWindow(leftTop);
             int left = leftTop[0];
@@ -113,5 +87,4 @@ public class LoginActivity extends AppCompatActivity {
         }
         return false;
     }
-
 }
