@@ -9,12 +9,15 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.meiaomei.bankusher.R;
 import com.meiaomei.bankusher.utils.DeviceInfoUtils;
+import com.meiaomei.bankusher.utils.SharedPrefsUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -38,13 +41,39 @@ public class SettingActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
-
         initView();
     }
 
     private void initView() {
         etDeviceId.setText(DeviceInfoUtils.getDevicedId());
         etDeviceId.setFocusable(false);
+        etAppId.setText("user");
+        etAppSecret.setText("12345");
+        etRegister.setText("");
+        etServerAddress.setText("http://192.168.0.183:8580");
+    }
+
+
+    @OnClick({R.id.btn_save_set})
+    public void Onclick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_save_set:
+                String appId = etAppId.getText().toString();
+                String appSecret = etAppSecret.getText().toString();
+                String serverAddress = etServerAddress.getText().toString();
+                String deviedId = etDeviceId.getText().toString();
+                String register = etRegister.getText().toString();
+                SharedPrefsUtil.putValue(SettingActivity.this, "appId", appId);
+                SharedPrefsUtil.putValue(SettingActivity.this, "appSecret", appSecret);
+                SharedPrefsUtil.putValue(SettingActivity.this, "serverAddress", serverAddress);
+                SharedPrefsUtil.putValue(SettingActivity.this, "deviedId", deviedId);
+                SharedPrefsUtil.putValue(SettingActivity.this, "register", register);
+                Toast.makeText(SettingActivity.this, "保存成功！", Toast.LENGTH_SHORT).show();
+//                ToastUtils.showToast("", SettingActivity.this, Toast.LENGTH_SHORT);
+                finish();
+                break;
+        }
+
     }
 
 
@@ -68,9 +97,9 @@ public class SettingActivity extends AppCompatActivity {
         return onTouchEvent(ev);
     }
 
-    public  boolean isShouldHideInput(View v, MotionEvent event) {
+    public boolean isShouldHideInput(View v, MotionEvent event) {
         if (v != null && (v instanceof EditText)) {
-            int[] leftTop = { 0, 0 };
+            int[] leftTop = {0, 0};
             //获取输入框当前的location位置
             v.getLocationInWindow(leftTop);
             int left = leftTop[0];

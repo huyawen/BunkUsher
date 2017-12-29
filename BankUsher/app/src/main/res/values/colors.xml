@@ -34,6 +34,10 @@
     <color name="bg_tv_color">#bbbbbb</color>
     <color name="bar_line">#bbbbbb</color>
 
+    <color name="transparent">#0000</color>
+    <color name="loginDialogBackground">#393939</color>
+    <color name="loginBackground">#7f7f7f</color>
+
 
     <!--时间控件的颜色-->
     <color name="mdtp_white">#ffffff</color>

@@ -48,16 +48,45 @@ public class OkHttpManager {
                 .build();
     }
 
+    public static String getUrl(String paramString, int paramInt) {
+        switch (paramInt) {
+            default:
+                return "";
+            case 0:
+                return String.format("%s/j_spring_security_check", new Object[]{paramString});//登录
+            case 1:
+                return String.format("%s/mobile/findReceptionRecord", new Object[]{paramString});
+            case 2:
+                return String.format("%s/user/findById", new Object[]{paramString});
+            case 4:
+                return String.format("%s/entryexitrecord/update", new Object[]{paramString});
+            case 3:
+                return String.format("%s/user/mobileUpdate", new Object[]{paramString});
+            case 5:
+                return String.format("%s/user/mobileAdd", new Object[]{paramString});
+            case 6:
+                return String.format("%s/doLogout", new Object[]{paramString});
+            case 7:
+        }
+        return String.format("%s/entryexitrecord/receptionSetting", new Object[]{paramString});
+    }
+
     /**
      * post请求  json数据为body
      */
     public void postJson(String url, String json, final HttpCallBack callBack) {
-        RequestBody body = RequestBody.create(JSON, json);
-        final Request request = new Request.Builder().url(url).post(body).build();
 
+        RequestBody localRequestBody = RequestBody.create(JSON, json);
+        Request localRequest = new Request.Builder().
+                header("X-Requested-With".toLowerCase(), "XMLHttpRequest")
+                .header("Cookie", "")
+                .url(url)
+                .post(localRequestBody).build();
+//        RequestBody body = RequestBody.create(JSON, json);
+//        final Request request = new Request.Builder().url(url).post(body).build();
         OnStart(callBack);
 
-        client.newCall(request).enqueue(new Callback() {
+        client.newCall(localRequest).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 OnError(callBack, e.getMessage());
@@ -75,6 +104,7 @@ public class OkHttpManager {
         });
     }
 
+
     /**
      * post 请求发送   任务轮询请求消息头参数
      *
@@ -83,7 +113,6 @@ public class OkHttpManager {
      * @param mac
      */
     public void postHead(String url, String command, String mac, String xmlString, final HttpCallBack callBack) {
-
         RequestBody body = RequestBody.create(MEDIA_TYPE_XML, xmlString);////创建一个请求实体对象 RequestBody
         Request request = new Request.Builder().url(url)
                 .addHeader("command", command)
@@ -118,7 +147,6 @@ public class OkHttpManager {
      * @param callBack
      */
     public void postMap(String url, String command, String mac, Map<String, String> map, final HttpCallBack callBack) {
-
         FormBody.Builder builder = new FormBody.Builder();//请求体
         //遍历map
         if (map != null) {//添加表单
@@ -127,7 +155,6 @@ public class OkHttpManager {
             }
         }
         RequestBody body = builder.build();//请求体
-
         Request request = new Request.Builder().addHeader("command", command).addHeader("mac", mac).url(url).post(body).build();//请求方式为post
         OnStart(callBack);
         client.newCall(request).enqueue(new Callback() {
@@ -146,6 +173,7 @@ public class OkHttpManager {
             }
         });
     }
+
 
     /**
      * get 请求

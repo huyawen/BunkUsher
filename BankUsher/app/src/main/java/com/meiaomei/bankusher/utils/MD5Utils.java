@@ -21,6 +21,7 @@ public class MD5Utils {
 
 
     protected static char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9','a', 'b', 'c', 'd', 'e', 'f' };
+//    protected static char hexDigits[] = { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70 };
     protected static MessageDigest messagedigest = null;
     static{
         try{
