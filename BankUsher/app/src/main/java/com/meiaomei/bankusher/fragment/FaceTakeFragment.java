@@ -185,7 +185,7 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
                 tv_face_address_value.setText(TextUtils.isEmpty(tenListInit.get(position).getSecondPara())?"未录入":tenListInit.get(position).getSecondPara());
                 tv_face_sex_value.setText(TextUtils.isEmpty(tenListInit.get(position).getSixthPara())?"未录入":tenListInit.get(position).getSixthPara());
                 String base64=tenListInit.get(position).getTenthPara();
-                if (base64.length()>48) {
+                if (base64.length()>150) {
                     String path = ImageUtils.base64ToBitmapPath(base64, new Date().getTime()+".jpg");
                     Picasso.with(getActivity()).load("file://" + path).into(iv_faceTake);
                 }else {

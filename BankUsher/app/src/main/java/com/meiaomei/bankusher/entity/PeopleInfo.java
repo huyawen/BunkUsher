@@ -5,7 +5,7 @@ package com.meiaomei.bankusher.entity;
  * email:1754397982@qq.com
  */
 
-public class PeopleInfoModel {
+public class PeopleInfo {
 
     private String id;          //人员id
     private String name;        //人员姓名

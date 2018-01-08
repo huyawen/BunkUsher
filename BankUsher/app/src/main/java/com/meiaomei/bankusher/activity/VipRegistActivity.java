@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,17 +30,24 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 import com.meiaomei.bankusher.R;
+import com.meiaomei.bankusher.entity.MyResponse;
 import com.meiaomei.bankusher.entity.VipCustomerModel;
 import com.meiaomei.bankusher.manager.BankUsherDB;
+import com.meiaomei.bankusher.manager.OkHttpManager;
 import com.meiaomei.bankusher.utils.FileUtils;
 import com.meiaomei.bankusher.utils.ImageUtils;
+import com.meiaomei.bankusher.utils.SharedPrefsUtil;
 import com.meiaomei.bankusher.utils.ToastUtils;
 import com.meiaomei.bankusher.utils.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Date;
@@ -106,6 +112,7 @@ public class VipRegistActivity extends AppCompatActivity {
     RelativeLayout topView;
     @BindView(R.id.sv_base)
     ScrollView svBase;
+    String baseUrl = "";
 
     private Bitmap picbitmap;
     String mFilePath = "";
@@ -122,6 +129,10 @@ public class VipRegistActivity extends AppCompatActivity {
                 ToastUtils.showToast("保存成功!", VipRegistActivity.this, Toast.LENGTH_SHORT);
             } else if (msg.what == 2) {
                 ToastUtils.showToast("保存失败!", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            } else if (msg.what == 3) {
+                ToastUtils.showToast("上传服务器成功!", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            } else if (msg.what == 4) {
+                ToastUtils.showToast("上传服务失败!", VipRegistActivity.this, Toast.LENGTH_SHORT);
             }
         }
     };
@@ -133,6 +144,7 @@ public class VipRegistActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_vip_regist);
+        baseUrl = SharedPrefsUtil.getValue(VipRegistActivity.this, "serverAddress", "");
         initOther();
         ButterKnife.bind(this);
     }
@@ -166,6 +178,54 @@ public class VipRegistActivity extends AppCompatActivity {
             return;
         }
 
+        //传递给后台将录入的数据
+        OkHttpManager okHttpManager = new OkHttpManager();
+        String url = OkHttpManager.getUrl(baseUrl, 5);
+        JSONObject js = new JSONObject();
+        try {
+            js.put("c4", "1");
+            js.put("appId", "user");
+            js.put("appSecret", "12345");
+            js.put("base64Img", base64);
+            js.put("cango", false);
+            js.put("name", name);
+            js.put("favourite", "");
+            js.put("orgCode", "1001");
+            js.put("telephone", phone);
+            int le = getIntLevel(level);
+            js.put("userLevel", le);
+            js.put("userType", "2");
+            js.put("workCode", carNun);//此处改carnum 为工号
+            js.put("idCard", cardid);
+            int ge=getIntGender(gender);
+//            js.put("gender", ge);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        okHttpManager.postJson(url, js.toString(), new OkHttpManager.HttpCallBack() {
+
+            @Override
+            public void onSusscess(String data, String cookie) {
+                Gson gson = new Gson();
+                if (!TextUtils.isEmpty(data)) {
+                    MyResponse myResponse = gson.fromJson(data, MyResponse.class);
+                    if (myResponse != null) {
+                        if ("200".equals(myResponse.getRespCode())) {
+                            handler.obtainMessage(3).sendToTarget();
+                        } else if ("500".equals(myResponse.getRespCode())) {
+                            handler.obtainMessage(4).sendToTarget();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String meg) {
+                super.onError(meg);
+            }
+        });
+
+        //本地保存
         VipCustomerModel vip = new VipCustomerModel();
         vip.setName(name);
         vip.setCarNumber(carNun);
@@ -185,6 +245,48 @@ public class VipRegistActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    private int getIntLevel(String slevel) {
+        int intLevel = 0;
+        //清空checkBox
+        if (!TextUtils.isEmpty(slevel)) {
+            switch (slevel) {
+                case "钻石":
+                    intLevel = 5;
+                    break;
+                case "铂金":
+                    intLevel = 4;
+                    break;
+                case "黄金":
+                    intLevel = 3;
+                    break;
+                case "白银":
+                    intLevel = 2;
+                    break;
+                case "青铜":
+                    intLevel = 1;
+                    break;
+            }
+        }
+
+        return intLevel;
+    }
+
+    private int getIntGender(String slevel) {
+        int intLevel = 0;
+        //清空checkBox
+        if (!TextUtils.isEmpty(slevel)) {
+            switch (slevel) {
+                case "男":
+                    intLevel = 1;
+                    break;
+                case "女":
+                    intLevel = 0;
+                    break;
+            }
+        }
+        return intLevel;
     }
 
 
@@ -297,6 +399,7 @@ public class VipRegistActivity extends AppCompatActivity {
             }
             level = null;
         }
+
         if (!TextUtils.isEmpty(gender)) {
             switch (gender) {
                 case "男":
@@ -335,19 +438,19 @@ public class VipRegistActivity extends AppCompatActivity {
         switch (view.getId()) {
 
             case R.id.radioBtn_level1:
-                level = "钻石";
+                level = "钻石"; //5
                 break;
             case R.id.radioBtn_level2:
-                level = "铂金";
+                level = "铂金"; //4
                 break;
             case R.id.radioBtn_level3:
-                level = "黄金";
+                level = "黄金"; //3
                 break;
             case R.id.radioBtn_level4:
-                level = "白银";
+                level = "白银";  //2
                 break;
             case R.id.radioBtn_level5:
-                level = "青铜";
+                level = "青铜";  //1
                 break;
 
         }
@@ -365,6 +468,11 @@ public class VipRegistActivity extends AppCompatActivity {
         }
         if (TextUtils.isEmpty(phone.trim())) {
             ToastUtils.showToast("手机号不能为空！", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            return true;
+        }
+
+        if (TextUtils.isEmpty(cardid.trim())){
+            ToastUtils.showToast("身份证号不能为空！", VipRegistActivity.this, Toast.LENGTH_SHORT);
             return true;
         }
         return false;
@@ -398,9 +506,9 @@ public class VipRegistActivity extends AppCompatActivity {
         return onTouchEvent(ev);
     }
 
-    public  boolean isShouldHideInput(View v, MotionEvent event) {
+    public boolean isShouldHideInput(View v, MotionEvent event) {
         if (v != null && (v instanceof EditText)) {
-            int[] leftTop = { 0, 0 };
+            int[] leftTop = {0, 0};
             //获取输入框当前的location位置
             v.getLocationInWindow(leftTop);
             int left = leftTop[0];

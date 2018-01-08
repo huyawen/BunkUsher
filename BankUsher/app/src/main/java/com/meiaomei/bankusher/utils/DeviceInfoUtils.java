@@ -2,6 +2,7 @@ package com.meiaomei.bankusher.utils;
 
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -25,7 +26,6 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.meiaomei.bankusher.BankUsherApplication;
-import com.meiaomei.bankusher.activity.SettingActivity;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -142,6 +142,7 @@ public class DeviceInfoUtils {
         }
         return isWork;
     }
+
 
 
     //安装apk

@@ -8,7 +8,7 @@ package com.meiaomei.bankusher.entity;
  * "respDesc" : "请求已完成"
  */
 
-public class DeviceModel {
+public class Device {
 
 
     private String id;          //设备的id

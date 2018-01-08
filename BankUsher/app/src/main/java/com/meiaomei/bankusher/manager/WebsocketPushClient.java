@@ -1,8 +1,6 @@
 package com.meiaomei.bankusher.manager;
 
-import android.os.Handler;
 import android.util.Log;
-
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
@@ -40,13 +38,14 @@ public class WebsocketPushClient extends WebSocketClient {
         m_sOrgCode = s;
     }
 
-    protected  String m_sOranization="";
+    protected String m_sOranization = "";
 
     public void setM_sOranization(String m_sOranization) {
         this.m_sOranization = m_sOranization;
     }
 
     protected CallErroBack callErroBack;
+
     public interface CallErroBack {
         public void OnReciveError();
     }
@@ -62,7 +61,7 @@ public class WebsocketPushClient extends WebSocketClient {
         JSONObject object = new JSONObject();
         try {
             object.put("orgCode", m_sOrgCode);
-            object.put("organizationCode",m_sOranization);
+            object.put("organizationCode", m_sOranization);
             this.send("" + object.toString());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -87,7 +86,7 @@ public class WebsocketPushClient extends WebSocketClient {
     public void onClose(int code, String reason, boolean remote) {
         Log.e(TAG, "onClose-------  " + reason);
         this.close();
-        if (null!=callErroBack){
+        if (null != callErroBack) {
             callErroBack.OnReciveError();
         }
 
@@ -100,29 +99,5 @@ public class WebsocketPushClient extends WebSocketClient {
         Log.e(TAG, "onError---------- " + ex.getLocalizedMessage());
         this.close();
     }
-
-	/*public static void main( String[] args ) throws URISyntaxException {
-        WebsocketPushClient client = new WebsocketPushClient( new URI( "ws://192.168.50.133:8080/falcon-web/webSocketServer" ), new Draft_6455() ); // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
-
-		long ticketCon = 0;
-		while(true) {
-
-			if (System.currentTimeMillis() - ticketCon > 3000) {
-				ticketCon = System.currentTimeMillis();
-
-				if (! client.isOpen())
-					client.connect();
-			}
-
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		//System.out.println("main end");
-	}*/
 
 }

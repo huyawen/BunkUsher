@@ -49,12 +49,23 @@ public class VipCustomerModel implements Serializable {
     @Column(column = "PhoneNumber") // 对应云丛 telephone
             String phoneNumber;
 
-    @Column(column = "CarNumber")  //车牌号
-            String carNumber;
+    @Column(column = "WorkNumber")  //车牌号
+            String workNumber;
+
+    @Column(column = "Email")
+    String email;
 
     @NotNull
     @Column(column = "DelFlag")//自己的查询条件 flag标记 0为未删除  1为已删除
             String delFlag;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getRemark() {
         return remark;
@@ -65,11 +76,11 @@ public class VipCustomerModel implements Serializable {
     }
 
     public String getCarNumber() {
-        return carNumber;
+        return workNumber;
     }
 
     public void setCarNumber(String carNumber) {
-        this.carNumber = carNumber;
+        this.workNumber = carNumber;
     }
 
     public long getBirthday() {

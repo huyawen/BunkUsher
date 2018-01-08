@@ -82,11 +82,11 @@ public class RecycleVipSerDisposAdapter extends RecyclerView.Adapter<RecycleVipS
             },2000);
         }else {
             String base64=thirteenParamModelList.get(position).getTenthPara();
-            if (base64.length()>48) {
+            if (base64.length()>150) {
                 Bitmap bp = ImageUtils.base64ToBitmap(base64);
                 holder.iv_al_vips_face.setImageBitmap(bp);
             }else {
-                Picasso.with(context).load("file://" + base64).into(holder.iv_al_vips_face);
+                Picasso.with(context).load(base64).into(holder.iv_al_vips_face);
             }
             holder.tv_al_vip_name.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getFourthPara())?"未录入":thirteenParamModelList.get(position).getFourthPara());
             holder.tv_al_vip_grade.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getEighthPara())?"未录入":thirteenParamModelList.get(position).getEighthPara());

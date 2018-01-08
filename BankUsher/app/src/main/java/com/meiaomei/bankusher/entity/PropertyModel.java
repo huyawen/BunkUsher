@@ -4,6 +4,7 @@ import com.lidroid.xutils.db.annotation.Column;
 import com.lidroid.xutils.db.annotation.Table;
 
 /**
+ * 资产表暂时未用
  * Created by huyawen on 2017/11/27.
  * email:1754397982@qq.com
  */

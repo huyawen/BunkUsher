@@ -77,7 +77,7 @@ public class VisitRegistActivity extends AppCompatActivity implements DatePicker
     @OnClick(R.id.bt_send)
     public void btnSend(){
         NotificationUtils notificationUtils=new NotificationUtils(VisitRegistActivity.this);
-        notificationUtils.sendMyNotification();
+        notificationUtils.sendMyNotification("华怡雯");
     }
 
     @OnClick(R.id.bt_visit)

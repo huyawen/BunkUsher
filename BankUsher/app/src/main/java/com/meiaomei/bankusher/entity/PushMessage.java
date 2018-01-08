@@ -28,21 +28,40 @@ public class PushMessage {
     }
 
     public static class Body {
-        long bithday;
+        long bithday; //生日
         String c4;
         String favourite;
         String id;    //id是识别记录主建
         String path;  //path是现场照
         String picName; //注册照
-        double score;
+        double score;   //识别分数
         long signTime;  //识别时间
         String userId;  //userid是vip主建
-        int userLevel;
-        String userLevelName;
-        String userName;
+        int userLevel;  //vip等级的数字
+        String userLevelName; //vip等级的汉字
+        String userName; //用户的名字
+        String cameraName; //摄像头名称
+        String deviceId;//设备id
+
+        public String getCameraName() {
+            return cameraName;
+        }
+
+        public void setCameraName(String cameraName) {
+            this.cameraName = cameraName;
+        }
+
+        public String getDeviceId() {
+            return deviceId;
+        }
+
+        public void setDeviceId(String deviceId) {
+            this.deviceId = deviceId;
+        }
 
         public long getBithday() {
             return bithday;
+
         }
 
         public void setBithday(long bithday) {

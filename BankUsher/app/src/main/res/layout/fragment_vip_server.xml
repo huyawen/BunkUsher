@@ -34,7 +34,7 @@
                 android:background="@drawable/red_message_bg"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:minWidth="@dimen/x32"
+                android:minWidth="@dimen/x42"
                 android:text="0"
                 android:textColor="@color/color_white"
                 android:textSize="13sp" />

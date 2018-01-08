@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
+import com.meiaomei.bankusher.entity.Protocol;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -67,6 +69,7 @@ public class OkHttpManager {
             case 6:
                 return String.format("%s/doLogout", new Object[]{paramString});
             case 7:
+              break;
         }
         return String.format("%s/entryexitrecord/receptionSetting", new Object[]{paramString});
     }
@@ -76,14 +79,14 @@ public class OkHttpManager {
      */
     public void postJson(String url, String json, final HttpCallBack callBack) {
 
+        String cookedId=Protocol.getCookedId();
         RequestBody localRequestBody = RequestBody.create(JSON, json);
         Request localRequest = new Request.Builder().
                 header("X-Requested-With".toLowerCase(), "XMLHttpRequest")
-                .header("Cookie", "")
+                .header("Cookie", cookedId)
                 .url(url)
                 .post(localRequestBody).build();
-//        RequestBody body = RequestBody.create(JSON, json);
-//        final Request request = new Request.Builder().url(url).post(body).build();
+
         OnStart(callBack);
 
         client.newCall(localRequest).enqueue(new Callback() {
@@ -95,8 +98,8 @@ public class OkHttpManager {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    Log.e("isSuccessful", "" + response.isSuccessful());
-                    onSuccess(callBack, response.body().string());
+                    Log.e("OkhttpManager", "-isSuccessful--" + response.isSuccessful());
+                    onSuccess(callBack, response.body().string(),response.header("Set-Cookie"));
                 } else {
                     OnError(callBack, response.message());
                 }
@@ -130,7 +133,7 @@ public class OkHttpManager {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     Log.e("OkHttpManager-success", response.message());
-                    onSuccess(callBack, response.body().string());
+                    onSuccess(callBack, response.body().string(),response.header("Set-Cookie"));
                 } else {
                     Log.e("OkHttpManager", response.message());
                     OnError(callBack, response.message());
@@ -166,7 +169,7 @@ public class OkHttpManager {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    onSuccess(callBack, response.body().string());
+                    onSuccess(callBack, response.body().string(),response.header("Set-Cookie"));
                 } else {
                     OnError(callBack, response.message());
                 }
@@ -193,7 +196,7 @@ public class OkHttpManager {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    onSuccess(callBack, response.body().string());
+                    onSuccess(callBack, response.body().string(),response.header("Set-Cookie"));
                 } else {
                     OnError(callBack, response.message());
                 }
@@ -207,12 +210,12 @@ public class OkHttpManager {
         }
     }
 
-    public void onSuccess(final HttpCallBack callBack, final String data) {
+    public void onSuccess(final HttpCallBack callBack, final String data,final String cookie) {
         if (callBack != null) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {//在主线程操作
-                    callBack.onSusscess(data);
+                    callBack.onSusscess(data,cookie);
                 }
             });
         }
@@ -235,7 +238,7 @@ public class OkHttpManager {
         }
 
         //成功回调
-        public abstract void onSusscess(String data);
+        public abstract void onSusscess(String data,String cookie);
 
         //失败
         public void onError(String meg) {

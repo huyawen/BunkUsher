@@ -210,7 +210,7 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
                 tv_remark_phone_value.setText(TextUtils.isEmpty(tenListStart.get(position).getFifthPara())?"未录入":tenListStart.get(position).getFifthPara());
                 tv_remark_viporder_value.setText(TextUtils.isEmpty(tenListStart.get(position).getEighthPara())?"未录入":tenListStart.get(position).getEighthPara());
                 String base64=tenListStart.get(position).getTenthPara();
-                if (base64.length()>48) {
+                if (base64.length()>150) {
                     String path = ImageUtils.base64ToBitmapPath(base64, new Date().getTime()+".jpg");
                     Picasso.with(getActivity()).load("file://" + path).into(iv_vip_remark);
                 }else {

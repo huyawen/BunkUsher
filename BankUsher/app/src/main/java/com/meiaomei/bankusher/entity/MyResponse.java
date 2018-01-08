@@ -3,16 +3,17 @@ package com.meiaomei.bankusher.entity;
 import java.io.Serializable;
 
 /**
+ * 识别后台的推送数据
  * Created by huyawen on 2017/12/29.
  * email:1754397982@qq.com
  */
 
-public class ResponseModel implements Serializable {
+public class MyResponse implements Serializable {
 
 
     private String respCode;
     private String respDesc;
-    Data data;
+    MyData data;
 
     public String getRespCode() {
         return respCode;
@@ -30,31 +31,98 @@ public class ResponseModel implements Serializable {
         this.respDesc = respDesc;
     }
 
-    public Data getData() {
+    public MyData getData() {
         return data;
     }
 
-    public void setData(Data data) {
+    public void setData(MyData data) {
         this.data = data;
     }
 
-    class Data{
-        private String gender;
+    public static class MyData{
+        //login
+        private String loginName;
+        private String password;
+        private int gender;
         private String id;
         private String imgBaseUrl;
-        private String loginName;
         private String name;
-        private String password;
         private String recognitionOptimize;
         private String recognitionType;
         private int shared ;
         private int status ;
 
-    public String getGender() {
+        //findbyId
+        private String email;
+        private String genderName;
+        private String houseCode;
+        private String houseName;
+        private String idCard;//身份证号
+        private String remark;//备注
+        private String telephone;
+
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getGenderName() {
+            return genderName;
+        }
+
+        public void setGenderName(String genderName) {
+            this.genderName = genderName;
+        }
+
+        public String getHouseCode() {
+            return houseCode;
+        }
+
+        public void setHouseCode(String houseCode) {
+            this.houseCode = houseCode;
+        }
+
+        public String getHouseName() {
+            return houseName;
+        }
+
+        public void setHouseName(String houseName) {
+            this.houseName = houseName;
+        }
+
+        public String getIdCard() {
+            return idCard;
+        }
+
+        public void setIdCard(String idCard) {
+            this.idCard = idCard;
+        }
+
+        public String getRemark() {
+            return remark;
+        }
+
+        public void setRemark(String remark) {
+            this.remark = remark;
+        }
+
+        public String getTelephone() {
+            return telephone;
+        }
+
+        public void setTelephone(String telephone) {
+            this.telephone = telephone;
+        }
+
+        public int getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
