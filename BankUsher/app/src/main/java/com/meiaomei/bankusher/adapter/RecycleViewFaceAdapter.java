@@ -139,13 +139,13 @@ public class RecycleViewFaceAdapter extends RecyclerView.Adapter<RecycleViewFace
                 @Override
                 public void onClick(View v) {
                     if (holder.cb_face_item.isChecked()) {//是选中的
-                        Log.e("isChecked", "rl_item_cb:==" + position + "==" + holder.cb_face_item.isChecked() + "-remove");
+                        Log.e("RecycleViewFaceAdapter", "rl_item_cb:positin==" + position + "==" + holder.cb_face_item.isChecked() + "-remove");
                         //ui界面
                         holder.cb_face_item.setChecked(false);
                         //操作数据
                         excelMap.remove(position);
                     } else {//没有被选中
-                        Log.e("isChecked", "rl_item_cb:==" + position + "==" + holder.cb_face_item.isChecked() + "-add");
+                        Log.e("RecycleViewFaceAdapter", "rl_item_cb::positin==" + position + "==" + holder.cb_face_item.isChecked() + "-add");
                         holder.cb_face_item.setChecked(true);//ui界面
                         messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));//操作数据
                         messageMap.put("visitAddress", thirteenParamModelList.get(position).getSecondPara());
@@ -183,11 +183,14 @@ public class RecycleViewFaceAdapter extends RecyclerView.Adapter<RecycleViewFace
                     if (excelMap.size() > 0) {
                         excelMap.remove(position);//操作数据  remove
                     }
+
+                    if (excelMap.size()==0){//防止全部的影响单个选中
+                        isCheckClick=false;
+                    }
                 }
 
                 if (checkItemClickListener != null) {//最后一个值设置监听,改变进入状态
                     checkItemClickListener.onCheckClik(excelMap);//设置监听
-//                    isCheckClick = false;
                 }
             }
 

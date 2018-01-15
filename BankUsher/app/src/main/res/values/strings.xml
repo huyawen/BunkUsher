@@ -19,10 +19,10 @@
     <string name="radioBtn_male">男</string>
     <string name="radioBtn_female">女</string>
 
-    <string name="radioBtn_level1">钻石</string>
-    <string name="radioBtn_level2">铂金</string>
-    <string name="radioBtn_level3">黄金</string>
-    <string name="radioBtn_level4">白银</string>
+    <string name="radioBtn_level1">四级</string>
+    <string name="radioBtn_level2">三级</string>
+    <string name="radioBtn_level3">二级</string>
+    <string name="radioBtn_level4">一级</string>
     <string name="radioBtn_level5">普通</string>
 
     <string name="vip_reg">VIP注册</string>

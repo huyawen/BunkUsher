@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -55,7 +56,9 @@ public class LoginActivity extends AppCompatActivity {
     OkHttpManager manager;
     Dialog progressDialog;
     String baseurl = "";
-    boolean canLogin=false;
+    boolean canLogin = false;
+
+    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +70,15 @@ public class LoginActivity extends AppCompatActivity {
         ViewUtils.inject(this);
         BankUsherDB.creatNewTable();//创建数据库表
         getAppUserPermission();//动态获取权限
+
         manager = new OkHttpManager();
         progressDialog = new MyProgressDialog().createLoadingDialog(LoginActivity.this, "正在通讯，请稍后...");
+        baseurl = SharedPrefsUtil.getValue(LoginActivity.this, "serverAddress", "");
         if (TextUtils.isEmpty(baseurl)) {
             baseurl = "http://192.168.0.183:8580";
         }
         et_username.setText("admin");
-        et_password.setText("123456");
+        et_password.setText("");
         boolean isLogined = checkLogin();
         if (isLogined) {
             Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
@@ -94,11 +99,15 @@ public class LoginActivity extends AppCompatActivity {
                 case R.id.login_imbtn:
                     String useName = et_username.getText().toString();
                     String passWord = et_password.getText().toString();
-                    baseurl = SharedPrefsUtil.getValue(LoginActivity.this, "serverAddress", "");
-                    //保存完成之后，发通知测试
-//                    NotificationUtils notificationUtils = new NotificationUtils(LoginActivity.this);
-//                    notificationUtils.sendMyNotification("胡亚文");
 
+                    //保存完成之后，发通知测试
+                  /*  handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            NotificationUtils notificationUtils = new NotificationUtils(LoginActivity.this);
+                            notificationUtils.sendSysNotification("胡亚文");
+                        }
+                    },10000);*/
                     login(useName, passWord);
                     break;
 
@@ -162,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 if (myResponse != null && "200".equals(myResponse.getRespCode())) {//响应成功
                     //通过后
-                    canLogin=true;
+                    canLogin = true;
                     if (!TextUtils.isEmpty(cookie) && cookie.contains("JSESSIONID=")) {
                         String cookie1 = cookie.substring(0, 43);
                         Protocol.setCookedId(cookie1);
@@ -184,7 +193,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onError(String meg) {
                 super.onError(meg);
                 //失败后
-                canLogin=false;
+                canLogin = false;
                 progressDialog.dismiss();
                 Log.e("errir", meg + "");
                 Toast.makeText(LoginActivity.this, "无法连接到服务器，请检查网络！", Toast.LENGTH_SHORT).show();

@@ -9,7 +9,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -32,16 +31,15 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.lidroid.xutils.DbUtils;
-import com.lidroid.xutils.exception.DbException;
 import com.meiaomei.bankusher.R;
 import com.meiaomei.bankusher.entity.MyResponse;
-import com.meiaomei.bankusher.entity.VipCustomerModel;
 import com.meiaomei.bankusher.manager.BankUsherDB;
 import com.meiaomei.bankusher.manager.OkHttpManager;
 import com.meiaomei.bankusher.utils.FileUtils;
 import com.meiaomei.bankusher.utils.ImageUtils;
 import com.meiaomei.bankusher.utils.SharedPrefsUtil;
 import com.meiaomei.bankusher.utils.ToastUtils;
+import com.meiaomei.bankusher.utils.UpLoadImage;
 import com.meiaomei.bankusher.utils.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -50,7 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.Date;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,10 +99,10 @@ public class VipRegistActivity extends AppCompatActivity {
     Button btnClear;
     @BindView(R.id.root_regvip)
     RelativeLayout rootRegvip;
-    String carNun = "";
+    String workNum = "";
     String name = "";
     String phone = "";
-    String cardid = "";
+    String idCard = "";
     String remark = "";
     String gender = "";
     String level = "";
@@ -115,10 +113,13 @@ public class VipRegistActivity extends AppCompatActivity {
     String baseUrl = "";
 
     private Bitmap picbitmap;
-    String mFilePath = "";
+    String imgFilePath = "";
     final static int REQUEST_CAMERA_1 = 21;
     final static String TAG = "VipRegistActivity";
     DbUtils dbUtils;
+    boolean isEditer = false;
+    String useId = "";
+    OkHttpManager okHttpManager = new OkHttpManager();
 
     Handler handler = new Handler() {
 
@@ -133,6 +134,12 @@ public class VipRegistActivity extends AppCompatActivity {
                 ToastUtils.showToast("上传服务器成功!", VipRegistActivity.this, Toast.LENGTH_SHORT);
             } else if (msg.what == 4) {
                 ToastUtils.showToast("上传服务失败!", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            } else if (msg.what == 5) {
+                ToastUtils.showToast("服务器出错了，上传失败!", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            } else if (msg.what == 6) {
+                ToastUtils.showToast("修改成功!", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            } else if (msg.what == 7) {
+                ToastUtils.showToast("修改失败！", VipRegistActivity.this, Toast.LENGTH_SHORT);
             }
         }
     };
@@ -144,22 +151,60 @@ public class VipRegistActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_vip_regist);
-        baseUrl = SharedPrefsUtil.getValue(VipRegistActivity.this, "serverAddress", "");
-        initOther();
         ButterKnife.bind(this);
+
+        initOther();
     }
 
     private void initOther() {
         dbUtils = BankUsherDB.getDbUtils();
-
+        tvTitle.setText("VIP 人员注册");
+        Intent intent = getIntent();
+        HashMap<String, String> linkedHashMap = (HashMap<String, String>) intent.getSerializableExtra("linkedHashMap");
+        String path = intent.getStringExtra("imgPath");
+        if (linkedHashMap != null && !TextUtils.isEmpty(path)) {
+            isEditer = true;
+            tvTitle.setText("VIP 人员修改");
+            Picasso.with(VipRegistActivity.this)
+                    .load(path)
+                    .resize(200, 200)
+                    .transform(new CircleTransform()).into(ivImg);
+            etName.setText(linkedHashMap.get("姓名"));
+            if ("男".equals(linkedHashMap.get("性别"))) {
+                radioBtnMale.setChecked(true);
+            } else if ("女".equals(linkedHashMap.get("性别"))) {
+                radioBtnFemale.setChecked(true);
+            }
+            useId = linkedHashMap.get("id");
+            etPhone.setText(linkedHashMap.get("电话"));
+            etCarNum.setText(linkedHashMap.get("工号").equals("未录入") ? "" : linkedHashMap.get("工号"));
+            etCardid.setText(linkedHashMap.get("身份证号").equals("未录入") ? "" : linkedHashMap.get("身份证号"));
+            etRemark.setText(linkedHashMap.get("备注").equals("未录入") ? "" : linkedHashMap.get("备注"));
+            switch (linkedHashMap.get("客户等级")) {
+                case "一级":
+                    radioBtnLevel4.setChecked(true);
+                    break;
+                case "二级":
+                    radioBtnLevel3.setChecked(true);
+                    break;
+                case "三级":
+                    radioBtnLevel2.setChecked(true);
+                    break;
+                case "四级":
+                    radioBtnLevel1.setChecked(true);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
 
     @OnClick(R.id.btn_signin)
     public void btn_regist() {
         getInput();
-        final String base64 = ImageUtils.imgToBase64(null, picbitmap);
-        if (isEmpty()) {
+        final String base64 = ImageUtils.imgToBase64(null, picbitmap); //imgpath 和 bitmap 传一个即可
+        if (isEmpty()) {//非空项校验
             return;
         }
 
@@ -167,65 +212,145 @@ public class VipRegistActivity extends AppCompatActivity {
             ToastUtils.showToast("请输入正确的手机号！", VipRegistActivity.this, Toast.LENGTH_SHORT);
         }
 
-        if (!TextUtils.isEmpty(cardid)) {
-            if (!Utils.isIDCard(cardid)) {
+        if (!TextUtils.isEmpty(idCard)) {
+            if (!Utils.isIDCard(idCard)) {
                 ToastUtils.showToast("请输入正确的身份证号！", VipRegistActivity.this, Toast.LENGTH_SHORT);
             }
         }
 
-        if (base64 == null) {//传给后台的base64
+        if (base64 == null && !isEditer) {//传给后台的base64  如果是编辑进来的忽略此检查
             ToastUtils.showToast("请选择相机拍照！", VipRegistActivity.this, Toast.LENGTH_SHORT);
             return;
         }
 
         //传递给后台将录入的数据
-        OkHttpManager okHttpManager = new OkHttpManager();
-        String url = OkHttpManager.getUrl(baseUrl, 5);
-        JSONObject js = new JSONObject();
-        try {
-            js.put("c4", "1");
-            js.put("appId", "user");
-            js.put("appSecret", "12345");
-            js.put("base64Img", base64);
-            js.put("cango", false);
-            js.put("name", name);
-            js.put("favourite", "");
-            js.put("orgCode", "1001");
-            js.put("telephone", phone);
-            int le = getIntLevel(level);
-            js.put("userLevel", le);
-            js.put("userType", "2");
-            js.put("workCode", carNun);//此处改carnum 为工号
-            js.put("idCard", cardid);
-            int ge=getIntGender(gender);
-//            js.put("gender", ge);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        baseUrl = SharedPrefsUtil.getValue(VipRegistActivity.this, "serverAddress", "");
+        if (TextUtils.isEmpty(baseUrl)) {
+            baseUrl = "http://192.168.0.183:8580";
         }
-        okHttpManager.postJson(url, js.toString(), new OkHttpManager.HttpCallBack() {
 
-            @Override
-            public void onSusscess(String data, String cookie) {
-                Gson gson = new Gson();
-                if (!TextUtils.isEmpty(data)) {
-                    MyResponse myResponse = gson.fromJson(data, MyResponse.class);
-                    if (myResponse != null) {
-                        if ("200".equals(myResponse.getRespCode())) {
-                            handler.obtainMessage(3).sendToTarget();
-                        } else if ("500".equals(myResponse.getRespCode())) {
-                            handler.obtainMessage(4).sendToTarget();
+        if (isEditer) {//编辑进来的
+            if (!TextUtils.isEmpty(imgFilePath)) {
+                //修改了图片，先把图片传至服务器
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String uploadUrl = OkHttpManager.getUrl(baseUrl, 9);//uploadUrl
+                        String s=UpLoadImage.uploadFile(new File(imgFilePath),uploadUrl);
+                        Log.e(TAG, "uploadFile: " + s);
+//                        String response = UpLoadImage.uploadFiletwo(new File(imgFilePath), uploadUrl);
+//                        Log.e(TAG, "uploadFiletwo: " + response);
+                        okHttpManager.upLoadFile(uploadUrl, imgFilePath, new OkHttpManager.ReqCallBack<String>() {
+                            @Override
+                            public void onReqSuccess(String result) {
+                                Log.e(TAG, "run: " + result);
+                            }
+
+                            @Override
+                            public void onReqFailed(String errorMsg) {
+                                Log.e(TAG, "run: " + errorMsg);
+                            }
+                        });
+
+                        String editUrl = OkHttpManager.getUrl(baseUrl, 3);
+                        JSONObject js = new JSONObject();
+                        try {
+                            if (UpLoadImage.SUCCESS.equals("")){
+                                js.put("updateModules", "10"); //更新基本信息就是 2  更新图片和基本信息就是 10
+                            } else {
+                                js.put("updateModules", "2");
+                            }
+                            js.put("appId", "user");
+                            js.put("appSecret", "12345");
+                            js.put("id", useId);
+                            js.put("cango", false);
+                            js.put("name", name);
+                            js.put("favourite", "");
+                            js.put("orgCode", "1000");
+                            js.put("telephone", phone);
+                            int le = getIntLevel(level);
+                            js.put("userLevel", le);
+                            js.put("userType", "2");
+                            js.put("workCode", workNum);//为工号
+                            js.put("idCard", idCard);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        okHttpManager.postJson(editUrl, js.toString(), new OkHttpManager.HttpCallBack() {
+                            @Override
+                            public void onSusscess(String data, String cookie) {
+                                Gson gson = new Gson();
+                                if (!TextUtils.isEmpty(data)) {
+                                    MyResponse myResponse = gson.fromJson(data, MyResponse.class);
+                                    if (myResponse != null) {
+                                        if ("200".equals(myResponse.getRespCode())) {
+                                            handler.obtainMessage(6).sendToTarget();
+                                        } else if ("500".equals(myResponse.getRespCode())) {
+                                            handler.obtainMessage(7).sendToTarget();
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onError(String meg) {
+                                super.onError(meg);
+                                handler.obtainMessage(5).sendToTarget();
+                            }
+                        });
+                    }
+                }).start();
+            }
+
+        } else if (!isEditer) {//新添加vip进来的
+            String url = OkHttpManager.getUrl(baseUrl, 5);
+            JSONObject js = new JSONObject();
+            try {
+                js.put("c4", "1");
+                js.put("appId", "user");
+                js.put("appSecret", "12345");
+                js.put("base64Img", base64);
+                js.put("cango", false);
+                js.put("name", name);
+                js.put("favourite", "");
+                js.put("orgCode", "1000");
+                js.put("telephone", phone);
+                int le = getIntLevel(level);
+                js.put("userLevel", le);
+                js.put("userType", "2");
+                js.put("workCode", workNum);//为工号
+                js.put("idCard", idCard);
+//            int ge = getIntGender(gender);
+//            js.put("gender", ge);//不传性别
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            okHttpManager.postJson(url, js.toString(), new OkHttpManager.HttpCallBack() {
+                @Override
+                public void onSusscess(String data, String cookie) {
+                    Gson gson = new Gson();
+                    if (!TextUtils.isEmpty(data)) {
+                        MyResponse myResponse = gson.fromJson(data, MyResponse.class);
+                        if (myResponse != null) {
+                            if ("200".equals(myResponse.getRespCode())) {
+                                handler.obtainMessage(3).sendToTarget();
+                            } else if ("500".equals(myResponse.getRespCode())) {
+                                handler.obtainMessage(4).sendToTarget();
+                            }
                         }
                     }
                 }
-            }
 
-            @Override
-            public void onError(String meg) {
-                super.onError(meg);
-            }
-        });
+                @Override
+                public void onError(String meg) {
+                    super.onError(meg);
+                    handler.obtainMessage(5).sendToTarget();
+                }
+            });
 
-        //本地保存
+            //传服务器报存 本地不保存
+        /*
         VipCustomerModel vip = new VipCustomerModel();
         vip.setName(name);
         vip.setCarNumber(carNun);
@@ -243,8 +368,9 @@ public class VipRegistActivity extends AppCompatActivity {
         } catch (DbException e) {
             handler.obtainMessage(2).sendToTarget();
             e.printStackTrace();
-        }
+        }*/
 
+        }
     }
 
     private int getIntLevel(String slevel) {
@@ -252,19 +378,21 @@ public class VipRegistActivity extends AppCompatActivity {
         //清空checkBox
         if (!TextUtils.isEmpty(slevel)) {
             switch (slevel) {
-                case "钻石":
-                    intLevel = 5;
-                    break;
-                case "铂金":
+
+                case "四级":
                     intLevel = 4;
                     break;
-                case "黄金":
+                case "三级":
                     intLevel = 3;
                     break;
-                case "白银":
+                case "二级":
                     intLevel = 2;
                     break;
-                case "青铜":
+                case "一级":
+                    intLevel = 1;
+                    break;
+
+                case "普通":
                     intLevel = 1;
                     break;
             }
@@ -292,12 +420,11 @@ public class VipRegistActivity extends AppCompatActivity {
 
     @OnClick(R.id.iv_img)
     public void iv_Photo(View view) {
-        mFilePath = Environment.getExternalStorageDirectory().getPath();// 获取SD卡路径
         File photoFile = FileUtils.createDir("photo");
-        mFilePath = photoFile + "/" + new Date().getTime() + ".jpg";// 指定路径
+        imgFilePath = photoFile + "/" + "img" + ".jpg";// 指定路径
         //系统相机调用
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);// 启动系统相机
-        Uri photoUri = Uri.fromFile(new File(mFilePath)); // 传递路径
+        Uri photoUri = Uri.fromFile(new File(imgFilePath)); // 传递路径
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);// 更改系统默认存储路径
         startActivityForResult(intent, REQUEST_CAMERA_1);
     }
@@ -306,12 +433,12 @@ public class VipRegistActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {//返回成功
             if (requestCode == REQUEST_CAMERA_1) {
-                Bitmap bitmap = BitmapFactory.decodeFile(mFilePath);
+                Bitmap bitmap = BitmapFactory.decodeFile(imgFilePath);
                 picbitmap = bitmap;
                 if (bitmap != null) {
                     ivImg.setBackground(null);
                     Picasso.with(VipRegistActivity.this)
-                            .load("file://" + mFilePath)
+                            .load("file://" + imgFilePath)
                             .resize(200, 200)
                             .transform(new CircleTransform()).into(ivImg);
                 }
@@ -359,13 +486,13 @@ public class VipRegistActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btn_clear)
-    public void bt_clean() {
+    public void bt_clean() {//清空的按钮
         clean();
     }
 
     //清空
     private void clean() {
-        Log.d(TAG, "clean: level=" + level + "--gender=" + gender);
+        Log.e(TAG, "clean: level=" + level + "--gender=" + gender);
         //清空文本
         etName.setText("");
         etPhone.setText("");
@@ -381,19 +508,19 @@ public class VipRegistActivity extends AppCompatActivity {
         //清空checkBox
         if (!TextUtils.isEmpty(level)) {
             switch (level) {
-                case "钻石":
+                case "四级":
                     radioBtnLevel1.setChecked(false);
                     break;
-                case "铂金":
+                case "三级":
                     radioBtnLevel2.setChecked(false);
                     break;
-                case "黄金":
+                case "二级":
                     radioBtnLevel3.setChecked(false);
                     break;
-                case "白银":
+                case "一级":
                     radioBtnLevel4.setChecked(false);
                     break;
-                case "青铜":
+                case "普通":
                     radioBtnLevel5.setChecked(false);
                     break;
             }
@@ -416,7 +543,7 @@ public class VipRegistActivity extends AppCompatActivity {
 
 
     @OnClick(R.id.iv_return)
-    public void iv_return(View view) {
+    public void iv_return(View view) {//结束的按钮
         finish();
     }
 
@@ -438,19 +565,19 @@ public class VipRegistActivity extends AppCompatActivity {
         switch (view.getId()) {
 
             case R.id.radioBtn_level1:
-                level = "钻石"; //5
+                level = "四级"; //4
                 break;
             case R.id.radioBtn_level2:
-                level = "铂金"; //4
+                level = "三级"; //3
                 break;
             case R.id.radioBtn_level3:
-                level = "黄金"; //3
+                level = "二级"; //2
                 break;
             case R.id.radioBtn_level4:
-                level = "白银";  //2
+                level = "一级";  //1
                 break;
             case R.id.radioBtn_level5:
-                level = "青铜";  //1
+                level = "普通";  // null
                 break;
 
         }
@@ -471,7 +598,12 @@ public class VipRegistActivity extends AppCompatActivity {
             return true;
         }
 
-        if (TextUtils.isEmpty(cardid.trim())){
+        if (TextUtils.isEmpty(workNum.trim())) {
+            ToastUtils.showToast("工号不能为空！", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            return true;
+        }
+
+        if (TextUtils.isEmpty(idCard.trim()) && !isEditer) {//编辑的时候不用校验身份证号
             ToastUtils.showToast("身份证号不能为空！", VipRegistActivity.this, Toast.LENGTH_SHORT);
             return true;
         }
@@ -479,9 +611,9 @@ public class VipRegistActivity extends AppCompatActivity {
     }
 
     private void getInput() {
-        carNun = etCarNum.getText().toString().replace("", "");
+        workNum = etCarNum.getText().toString().replace("", "");
         name = etName.getText().toString().replace("", "");
-        cardid = etCardid.getText().toString().replace("", "");
+        idCard = etCardid.getText().toString().replace("", "");
         phone = etPhone.getText().toString().replace("", "");
         remark = etRemark.getText().toString().replace("", "");
     }
@@ -491,7 +623,6 @@ public class VipRegistActivity extends AppCompatActivity {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
             if (isShouldHideInput(v, ev)) {
-
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -526,4 +657,9 @@ public class VipRegistActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy: ");
+    }
 }

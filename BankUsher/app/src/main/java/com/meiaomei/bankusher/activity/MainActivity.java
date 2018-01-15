@@ -12,16 +12,11 @@ import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.meiaomei.bankusher.R;
-import com.meiaomei.bankusher.entity.MyResponse;
-import com.meiaomei.bankusher.entity.PushMessage;
-import com.meiaomei.bankusher.entity.VipCustomerModel;
 import com.meiaomei.bankusher.fragment.FaceTakeFragment;
 import com.meiaomei.bankusher.fragment.SettingFragment;
 import com.meiaomei.bankusher.fragment.VipRemarkFragment;
@@ -31,14 +26,9 @@ import com.meiaomei.bankusher.manager.OkHttpManager;
 import com.meiaomei.bankusher.service.MyService;
 import com.meiaomei.bankusher.utils.DeviceInfoUtils;
 import com.meiaomei.bankusher.utils.FileUtils;
-import com.meiaomei.bankusher.utils.JsonUtils;
 import com.meiaomei.bankusher.utils.SharedPrefsUtil;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -75,66 +65,6 @@ public class MainActivity extends AppCompatActivity {
         initView();
     }
 
-    //根据用户的id查出详细信息
-    private void findById() {
-        //联网检查
-        JSONObject localJSONObject = new JSONObject();
-        String js = "";
-        try {
-            localJSONObject.put("appId", "user");
-            localJSONObject.put("appSecret", "12345");
-            localJSONObject.put("id", "f9cce309fc4d407299c722b37c07ede0");
-            js = localJSONObject.toString();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        String url = OkHttpManager.getUrl(baseurl, 2);
-        manager.postJson(url, js, new OkHttpManager.HttpCallBack() {
-            @Override
-            public void onSusscess(String data, String cookie) {
-                Gson gson = new Gson();
-                MyResponse myResponse = null;
-                try {
-                    myResponse = gson.fromJson(data, MyResponse.class);
-                } catch (Exception e) {
-                    Toast.makeText(MainActivity.this, "发生了未知的错误！", Toast.LENGTH_SHORT).show();
-                }
-                if (myResponse != null && "200".equals(myResponse.getRespCode())) {//响应成功
-                    MyResponse.MyData myData = myResponse.getData();
-                    if (myData != null) {
-                        int gener = myData.getGender();
-                        String email = myData.getEmail();
-                        String idCard = myData.getIdCard();
-                        String remark = myData.getRemark();
-                        String telephone = myData.getTelephone();
-                        VipCustomerModel vipCustomerModel = new VipCustomerModel();
-
-                    }
-
-                } else if (myResponse != null && "500".equals(myResponse.getRespCode())) {
-                    Toast.makeText(MainActivity.this, "服务器错误！", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "发生了未知的错误！", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-
-            @Override
-            public void onError(String meg) {
-                super.onError(meg);
-                //失败后
-                Log.e("errir", meg);
-                Toast.makeText(MainActivity.this, "无法连接到服务器，请检查网络！", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e(TAG, "onResume:=======MainActivity ");
-    }
 
     private void initOther() {
         dbUtils = BankUsherDB.getDbUtils();
@@ -152,30 +82,6 @@ public class MainActivity extends AppCompatActivity {
         }
         manager = new OkHttpManager();
 
-//测试  json------------------------------------------------
-        PushMessage.Body body = new PushMessage.Body();
-        body.setId("111");
-        body.setBithday(new Date().getTime());
-        body.setC4("2");
-        body.setFavourite("哈哈哈哈哈哈");
-        body.setPath("img/现场照片路径");
-        body.setPicName("zhuce照片路径");
-        body.setScore(87);
-        body.setSignTime(new Date().getTime());
-        body.setUserId(FileUtils.generateUuid());
-        body.setUserLevel(1);
-        body.setUserLevelName("黄金");
-        body.setUserName("蝴蝶");
-
-        PushMessage.Header header = new PushMessage.Header();
-        header.setImgBaseUrl("tupianjichulujing");
-        header.setMessageType("record");
-        PushMessage message = new PushMessage();
-        message.setBody(body);
-        message.setHeader(header);
-        String jsons = JsonUtils.GsonString(message);
-        String SSS = jsons;
-//------------------------------------------------------------
     }
 
     public void initView() {
@@ -251,6 +157,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume:=======MainActivity ");
+    }
 
     //------------------------给fragment添加点击事件------------------------------------------
     public interface MyTouchListener {

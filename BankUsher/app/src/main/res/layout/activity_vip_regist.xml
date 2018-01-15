@@ -14,7 +14,7 @@
 
         <ImageView
             android:id="@+id/iv_return"
-            android:layout_marginLeft="6dp"
+            android:layout_marginLeft="25dp"
             android:layout_centerVertical="true"
             android:src="@mipmap/event_back"
             android:layout_width="30dp"

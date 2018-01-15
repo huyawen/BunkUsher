@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pop_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#50000000">
+    <ListView
+        android:id="@+id/lv_content"
+        android:layout_marginTop="@dimen/x8"
+        android:layout_width="@dimen/x650"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/popu_background"
+        android:divider="@null">
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/ll_bottom"
+        android:layout_below="@+id/lv_content"
+        android:background="@drawable/popu_background"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:layout_width="@dimen/x649"
+        android:layout_height="35dp">
+        <LinearLayout
+            android:id="@+id/linear_ll"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="fill_parent">
+            <Button
+                android:background="@drawable/background_select"
+                android:id="@+id/t_down"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="@color/colortext_check"
+                android:textSize="14sp"  />
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="26dp"
+                android:layout_gravity="center_vertical"
+                android:background="#B8B8B8"
+                />
+        </LinearLayout>
+        <Button
+
+            android:layout_width="0dp"
+            android:id="@+id/t_editer"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="编辑"
+            android:background="@drawable/background_select"
+            android:textColor="@color/colortext_check"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+</RelativeLayout>

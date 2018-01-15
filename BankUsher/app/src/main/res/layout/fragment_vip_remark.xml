@@ -1,17 +1,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rl_root"
     tools:context="com.meiaomei.bankusher.fragment.VipRemarkFragment">
 
     <LinearLayout
         android:id="@+id/ll1"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_marginRight="@dimen/x10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/x50"
+        android:layout_marginTop="@dimen/x40"
+        android:background="@color/background"
         android:orientation="horizontal"
+        android:paddingTop="@dimen/x20"
         android:paddingBottom="@dimen/x20">
 
         <RelativeLayout
@@ -41,10 +45,10 @@
                 android:layout_toEndOf="@+id/tv_add1"
                 android:background="@drawable/square"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/x10"
                 android:hint="请输入贵宾姓名"
-                android:textColorHint="@color/colortext_no_check"
+                android:paddingLeft="@dimen/x10"
                 android:textColor="@color/alertTextContent"
+                android:textColorHint="@color/colortext_no_check"
                 android:textSize="15sp" />
 
             <TextView
@@ -68,14 +72,14 @@
                 android:layout_alignTop="@+id/tv_time1"
                 android:layout_below="@+id/et_name"
                 android:background="@drawable/square"
-                android:drawableRight="@mipmap/clear"
-                android:paddingRight="@dimen/x12"
                 android:clickable="true"
+                android:drawableRight="@mipmap/clear"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/x10"
                 android:hint="请选择开始时间"
-                android:textColorHint="@color/colortext_no_check"
+                android:paddingLeft="@dimen/x10"
+                android:paddingRight="@dimen/x12"
                 android:textColor="@color/alertTextContent"
+                android:textColorHint="@color/colortext_no_check"
                 android:textSize="15sp" />
 
             <Button
@@ -97,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/x40"
             android:layout_weight="1"
-            android:padding="10dp">
+            android:padding="@dimen/x20">
 
             <TextView
                 android:id="@+id/tv_class1"
@@ -118,8 +122,8 @@
                 android:layout_toRightOf="@+id/tv_end_time1"
                 android:background="@drawable/square"
                 android:gravity="center_vertical"
-                android:textColorHint="@color/colortext_no_check"
                 android:textColor="@color/alertTextContent"
+                android:textColorHint="@color/colortext_no_check"
                 android:textSize="15sp" />
 
             <TextView
@@ -144,14 +148,14 @@
                 android:layout_below="@+id/sp_viporder"
                 android:layout_toRightOf="@+id/tv_end_time1"
                 android:background="@drawable/square"
-                android:drawableRight="@mipmap/clear"
-                android:paddingRight="@dimen/x12"
                 android:clickable="true"
+                android:drawableRight="@mipmap/clear"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/x10"
                 android:hint="请选择结束时间"
-                android:textColorHint="@color/colortext_no_check"
+                android:paddingLeft="@dimen/x10"
+                android:paddingRight="@dimen/x12"
                 android:textColor="@color/alertTextContent"
+                android:textColorHint="@color/colortext_no_check"
                 android:textSize="15sp" />
 
         </RelativeLayout>
@@ -162,7 +166,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll1"
-        android:layout_marginBottom="@dimen/x16">
+        android:layout_marginTop="@dimen/x10"
+        android:layout_marginBottom="@dimen/x10">
 
 
         <TextView
@@ -236,109 +241,131 @@
             android:textColor="@drawable/execl_select" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/iv_vip_remark"
-        android:layout_width="@dimen/x360"
-        android:layout_height="@dimen/x200"
-        android:layout_below="@+id/rl1"
+    <RelativeLayout
+        android:id="@+id/rl_left"
         android:layout_marginLeft="@dimen/x10"
-        android:layout_marginTop="@dimen/x20"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/liu" />
-
-    <TextView
-        android:id="@+id/tv_remark_name"
+        android:layout_marginRight="@dimen/x10"
+        android:layout_marginBottom="@dimen/x10"
+        android:background="@color/background"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="@dimen/x10"
-        android:paddingLeft="@dimen/x20"
-        android:paddingRight="@dimen/x20"
-        android:paddingTop="@dimen/x10"
-        android:text="姓名："
-        android:layout_alignBaseline="@+id/tv_remark_name_value"
-        android:layout_alignBottom="@+id/tv_remark_name_value"
-        android:layout_alignParentStart="true" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl1">
 
-    <TextView
-        android:id="@+id/tv_remark_name_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/iv_vip_remark"
-        android:layout_marginTop="@dimen/x10"
-        android:layout_toRightOf="@+id/tv_remark_name"
-        android:gravity="center"
-        android:paddingBottom="@dimen/x10"
-        android:paddingLeft="@dimen/x20"
-        android:paddingRight="@dimen/x20"
-        android:paddingTop="@dimen/x10"
-        android:text="" />
+        <ImageView
+            android:id="@+id/iv_vip_remark"
+            android:layout_width="@dimen/x360"
+            android:layout_height="@dimen/x200"
+            android:layout_marginLeft="@dimen/x10"
+            android:layout_marginTop="@dimen/x20"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/liu" />
 
-    <TextView
-        android:id="@+id/tv_remark_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_remark_name"
-        android:layout_marginTop="@dimen/x10"
-        android:gravity="center"
-        android:paddingBottom="@dimen/x10"
-        android:paddingLeft="@dimen/x20"
-        android:paddingRight="@dimen/x20"
-        android:paddingTop="@dimen/x10"
-        android:text="电话：" />
+        <TextView
+            android:id="@+id/tv_remark_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tv_remark_name_value"
+            android:layout_alignBottom="@+id/tv_remark_name_value"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:paddingBottom="@dimen/x10"
+            android:paddingLeft="@dimen/x20"
+            android:paddingRight="@dimen/x20"
+            android:paddingTop="@dimen/x10"
+            android:text="姓名：" />
 
-    <TextView
-        android:id="@+id/tv_remark_phone_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_remark_name_value"
-        android:layout_marginTop="@dimen/x10"
-        android:layout_toRightOf="@+id/tv_remark_phone"
-        android:layout_toLeftOf="@+id/ll_list"
-        android:gravity="center_vertical"
-        android:paddingBottom="@dimen/x10"
-        android:paddingLeft="@dimen/x20"
-        android:paddingRight="@dimen/x20"
-        android:paddingTop="@dimen/x10"
-        android:text="" />
+        <TextView
+            android:id="@+id/tv_remark_name_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_vip_remark"
+            android:layout_marginTop="@dimen/x10"
+            android:layout_toRightOf="@+id/tv_remark_name"
+            android:gravity="center"
+            android:paddingBottom="@dimen/x10"
+            android:paddingLeft="@dimen/x20"
+            android:paddingRight="@dimen/x20"
+            android:paddingTop="@dimen/x10"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/tv_remark_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_remark_name"
+            android:layout_marginTop="@dimen/x10"
+            android:gravity="center"
+            android:paddingBottom="@dimen/x10"
+            android:paddingLeft="@dimen/x20"
+            android:paddingRight="@dimen/x20"
+            android:paddingTop="@dimen/x10"
+            android:text="电话：" />
+
+        <TextView
+            android:id="@+id/tv_remark_phone_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_remark_name_value"
+            android:layout_marginTop="@dimen/x10"
+            android:layout_toRightOf="@+id/tv_remark_phone"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/x10"
+            android:paddingLeft="@dimen/x20"
+            android:paddingRight="@dimen/x20"
+            android:paddingTop="@dimen/x10"
+            android:text="" />
 
 
+        <TextView
+            android:id="@+id/tv_remark_viporder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_remark_phone_value"
+            android:layout_marginTop="@dimen/x10"
+            android:gravity="center"
+            android:paddingBottom="@dimen/x10"
+            android:paddingLeft="@dimen/x20"
+            android:paddingRight="@dimen/x20"
+            android:paddingTop="@dimen/x10"
+            android:text="VIP级别：" />
 
-    <TextView
-        android:id="@+id/tv_remark_viporder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_remark_phone_value"
-        android:layout_marginTop="@dimen/x10"
-        android:gravity="center"
-        android:paddingBottom="@dimen/x10"
-        android:paddingLeft="@dimen/x20"
-        android:paddingRight="@dimen/x20"
-        android:paddingTop="@dimen/x10"
-        android:text="VIP级别：" />
+        <TextView
+            android:id="@+id/tv_remark_viporder_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_remark_phone_value"
+            android:layout_marginTop="@dimen/x10"
+            android:layout_toRightOf="@+id/tv_remark_viporder"
+            android:gravity="center"
+            android:paddingBottom="@dimen/x10"
+            android:paddingLeft="@dimen/x20"
+            android:paddingRight="@dimen/x20"
+            android:paddingTop="@dimen/x10"
+            android:text="" />
 
-    <TextView
-        android:id="@+id/tv_remark_viporder_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_remark_phone_value"
-        android:layout_marginTop="@dimen/x10"
-        android:layout_toRightOf="@+id/tv_remark_viporder"
-        android:gravity="center"
-        android:paddingBottom="@dimen/x10"
-        android:paddingLeft="@dimen/x20"
-        android:paddingRight="@dimen/x20"
-        android:paddingTop="@dimen/x10"
-        android:text="" />
+        <Button
+            android:id="@+id/bt_detail"
+            android:layout_width="@dimen/x160"
+            android:layout_height="@dimen/x80"
+            android:layout_below="@+id/tv_remark_viporder_value"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/x10"
+            android:background="@drawable/bt_select"
+            android:text="详情"
+            android:textColor="@color/color_white">
+        </Button>
+
+    </RelativeLayout>
+
 
     <LinearLayout
         android:id="@+id/ll_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignTop="@+id/rl_left"
         android:layout_below="@id/rl1"
-        android:layout_marginLeft="@dimen/x16"
-        android:layout_alignTop="@+id/iv_vip_remark"
-        android:layout_toRightOf="@id/iv_vip_remark"
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_toRightOf="@+id/rl_left"
         android:orientation="vertical">
 
         <LinearLayout
@@ -427,8 +454,7 @@
             android:id="@+id/recycle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="6">
-        </android.support.v7.widget.RecyclerView>
+            android:layout_weight="6"></android.support.v7.widget.RecyclerView>
 
         <!--无数据显示-->
         <RelativeLayout
@@ -440,10 +466,10 @@
 
             <ImageView
                 android:id="@+id/no_record"
-                android:layout_marginTop="@dimen/x40"
                 android:layout_width="@dimen/x316"
                 android:layout_height="@dimen/x316"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/x40"
                 android:src="@mipmap/no_record" />
 
             <TextView

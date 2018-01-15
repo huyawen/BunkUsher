@@ -49,6 +49,12 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <!-- popWindow 动画 -->
+    <style name="listPopAnimation">
+        <item name="android:windowEnterAnimation">@anim/tran_start_pop_in</item>
+        <item name="android:windowExitAnimation">@anim/tran_finish_pop_out</item>
+    </style>
+
 
     <!--时间日期控件 mtp 的主题设置-->
     <attr name="mdtp_theme_dark" format="boolean">false</attr>

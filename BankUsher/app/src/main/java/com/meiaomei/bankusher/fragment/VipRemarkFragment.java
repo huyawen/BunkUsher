@@ -48,6 +48,7 @@ import com.meiaomei.bankusher.utils.ExcelUtil;
 import com.meiaomei.bankusher.utils.ImageUtils;
 import com.meiaomei.bankusher.utils.ToastUtils;
 import com.meiaomei.bankusher.view.ClearTextView;
+import com.meiaomei.bankusher.view.popuwindow.DetailPopuWindow;
 import com.meiaomei.bankusher.view.spinner.MySpinerView;
 import com.squareup.picasso.Picasso;
 
@@ -105,6 +106,8 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
             Button bt_export_all;
     @ViewInject(R.id.rl_root)
     RelativeLayout rl_root;
+    @ViewInject(R.id.bt_detail)
+    Button bt_detail;
 
     String[] title = {"抓拍时间", "抓拍地点", "姓名", "电话", "性别", "VIP级别", "身份证号"};
     ArrayList<String> vipArryaList = new ArrayList<>();
@@ -127,6 +130,8 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
     String qendTime;
     String qName;
     String qOrder;
+    int detail_position = -1;
+    DetailPopuWindow popuWindow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -162,11 +167,11 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void getMessage(StringModel stringModel){
+    public void getMessage(StringModel stringModel) {
         String key = stringModel.getKey();
-        String msg =stringModel.getMsg();
+        String msg = stringModel.getMsg();
         if ("update".equals(msg) || "faceAdapter".equals(msg)) {
-            Log.e(TAG, "getMessage: 接收到消息了" );
+            Log.e(TAG, "getMessage: 接收到消息了");
             initeData();
             recycleAdapter.refresh(tenListStart);
         }
@@ -189,7 +194,12 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
      */
     private void setupViews() {
         sp_viporder.initText("");//默认传入值为""
-        String[] names2 = {"青铜", "白银", "黄金", "铂金", "钻石", "无限制"};
+
+        String[] names2 = {getResources().getString(R.string.radioBtn_level1),
+                getResources().getString(R.string.radioBtn_level2),
+                getResources().getString(R.string.radioBtn_level3),
+                getResources().getString(R.string.radioBtn_level4),
+                getResources().getString(R.string.radioBtn_level5)};
         for (int i = 0; i < names2.length; i++) {
             vipArryaList.add(names2[i]);
         }
@@ -206,15 +216,16 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
         recycleAdapter.setRecycleviewItemOnclickListener(new RecycleViewVipRemarkAdapter.RecycleviewItemOnclickListener() {
             @Override
             public void onItemClik(View view, int position) {
-                tv_remark_name_value.setText(TextUtils.isEmpty(tenListStart.get(position).getFourthPara())?"未录入":tenListStart.get(position).getFourthPara());
-                tv_remark_phone_value.setText(TextUtils.isEmpty(tenListStart.get(position).getFifthPara())?"未录入":tenListStart.get(position).getFifthPara());
-                tv_remark_viporder_value.setText(TextUtils.isEmpty(tenListStart.get(position).getEighthPara())?"未录入":tenListStart.get(position).getEighthPara());
-                String base64=tenListStart.get(position).getTenthPara();
-                if (base64.length()>150) {
-                    String path = ImageUtils.base64ToBitmapPath(base64, new Date().getTime()+".jpg");
-                    Picasso.with(getActivity()).load("file://" + path).into(iv_vip_remark);
-                }else {
-                    Picasso.with(getActivity()).load("file://" + base64).into(iv_vip_remark);
+                detail_position = position;
+                tv_remark_name_value.setText(TextUtils.isEmpty(tenListStart.get(position).getFourthPara()) ? "未录入" : tenListStart.get(position).getFourthPara());
+                tv_remark_phone_value.setText(TextUtils.isEmpty(tenListStart.get(position).getFifthPara()) ? "未录入" : tenListStart.get(position).getFifthPara());
+                tv_remark_viporder_value.setText(TextUtils.isEmpty(tenListStart.get(position).getEighthPara()) ? "未录入" : tenListStart.get(position).getEighthPara());
+                String base64 = tenListStart.get(position).getTenthPara();
+                if (base64.length() > 150) {
+                    String path = ImageUtils.base64ToBitmapPath(base64, new Date().getTime() + ".jpg");
+                    Picasso.with(getActivity()).load(path).error(R.mipmap.backimg).into(iv_vip_remark);
+                } else {
+                    Picasso.with(getActivity()).load(base64).error(R.mipmap.backimg).into(iv_vip_remark);
                 }
             }
         });
@@ -249,6 +260,7 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
         et_name.addTextChangedListener(new MyTextWher());
         tv_start_time2.addTextChangedListener(new MyTextWher());
         tv_end_time2.addTextChangedListener(new MyTextWher());
+        bt_detail.setOnClickListener(new MyClickListener());
 
         et_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -262,6 +274,22 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
                 return true;//消费掉该行为
             }
         });
+    }
+
+    //全部选中的checkbox
+    class MyCheckBoxCheckedListener implements CompoundButton.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (buttonView.getId() == R.id.cb_all) {
+                if (isChecked) {
+                    Log.e("cb_all", "onCheckedChanged: 全部的checkbox被选中了");
+                    recycleAdapter.refreshCheckBox(true, true);
+                } else {
+                    Log.e("cb_all", "onCheckedChanged: 不选了");
+                    recycleAdapter.refreshCheckBox(false, true);
+                }
+            }
+        }
     }
 
     private void initeDate(String flag) {
@@ -335,7 +363,22 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.et_name:
+                case R.id.bt_detail:
+                    if (detail_position >= 0) {
+                        LinkedHashMap<String, String> detlinkHashMap = new LinkedHashMap<>();
+                        detlinkHashMap.put("id", tenListStart.get(detail_position).getThirdPara());
+                        detlinkHashMap.put("姓名", TextUtils.isEmpty(tenListStart.get(detail_position).getFourthPara()) ? "未录入" : tenListStart.get(detail_position).getFourthPara());
+                        detlinkHashMap.put("性别", TextUtils.isEmpty(tenListStart.get(detail_position).getSixthPara()) ? "未录入" : tenListStart.get(detail_position).getSixthPara());
+                        detlinkHashMap.put("电话", TextUtils.isEmpty(tenListStart.get(detail_position).getFifthPara()) ? "未录入" : tenListStart.get(detail_position).getFifthPara());
+                        detlinkHashMap.put("工号", TextUtils.isEmpty(tenListStart.get(detail_position).getTwelfthPara()) ? "未录入" : tenListStart.get(detail_position).getTwelfthPara());
+                        detlinkHashMap.put("身份证号", TextUtils.isEmpty(tenListStart.get(detail_position).getSeventhPara()) ? "未录入" : tenListStart.get(detail_position).getSeventhPara());
+                        detlinkHashMap.put("客户等级", TextUtils.isEmpty(tenListStart.get(detail_position).getEighthPara()) ? "未录入" : tenListStart.get(detail_position).getEighthPara());
+                        detlinkHashMap.put("备注", TextUtils.isEmpty(tenListStart.get(detail_position).getNinthPara()) ? "未录入" : tenListStart.get(detail_position).getNinthPara());
+                        popuWindow = new DetailPopuWindow(getActivity(), detlinkHashMap, tenListStart.get(detail_position).getTenthPara());
+                        popuWindow.show();
+                    } else {
+                        ToastUtils.showToast("请选中来访记录后查看！", getActivity(), Toast.LENGTH_SHORT);
+                    }
                     break;
 
                 case R.id.tv_time2:
@@ -600,23 +643,6 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
                 }
 
 
-            }
-        }
-    }
-
-
-    //全部选中的checkbox
-    class MyCheckBoxCheckedListener implements CompoundButton.OnCheckedChangeListener {
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (buttonView.getId() == R.id.cb_all) {
-                if (isChecked) {
-                    Log.e("cb_all", "onCheckedChanged: 全部的checkbox被选中了");
-                    recycleAdapter.refreshCheckBox(true, true);
-                } else {
-                    Log.e("cb_all", "onCheckedChanged: 不选了");
-                    recycleAdapter.refreshCheckBox(false, true);
-                }
             }
         }
     }

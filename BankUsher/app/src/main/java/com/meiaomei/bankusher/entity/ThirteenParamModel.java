@@ -14,6 +14,8 @@ package com.meiaomei.bankusher.entity;
  * 9 remark
  * 10 imgurl
  * 11 visitId
+ * 12 WorkNumber
+ * 13
  */
 public class ThirteenParamModel {//13个参数的类
     long firstPara;

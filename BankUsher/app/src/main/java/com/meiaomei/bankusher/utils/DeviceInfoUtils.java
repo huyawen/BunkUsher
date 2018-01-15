@@ -127,9 +127,8 @@ public class DeviceInfoUtils {
      */
     public static boolean isServiceWork(Context mContext, String serviceName) {
         boolean isWork = false;
-        ActivityManager myAM = (ActivityManager) mContext
-                .getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(40);
+        ActivityManager myAM = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> myList = myAM.getRunningServices(100);//后台的服务太多  以至于没检查到自己的那一个
         if (myList.size() <= 0) {
             return false;
         }

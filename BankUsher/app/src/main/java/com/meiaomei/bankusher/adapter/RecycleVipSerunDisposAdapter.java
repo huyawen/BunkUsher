@@ -97,7 +97,7 @@ public class RecycleVipSerunDisposAdapter extends RecyclerView.Adapter<RecycleVi
                 Bitmap bitmap = ImageUtils.base64ToBitmap(base64);
                 holder.iv_vips_face.setImageBitmap(bitmap);
             }else {
-                Picasso.with(context).load(base64).into(holder.iv_vips_face);//.error(R.mipmap.liu)
+                Picasso.with(context).load(base64).error(R.mipmap.backimg).into(holder.iv_vips_face);//.error(R.mipmap.liu)
             }
             holder.tv_vip_name.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getFourthPara())?"未录入":thirteenParamModelList.get(position).getFourthPara());
             holder.tv_vip_grade.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getEighthPara())?"未录入":thirteenParamModelList.get(position).getEighthPara());
@@ -113,7 +113,7 @@ public class RecycleVipSerunDisposAdapter extends RecyclerView.Adapter<RecycleVi
                     String visitId = thirteenParamModelList.get(position).getEleventhPara();
                     try {
                         VisitRecordModel visitRecordModel = dbUtils.findFirst(Selector.from(VisitRecordModel.class).where("VisitId", "=", visitId));
-                        visitRecordModel.setHandleFlag("0");
+                        visitRecordModel.setHandleFlag("1");
                         dbUtils.update(visitRecordModel);
 
                         if (null != btnClick) {

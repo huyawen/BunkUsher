@@ -7,6 +7,7 @@
     android:orientation="horizontal">
 
 
+
     <RelativeLayout
         android:id="@+id/rl_item_cb"
         android:layout_width="0dp"
@@ -15,6 +16,7 @@
         android:clickable="true"
         android:focusable="true">
 
+        <!--duplicateParentState 当前控件的焦点给父控件-->
         <CheckBox
             android:id="@+id/cb_item"
             android:duplicateParentState="true"

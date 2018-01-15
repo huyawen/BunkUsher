@@ -30,7 +30,7 @@ public class VipCustomerModel implements Serializable {
             String idNumber;
 
     //vip级别
-    @Column(column = "VipOrder") // 对应 云丛 userLevelName 青铜（普通） 白银 黄金 铂金 钻石
+    @Column(column = "VipOrder") // 对应 云丛 userLevelName
             String vipOrder;
 
     //爱好
@@ -49,10 +49,10 @@ public class VipCustomerModel implements Serializable {
     @Column(column = "PhoneNumber") // 对应云丛 telephone
             String phoneNumber;
 
-    @Column(column = "WorkNumber")  //车牌号
+    @Column(column = "WorkNumber")  //工号
             String workNumber;
 
-    @Column(column = "Email")
+    @Column(column = "Email")  //电子邮件
     String email;
 
     @NotNull

@@ -11,8 +11,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +25,9 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.meiaomei.bankusher.R;
+import com.meiaomei.bankusher.activity.LoginActivity;
 import com.meiaomei.bankusher.activity.MainActivity;
+import com.meiaomei.bankusher.entity.Protocol;
 import com.meiaomei.bankusher.entity.event.StringModel;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,6 +71,7 @@ public class NotificationUtils {
     }
 
 
+
     //自定义通知栏
     public void sendMyNotification(String name) {
         //判断系统通知栏背景颜色
@@ -89,12 +96,11 @@ public class NotificationUtils {
         remoteViews.setImageViewResource(R.id.iconImageView, R.mipmap.icon);
         remoteViews.setTextViewText(R.id.appNameTextView, "紫禁城");//小的
 
-        remoteViews.setTextViewText(R.id.title_TextView, "欢迎VIP : " + name + " 的到来！");
+        remoteViews.setTextViewText(R.id.title_TextView, "欢迎VIP : " + name + "");
         remoteViews.setTextViewText(R.id.content_TextView, "大堂经理请接待！");
         SimpleDateFormat format = new SimpleDateFormat("a hh:mm");//a是上下午  EEEE是星期
         String time = format.format(new Date(System.currentTimeMillis()));
         remoteViews.setTextViewText(R.id.tv_time, time);
-//        remoteViews.setImageViewBitmap(R.id.iv_time, buildUpdate(time));//改变字体的样式没用
 
         //实例化通知栏构造器。
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
@@ -104,26 +110,19 @@ public class NotificationUtils {
         mBuilder.setCustomBigContentView(remoteViews);
         //显示在通知栏上的小图标
         mBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        mBuilder.setFullScreenIntent(getDefalutIntent(PendingIntent.FLAG_UPDATE_CURRENT), false);//设置通知以headup形式出现
-        //设置大图标，即通知条上左侧的图片（如果只设置了小图标，则此处会显示小图标）
         mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
-        //添加声音
-        mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);//默认的声音和铃声 吱吱
-        Intent intent = new Intent(context, MainActivity.class);//点击通知，进入应用
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        mBuilder.setContentIntent(pendingIntent);//点击通知栏后的意图
+
         mBuilder.setAutoCancel(true);//设置这个标志当用户单击面板就可以让通知将自动取消
-        //设置为不可清除模式
-//        mBuilder.setOngoing(true);
+        mBuilder.setDefaults(Notification.DEFAULT_SOUND);//设置默认铃声
+        mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);//默认的震动
+        mBuilder.setFullScreenIntent(getDefalutIntent(PendingIntent.FLAG_UPDATE_CURRENT), false);//待研究：设置通知以headup形式出现
+        mBuilder.setContentIntent(getDefalutIntent(PendingIntent.FLAG_UPDATE_CURRENT));//点击通知栏后的意图
+
         //显示通知，id必须不重复，否则新的通知会覆盖旧的通知（利用这一特性，可以对通知进行更新）
         NotificationManager mm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = mBuilder.build();
         mm.notify(new Random().nextInt(10000), notification);
-//        Picasso.with(this).load("")//message 就是图片链接地址
-//                .resize(200, 200)
-//                .centerCrop()
-//                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-//                .into(remoteViews, R.id.ImageView, 1, notification);
+
 
         //通知vipServer界面更新数据
         StringModel model = new StringModel("update", "update");
@@ -135,32 +134,44 @@ public class NotificationUtils {
     public void sendSysNotification(String name) {
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-        Notification notify = mBuilder.build();
-        mBuilder.setContentTitle("欢迎VIP : " + name + " 的到来！")//设置通知栏标题
+        mBuilder.setContentTitle("欢迎VIP : " + name + "")//设置通知栏标题
                 .setContentText("大堂经理请接待！")
-                .setDeleteIntent(deletIntent(notify))
-                .setContentIntent(getDefalutIntent(PendingIntent.FLAG_UPDATE_CURRENT)) //设置通知栏点击意图
-//                .setNumber(4) //设置通知集合的数量
                 .setTicker("VIP客户来了！") //通知首次出现在通知栏，带上升动画效果的
                 .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示，一般是系统获取到的时间
                 .setPriority(Notification.PRIORITY_DEFAULT) //设置该通知优先级
                 .setAutoCancel(true)//点击消费
                 .setOngoing(false)//ture，设置他为一个正在进行的通知。他们通常是用来表示一个后台任务,用户积极参与(如播放音乐)或以某种方式正在等待,因此占用设备(如一个文件下载,同步操作,主动网络连接)
-                .setDefaults(Notification.DEFAULT_SOUND)//设置默认铃声
-//                .setSound(Uri.withAppendedPath(MediaStore.Audio.Media.INTERNAL_CONTENT_URI, "2"))//获取Android多媒体库内的铃声
-//                .setDefaults(Notification.DEFAULT_LIGHTS)//设置三色灯
+                .setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message))//获取Android多媒体库内的铃声
+                .setDefaults(Notification.DEFAULT_LIGHTS)//设置三色灯
                 .setVibrate(new long[]{0, 300, 300, 300})//设置震动  实现效果：延迟0ms，然后振动300ms，在延迟300ms，接着在振动300ms。
                 .setLights(0xff0000ff, 300, 0)// .setLights(intledARGB ,intledOnMS ,intledOffMS 只有在设置了标志符Flags为Notification.FLAG_SHOW_LIGHTS的时候，才支持三色灯提醒。 这边的颜色跟设备有关，不是所有的颜色都可以，要看具体设备。
                 .setSmallIcon(R.mipmap.icon)//设置通知小ICON
-                .setFullScreenIntent(getDefalutIntent(PendingIntent.FLAG_UPDATE_CURRENT), false);//设置通知以headup形式出现
 
-        mNotificationManager.notify(new Random().nextInt(10000), mBuilder.build());
+        ;
+
+        PendingIntent pendingIntent1 = PendingIntent.getActivity(context, 1, new Intent(), PendingIntent.FLAG_UPDATE_CURRENT);// requestCode是0的时候三星手机点击通知栏通知不起作用
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mBuilder.setVisibility(Notification.VISIBILITY_PUBLIC);
+            mBuilder.setFullScreenIntent(pendingIntent1, false);// //设置通知以headup形式出现
+        }
+        Notification notification=mBuilder.build();
+        notification.contentIntent= (getDefalutIntent(PendingIntent.FLAG_UPDATE_CURRENT)) ;//设置通知栏点击意图
+        mNotificationManager.notify(new Random().nextInt(10000), notification);
+
+        //通知vipServer界面更新数据
+        StringModel model = new StringModel("update", "update");
+        EventBus.getDefault().post(model);
     }
 
 
     //相应点击通知的事件
     public PendingIntent getDefalutIntent(int flags) {
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent();
+        if (!TextUtils.isEmpty(Protocol.getCookedId())) {
+            intent.setClass(context, MainActivity.class);
+        } else {
+            intent.setClass(context, LoginActivity.class);
+        }
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, flags);
         return pendingIntent;
     }

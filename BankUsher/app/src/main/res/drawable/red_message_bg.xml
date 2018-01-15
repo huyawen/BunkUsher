@@ -3,7 +3,7 @@
 
     <solid android:color="@color/red_msg_qipao_bg" />
 
-    <corners android:radius="10dp"></corners>
+    <corners android:radius="@dimen/x45"></corners>
     <padding
         android:bottom="3dp"
         android:left="3dp"

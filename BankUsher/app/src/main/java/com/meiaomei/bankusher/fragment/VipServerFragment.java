@@ -226,9 +226,9 @@ public class VipServerFragment extends BaseFragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (hidden) {
-            Log.e("不可见了", "hidden===" + hidden);
+            Log.e("VipServerFragment", "不可见了--hidden===" + hidden);
         } else {
-            Log.e("可见了", "hidden===" + hidden);
+            Log.e("VipServerFragment", "可见了--hidden===" + hidden);
         }
     }
 

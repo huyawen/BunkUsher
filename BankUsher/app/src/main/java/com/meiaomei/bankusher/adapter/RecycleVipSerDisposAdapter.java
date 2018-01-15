@@ -86,7 +86,7 @@ public class RecycleVipSerDisposAdapter extends RecyclerView.Adapter<RecycleVipS
                 Bitmap bp = ImageUtils.base64ToBitmap(base64);
                 holder.iv_al_vips_face.setImageBitmap(bp);
             }else {
-                Picasso.with(context).load(base64).into(holder.iv_al_vips_face);
+                Picasso.with(context).load(base64).error(R.mipmap.backimg).error(R.mipmap.backimg).into(holder.iv_al_vips_face);
             }
             holder.tv_al_vip_name.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getFourthPara())?"未录入":thirteenParamModelList.get(position).getFourthPara());
             holder.tv_al_vip_grade.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getEighthPara())?"未录入":thirteenParamModelList.get(position).getEighthPara());

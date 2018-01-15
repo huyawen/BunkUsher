@@ -19,6 +19,8 @@
     <!-- 反射ip地址的权限 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- headup 横幅通知的权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <!-- 震动提示的权限 -->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -39,36 +41,29 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:imeOptions="flagNoExtractUi"
             android:launchMode="singleTask"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustNothing|stateHidden">
-
-        </activity>
-
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustNothing|stateHidden"></activity>
         <activity
             android:name=".activity.LoginActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustNothing|stateHidden" >?
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustNothing|stateHidden"></activity>
 
         <activity
             android:name=".activity.SelectCityActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:theme="@style/AppTheme_City" />
         <activity
             android:name=".activity.VipRegistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustNothing|stateHidden" />
 
         <service android:name=".service.MyService" />
+
+        <service android:name=".service.DownLoadService"/>
 
         <!-- 开机自启动应用的广播 -->
         <receiver android:name=".broadcastreceiver.BootBroadcastReceiver">
@@ -80,13 +75,23 @@
         <activity
             android:name=".activity.VisitRegistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensorLandscape"
+            android:windowSoftInputMode="adjustNothing|stateHidden" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorLandscape"
             android:windowSoftInputMode="adjustNothing|stateHidden" />
 
-        <activity android:name=".activity.SettingActivity"
+        <activity android:name=".activity.GuideActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustNothing|stateHidden"></activity>
+            android:screenOrientation="sensorLandscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

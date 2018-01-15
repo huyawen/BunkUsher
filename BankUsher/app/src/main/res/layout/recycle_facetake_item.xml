@@ -19,6 +19,8 @@
             android:id="@+id/rl_face_cb_item"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_weight="0.5">
 
             <CheckBox
@@ -26,6 +28,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:clickable="false"
+                android:duplicateParentState="true"
                 android:background="@null"
                 android:button="@drawable/check_box_select" />
         </RelativeLayout>
@@ -73,7 +77,6 @@
                 android:layout_centerInParent="true"
                 android:background="@drawable/clear_item_selecet" />
         </RelativeLayout>
-
 
     </LinearLayout>
 

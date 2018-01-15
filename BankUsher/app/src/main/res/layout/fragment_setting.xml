@@ -16,7 +16,7 @@
         android:background="@color/color_white">
 
         <ImageView
-            android:id="@+id/iv__setting_loge"
+            android:id="@+id/iv_settingloge"
             android:layout_width="@dimen/x500"
             android:layout_height="@dimen/x100"
             android:layout_centerInParent="true"
@@ -37,7 +37,7 @@
             android:background="@color/common_bg_press" />
 
         <LinearLayout
-            android:id="@+id/rl_relase"
+            android:id="@+id/ll_relaseMessage"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x130"
             android:layout_below="@+id/setting_line1"
@@ -55,7 +55,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tv_version"
+                android:id="@+id/tv_versionMessage"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/x20"
@@ -84,7 +84,7 @@
             android:background="@color/common_bg_press" />
 
         <LinearLayout
-            android:id="@+id/rl_function"
+            android:id="@+id/ll_function"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x130"
             android:layout_below="@+id/setting_line1"
@@ -124,7 +124,7 @@
             android:background="@color/common_bg_press" />
 
         <LinearLayout
-            android:id="@+id/rl_update"
+            android:id="@+id/ll_update"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x130"
             android:layout_below="@+id/setting_line1"
@@ -164,13 +164,26 @@
             android:background="@color/common_bg_press" />
 
         <TextView
+            android:id="@+id/tv_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/x40"
             android:padding="@dimen/x6"
             android:text="版本：V1.0"
-            android:textSize="15sp" />
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_checkUpdate"
+            android:layout_marginTop="@dimen/x16"
+            android:padding="@dimen/x5"
+            android:text="检查更新"
+            android:textSize="15sp"
+            android:background="@drawable/background_select"
+            android:textColor="@color/colortext_check"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </LinearLayout>

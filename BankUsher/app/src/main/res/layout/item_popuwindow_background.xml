@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/x18"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:padding="@dimen/x15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ll_key"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/ll_value"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/x30"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_key"
+                android:layout_width="@dimen/x160"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="姓名"
+                android:textSize="@dimen/x36" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/x60"
+            android:layout_marginRight="@dimen/x30"
+            android:layout_toRightOf="@+id/ll_key">
+
+            <TextView
+                android:id="@+id/tv_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="胡亚文"
+                android:textColor="@color/alertTextContent"
+                android:textSize="@dimen/x36" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/view_line_front"
+            android:layout_width="@dimen/x160"
+            android:layout_height="2px"
+            android:layout_marginLeft="@dimen/x45"
+            android:background="@color/colortext_no_check" />
+
+        <View
+            android:id="@+id/view_line_behind"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginLeft="@dimen/x60"
+            android:layout_marginRight="@dimen/x30"
+            android:background="@color/colortext_no_check" />
+    </LinearLayout>
+
+</LinearLayout>

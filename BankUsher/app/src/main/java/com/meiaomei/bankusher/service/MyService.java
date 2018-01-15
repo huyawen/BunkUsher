@@ -24,7 +24,6 @@ import com.google.gson.Gson;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 import com.meiaomei.bankusher.R;
-import com.meiaomei.bankusher.activity.LoginActivity;
 import com.meiaomei.bankusher.activity.MainActivity;
 import com.meiaomei.bankusher.broadcastreceiver.AwakeMyServiceReceiver;
 import com.meiaomei.bankusher.entity.MyResponse;
@@ -49,7 +48,6 @@ import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
 public class MyService extends Service {
     public static WebsocketPushClient client;
-    Handler handler = new Handler();
     private NotificationManager notificationManager;
     OkHttpManager okHttpManager;
 
@@ -64,12 +62,14 @@ public class MyService extends Service {
     String baseurl = "";
     DbUtils dbUtils;
 
+    Handler handler = new Handler();
+
     @Override
     public void onCreate() {
         super.onCreate();
         draft_17 = new Draft_17();
         context = getApplicationContext();
-        okHttpManager=new OkHttpManager();
+        okHttpManager = new OkHttpManager();
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         dbUtils = BankUsherDB.getDbUtils();
         ws = SharedPrefsUtil.getValue(context, "serverAddress", "");
@@ -108,7 +108,7 @@ public class MyService extends Service {
                     if (!TextUtils.isEmpty(data)) {
                         message = new Gson().fromJson(data, PushMessage.class);
                         if (message != null) {
-                            PushMessage.Body body = message.getBody();
+                            final PushMessage.Body body = message.getBody();
                             PushMessage.Header header = message.getHeader();
                             if (body != null && header != null) {
                                 String userId = body.getUserId();//用户的id
@@ -124,9 +124,15 @@ public class MyService extends Service {
                                 recordModel.setVisitTime(body.getSignTime());
                                 dbUtils.saveOrUpdate(recordModel);
 
-                                //保存完成之后，发通知
-                                NotificationUtils notificationUtils = new NotificationUtils(context);
-                                notificationUtils.sendMyNotification(body.getUserName());
+                                //保存完成之后，发通知（延迟500毫秒）
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        NotificationUtils notificationUtils = new NotificationUtils(context);
+                                        notificationUtils.sendSysNotification(body.getUserName());
+                                    }
+                                }, 600);
+
                             }
                         }
                     }
@@ -156,7 +162,11 @@ public class MyService extends Service {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         baseurl = SharedPrefsUtil.getValue(context, "serverAddress", "");
+        if (TextUtils.isEmpty(baseurl)) {
+            baseurl = "http://192.168.0.183:8580";
+        }
         String url = okHttpManager.getUrl(baseurl, 2);
         okHttpManager.postJson(url, js, new OkHttpManager.HttpCallBack() {
             @Override
@@ -323,11 +333,12 @@ public class MyService extends Service {
         return false;
     }
 
+
     @Override
     public void onDestroy() {
+        super.onDestroy();
         Intent intent = new Intent(this, AwakeMyServiceReceiver.class);
         intent.putExtra("startService", "true");
         sendBroadcast(intent);
     }
-
 }

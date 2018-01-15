@@ -1,7 +1,6 @@
 package com.meiaomei.bankusher.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
@@ -13,7 +12,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.meiaomei.bankusher.R;
-import com.meiaomei.bankusher.service.MyService;
 import com.meiaomei.bankusher.utils.DeviceInfoUtils;
 import com.meiaomei.bankusher.utils.SharedPrefsUtil;
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageView_n"
+        android:layout_marginTop="@dimen/x18"
+        android:layout_marginBottom="@dimen/x18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/x5"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/icon" />
+
+    <TextView
+        android:id="@+id/tv_n"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/imageView_n"
+        android:layout_marginTop="@dimen/x15"
+        android:gravity="center"
+        android:textColor="@color/alertTextContent"
+        android:textSize="14sp"
+        android:text="正在下载" />
+
+    <TextView
+        android:id="@+id/tv_progress"
+        android:layout_marginRight="@dimen/x40"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:textColor="@color/alertTextContent"
+        android:layout_marginTop="@dimen/x15"
+        android:text=""
+        android:textSize="14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ProgressBar
+        android:id="@+id/progressBar_n"
+        android:layout_below="@+id/tv_n"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/x15"
+        android:layout_marginRight="@dimen/x15"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView_n"
+        android:layout_toRightOf="@+id/imageView_n"
+        android:indeterminate="false"
+        android:max="100" />
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.meiaomei.bankusher.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * 识别后台的推送数据
@@ -61,6 +62,15 @@ public class MyResponse implements Serializable {
         private String remark;//备注
         private String telephone;
 
+        private String productUrl;
+
+        public String getProductUrl() {
+            return productUrl;
+        }
+
+        public void setProductUrl(String productUrl) {
+            this.productUrl = productUrl;
+        }
 
         public String getEmail() {
             return email;

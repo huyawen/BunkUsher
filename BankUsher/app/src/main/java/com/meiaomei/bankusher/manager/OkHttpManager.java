@@ -8,6 +8,7 @@ import com.meiaomei.bankusher.entity.Protocol;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -15,6 +16,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -61,7 +63,7 @@ public class OkHttpManager {
             case 2:
                 return String.format("%s/user/findById", new Object[]{paramString});
             case 4:
-                return String.format("%s/entryexitrecord/update", new Object[]{paramString});
+                return String.format("%s/entryexitrecord/update", new Object[]{paramString});//更新爱好的接口
             case 3:
                 return String.format("%s/user/mobileUpdate", new Object[]{paramString});
             case 5:
@@ -69,9 +71,18 @@ public class OkHttpManager {
             case 6:
                 return String.format("%s/doLogout", new Object[]{paramString});
             case 7:
-              break;
+                return String.format("%s/mobile/adduserInfo", new Object[]{paramString});//编辑用户信息  (此接口调不出来)
+            case 8:
+                return String.format("%s/user/update", new Object[]{paramString}); //编辑用户信息 维持cookie  (此接口不生效)内部接口
+            case 9:
+                return String.format("%s/uploadfile/fileUpload", new Object[]{paramString});// 上传图片接口
+            case 10:
+                return String.format("%s/mobile/getTerminalProduct", new Object[]{paramString});//更新apk版本的接口
+            case 11:
+                break;
         }
-        return String.format("%s/entryexitrecord/receptionSetting", new Object[]{paramString});
+//        return String.format("%s/entryexitrecord/receptionSetting", new Object[]{paramString});
+            return "";
     }
 
     /**
@@ -79,10 +90,10 @@ public class OkHttpManager {
      */
     public void postJson(String url, String json, final HttpCallBack callBack) {
 
-        String cookedId=Protocol.getCookedId();
+        String cookedId = Protocol.getCookedId();
         RequestBody localRequestBody = RequestBody.create(JSON, json);
         Request localRequest = new Request.Builder().
-                header("X-Requested-With".toLowerCase(), "XMLHttpRequest")
+                 header("X-Requested-With".toLowerCase(), "XMLHttpRequest")
                 .header("Cookie", cookedId)
                 .url(url)
                 .post(localRequestBody).build();
@@ -99,9 +110,59 @@ public class OkHttpManager {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     Log.e("OkhttpManager", "-isSuccessful--" + response.isSuccessful());
-                    onSuccess(callBack, response.body().string(),response.header("Set-Cookie"));
+                    onSuccess(callBack, response.body().string(), response.header("Set-Cookie"));
                 } else {
                     OnError(callBack, response.message());
+                }
+            }
+        });
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param actionUrl 接口地址
+     * @param filePath  本地文件地址
+     */
+    public <T> void upLoadFile( String actionUrl, String filePath, final ReqCallBack<T> callBack) {
+
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        // 这里演示添加用户ID
+        builder.addFormDataPart("userId", "20160519142605");
+        builder.addFormDataPart("id","WU_FILE_0");
+        builder.addFormDataPart("name",new File(filePath).getName());
+        builder.addFormDataPart("type","image/jpeg");
+        builder.addFormDataPart("lastModifiedDate",new Date().toString());
+        builder.addFormDataPart("size",new File(filePath).length()+"");
+        builder.addFormDataPart("file", filePath,
+                RequestBody.create(MediaType.parse("image/jpeg"), new File(filePath)));
+        //创建File
+        File file = new File(filePath);
+        //创建RequestBody
+        RequestBody body =builder.build();
+        body.create(MEDIA_OBJECT_STREAM, file);
+        String cookedId=Protocol.getCookedId();
+        //创建Request
+        final Request request = new Request.Builder()
+//                .header("Cookie", cookedId)
+                .url(actionUrl)
+                .post(body).build();
+        final Call call = client.newBuilder().writeTimeout(50, TimeUnit.SECONDS).build().newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("结果", e.toString());
+                failedCallBack("上传失败", callBack);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String string = response.body().string();
+                    Log.e("结果", "response ----->" + string);
+                    successCallBack((T) string, callBack);
+                } else {
+                    failedCallBack("上传失败", callBack);
                 }
             }
         });
@@ -133,7 +194,7 @@ public class OkHttpManager {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     Log.e("OkHttpManager-success", response.message());
-                    onSuccess(callBack, response.body().string(),response.header("Set-Cookie"));
+                    onSuccess(callBack, response.body().string(), response.header("Set-Cookie"));
                 } else {
                     Log.e("OkHttpManager", response.message());
                     OnError(callBack, response.message());
@@ -150,7 +211,7 @@ public class OkHttpManager {
      * @param callBack
      */
     public void postMap(String url, String command, String mac, Map<String, String> map, final HttpCallBack callBack) {
-        FormBody.Builder builder = new FormBody.Builder();//请求体
+        FormBody.Builder builder = new FormBody.Builder();//请求form表单
         //遍历map
         if (map != null) {//添加表单
             for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -169,7 +230,7 @@ public class OkHttpManager {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    onSuccess(callBack, response.body().string(),response.header("Set-Cookie"));
+                    onSuccess(callBack, response.body().string(), response.header("Set-Cookie"));
                 } else {
                     OnError(callBack, response.message());
                 }
@@ -196,7 +257,7 @@ public class OkHttpManager {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    onSuccess(callBack, response.body().string(),response.header("Set-Cookie"));
+                    onSuccess(callBack, response.body().string(), response.header("Set-Cookie"));
                 } else {
                     OnError(callBack, response.message());
                 }
@@ -210,12 +271,12 @@ public class OkHttpManager {
         }
     }
 
-    public void onSuccess(final HttpCallBack callBack, final String data,final String cookie) {
+    public void onSuccess(final HttpCallBack callBack, final String data, final String cookie) {
         if (callBack != null) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {//在主线程操作
-                    callBack.onSusscess(data,cookie);
+                    callBack.onSusscess(data, cookie);
                 }
             });
         }
@@ -238,49 +299,13 @@ public class OkHttpManager {
         }
 
         //成功回调
-        public abstract void onSusscess(String data,String cookie);
+        public abstract void onSusscess(String data, String cookie);
 
         //失败
         public void onError(String meg) {
         }
     }
 
-
-    /**
-     * 上传文件
-     *
-     * @param actionUrl 接口地址
-     * @param filePath  本地文件地址
-     */
-    public <T> void upLoadFile(String actionUrl, String filePath, String ipAndPort, final ReqCallBack<T> callBack) {
-        //补全请求地址
-        String requestUrl = "http://" + ipAndPort + "/zhyh/PlayDev" + actionUrl;
-        //创建File
-        File file = new File(filePath);
-        //创建RequestBody
-        RequestBody body = RequestBody.create(MEDIA_OBJECT_STREAM, file);
-        //创建Request
-        final Request request = new Request.Builder().url(requestUrl).post(body).build();
-        final Call call = client.newBuilder().writeTimeout(50, TimeUnit.SECONDS).build().newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e("结果", e.toString());
-                failedCallBack("上传失败", callBack);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    String string = response.body().string();
-                    Log.e("结果", "response ----->" + string);
-                    successCallBack((T) string, callBack);
-                } else {
-                    failedCallBack("上传失败", callBack);
-                }
-            }
-        });
-    }
 
     public interface ReqCallBack<T> {
         /**

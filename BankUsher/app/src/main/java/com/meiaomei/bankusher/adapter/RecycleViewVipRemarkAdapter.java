@@ -47,8 +47,10 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
     //三个final int类型表示ViewType的两种类型
     private final int NORMAL_TYPE = 0;//正常
     private final int FOOT_TYPE = 1;//足视图
+
     boolean isCheckAll = false;//点击全选的checkbox
     boolean isCheckClick = false;//点击全选触发的事件
+
     List<ThirteenParamModel> thirteenParamModelList;
     RecycleviewItemOnclickListener recycleviewItemOnclickListener;
     CheckItemClickListener checkItemClickListener;
@@ -132,11 +134,11 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
             }, 2000);
         } else {
             final String faceId = thirteenParamModelList.get(position).getThirdPara();
-            holder.tv_catch_time.setText(DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(),"yyyy-MM-dd HH:mm"));
+            holder.tv_catch_time.setText(DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));
             final HashMap<String, String> messageMap = new HashMap<>();
-            holder.tv_card.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getSeventhPara())?"未录入":thirteenParamModelList.get(position).getSeventhPara());// idCrad
-            holder.tv_name.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getFourthPara())?"未录入":thirteenParamModelList.get(position).getFourthPara());// name
-            holder.tv_viporder.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getFourthPara())?"未录入":thirteenParamModelList.get(position).getEighthPara());//vip order
+            holder.tv_card.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getSeventhPara()) ? "未录入" : thirteenParamModelList.get(position).getSeventhPara());// idCrad
+            holder.tv_name.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getFourthPara()) ? "未录入" : thirteenParamModelList.get(position).getFourthPara());// name
+            holder.tv_viporder.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getFourthPara()) ? "未录入" : thirteenParamModelList.get(position).getEighthPara());//vip order
 
 
             //单选checkbox的点击监听
@@ -144,15 +146,15 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
                 @Override
                 public void onClick(View v) {
                     if (holder.cb_item.isChecked()) {//是选中的
-                        Log.e("isChecked", "rl_item_cb:==" + position + "==" + holder.cb_item.isChecked() + "-remove");
+                        Log.e("VipRemarkAdapter", "rl_item_cb:==" + position + "==" + holder.cb_item.isChecked() + "-remove");
                         //ui界面
                         holder.cb_item.setChecked(false);
                         //操作数据
                         excelMap.remove(position);
                     } else {//没有被选中
-                        Log.e("isChecked", "rl_item_cb:==" + position + "==" + holder.cb_item.isChecked() + "-add");
+                        Log.e("VipRemarkAdapter", "rl_item_cb:==" + position + "==" + holder.cb_item.isChecked() + "-add");
                         holder.cb_item.setChecked(true);//ui界面
-                        messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(),"yyyy-MM-dd HH:mm"));//操作数据
+                        messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));//操作数据
                         messageMap.put("visitAddress", thirteenParamModelList.get(position).getSecondPara());
                         messageMap.put("faceId", faceId);
                         messageMap.put("name", thirteenParamModelList.get(position).getFourthPara());
@@ -163,7 +165,7 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
                         excelMap.put(position, messageMap);
                     }
 
-                    if (checkItemClickListener != null) {//最后一个值设置监听,改变进入状态
+                    if (checkItemClickListener != null) {
                         checkItemClickListener.onCheckClik(excelMap);//设置监听
                     }
                 }
@@ -172,9 +174,9 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
 
             //全部选中的按钮的点击事件操作
             if (isCheckClick) {
-                if (isCheckAll) {
+                if (isCheckAll) {//选中的时候
                     holder.cb_item.setChecked(true);
-                    messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(),"yyyy-MM-dd HH:mm"));//操作数据
+                    messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));//操作数据
                     messageMap.put("visitAddress", thirteenParamModelList.get(position).getSecondPara());
                     messageMap.put("faceId", faceId);
                     messageMap.put("name", thirteenParamModelList.get(position).getFourthPara());
@@ -183,16 +185,19 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
                     messageMap.put("sex", thirteenParamModelList.get(position).getSixthPara());
                     messageMap.put("vipOrder", thirteenParamModelList.get(position).getEighthPara());
                     excelMap.put(position, messageMap);
-                } else {
+                } else {//取消的时候
                     holder.cb_item.setChecked(false);
                     if (excelMap.size() > 0) {
                         excelMap.remove(position);//操作数据  remove
                     }
+
+                    if (excelMap.size() == 0) {//防止全部的影响单个选中
+                        isCheckClick = false;
+                    }
                 }
 
-                if (checkItemClickListener != null) {//最后一个值设置监听,改变进入状态
+                if (checkItemClickListener != null) {
                     checkItemClickListener.onCheckClik(excelMap);//设置监听
-//                    isCheckClick = false;
                 }
             }
 
@@ -210,11 +215,11 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
                                 public void cancleButtonClickListener() {
                                     try {
                                         VisitRecordModel visitRecordModel = dbUtils.findFirst(Selector.from(VisitRecordModel.class).where("FaceId", "=", faceId));
-                                        if (visitRecordModel!=null){
+                                        if (visitRecordModel != null) {
                                             dbUtils.delete(visitRecordModel);
-                                            EventBus.getDefault().post( new StringModel("update", "remarkAdapter"));//数据删除完更新界面
-                                        }else {
-
+                                            EventBus.getDefault().post(new StringModel("update", "remarkAdapter"));//数据删除完更新界面
+                                        } else {
+                                            Log.e("删除失败，原因是：", "用户到访记录未查到！");
                                         }
 
                                     } catch (DbException e) {
@@ -223,7 +228,7 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
                                     }
                                     thirteenParamModelList.remove(thirteenParamModelList.get(position));//移除此条记录，刷新界面
                                     notifyItemRemoved(position);
-                                    notifyItemRangeChanged(position,thirteenParamModelList.size());
+                                    notifyItemRangeChanged(position, thirteenParamModelList.size());
 
                                 }
                             }).setSubmitBtnText("取消").setSubmitClickListener(new AlertDialogCommon.DialogSubmitClickListener() {

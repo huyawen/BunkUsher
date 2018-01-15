@@ -113,7 +113,8 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
     String timeFlag = "";
     RecycleViewFaceAdapter faceAdapter;
     DbUtils dbUtils;
-    String[] title = {"抓拍时间", "抓拍地点"};
+
+    String[] title = {"抓拍时间", "抓拍地点", "姓名", "电话", "性别", "VIP级别", "身份证号"};
     String TAG = getClass().getName();
     String gender = "";
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -187,9 +188,9 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
                 String base64=tenListInit.get(position).getTenthPara();
                 if (base64.length()>150) {
                     String path = ImageUtils.base64ToBitmapPath(base64, new Date().getTime()+".jpg");
-                    Picasso.with(getActivity()).load("file://" + path).into(iv_faceTake);
+                    Picasso.with(getActivity()).load("file://" + path).error(R.mipmap.backimg).into(iv_faceTake);
                 }else {
-                    Picasso.with(getActivity()).load("file://" + base64).into(iv_faceTake);
+                    Picasso.with(getActivity()).load("file://" + base64).error(R.mipmap.backimg).into(iv_faceTake);
                 }
             }
         });
@@ -286,7 +287,9 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
 
                 case R.id.bt_face_export_aline:
                     if (linkedHashMap != null && !linkedHashMap.isEmpty()) {
-                        ExcelUtil.writeExcel(getActivity(), linkedHashMap, "ex陌生人" + System.currentTimeMillis(), title, "所选条目导出成功！文件在sd卡目录下xls文件夹下。");
+                        Date date=new Date();
+                        String sDate=DateUtils.formatDate(date,"yyyy-MM-dd HH:mm");
+                        ExcelUtil.writeExcel(getActivity(), linkedHashMap, "excel-vip" + sDate, title, "所选条目导出成功！文件在sd卡目录下xls文件夹下。");
                     } else {
                         ToastUtils.showToast("请选中数据后再进行导出操作！", getActivity(), Toast.LENGTH_SHORT);
                     }
@@ -600,7 +603,6 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
     }
 
     class MyCheck implements CompoundButton.OnCheckedChangeListener {
-
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (buttonView.getId() == R.id.cb_face_all) {
