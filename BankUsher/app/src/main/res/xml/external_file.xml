@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    1.<files-path>        getFilesDir()       /data/data/包名/files目录
+    2.<cache-path>        getCacheDir()       /data/data/包名/cache目录
+
+    3.<external-path>     Environment.getExternalStorageDirectory()   SDCard +文件夹 文件名
+    4.<external-files-path>  Context.getExternalFilesDir()    SDCard/Android/data/你的应用的包名/files/ 目录
+    5.<external-cache-path>  Context.getExternalCacheDir()    SDCard/Android/data/你的应用的包名/cache/ 目录  .-->
+
+<resources>
+    <paths>
+        <external-path path="." name="camera_photos" />
+    </paths>
+</resources>
+

@@ -129,8 +129,8 @@ public class SettingFragment extends BaseFragment {
                                         @Override
                                         public void submitButtonClickListener() {
 //                                            点击确定  开启服务
-                                            Intent intent=new Intent(getActivity(), DownLoadService.class);
-                                            intent.putExtra("path",apkUrl);
+                                            Intent intent = new Intent(getActivity(), DownLoadService.class);
+                                            intent.putExtra("path", apkUrl);
                                             getActivity().startService(intent);
                                         }
 

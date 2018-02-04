@@ -7,16 +7,16 @@
 
     <LinearLayout
         android:id="@+id/ll1"
-        android:layout_marginLeft="@dimen/x10"
-        android:layout_marginRight="@dimen/x10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_marginRight="@dimen/x10"
         android:layout_marginTop="@dimen/x40"
         android:background="@color/background"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/x20"
-        android:paddingBottom="@dimen/x20">
+        android:paddingBottom="@dimen/x20"
+        android:paddingTop="@dimen/x20">
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -73,7 +73,7 @@
                 android:layout_below="@+id/et_name"
                 android:background="@drawable/square"
                 android:clickable="true"
-                android:drawableRight="@mipmap/clear"
+                android:drawableRight="@mipmap/j_clear"
                 android:gravity="center_vertical"
                 android:hint="请选择开始时间"
                 android:paddingLeft="@dimen/x10"
@@ -149,7 +149,7 @@
                 android:layout_toRightOf="@+id/tv_end_time1"
                 android:background="@drawable/square"
                 android:clickable="true"
-                android:drawableRight="@mipmap/clear"
+                android:drawableRight="@mipmap/j_clear"
                 android:gravity="center_vertical"
                 android:hint="请选择结束时间"
                 android:paddingLeft="@dimen/x10"
@@ -166,8 +166,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll1"
+        android:layout_marginBottom="@dimen/x10"
         android:layout_marginTop="@dimen/x10"
-        android:layout_marginBottom="@dimen/x10">
+        android:paddingBottom="@dimen/x5"
+        android:paddingTop="@dimen/x5">
 
 
         <TextView
@@ -195,11 +197,11 @@
 
             <TextView
                 android:id="@+id/num"
-                android:layout_width="@dimen/x44"
+                android:layout_width="@dimen/x50"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="0"
-                android:textColor="@color/colortext_check" />
+                android:textColor="@color/j_theme_color" />
 
             <TextView
                 android:id="@+id/tiao"
@@ -243,22 +245,43 @@
 
     <RelativeLayout
         android:id="@+id/rl_left"
-        android:layout_marginLeft="@dimen/x10"
-        android:layout_marginRight="@dimen/x10"
-        android:layout_marginBottom="@dimen/x10"
-        android:background="@color/background"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl1">
+        android:layout_below="@+id/rl1"
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginLeft="@dimen/x10"
+        android:layout_marginRight="@dimen/x10"
+        android:background="@color/background">
 
-        <ImageView
-            android:id="@+id/iv_vip_remark"
-            android:layout_width="@dimen/x360"
-            android:layout_height="@dimen/x200"
+        <RelativeLayout
+            android:id="@+id/rl_img"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x10"
-            android:layout_marginTop="@dimen/x20"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/liu" />
+            android:layout_marginRight="@dimen/x10"
+            android:layout_marginTop="@dimen/x20">
+
+            <ImageView
+                android:id="@+id/iv_vip_remark"
+                android:layout_centerHorizontal="true"
+                android:layout_width="@dimen/x360"
+                android:layout_height="@dimen/x200"
+                android:src="@mipmap/default_img" />
+
+            <TextView
+                android:id="@+id/tv_rl"
+                android:textColor="@color/j_theme_color"
+                android:paddingTop="@dimen/x5"
+                android:textSize="10sp"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_vip_remark"
+                android:text="(选中右侧列表项显示信息)" />
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tv_remark_name"
@@ -272,13 +295,13 @@
             android:paddingLeft="@dimen/x20"
             android:paddingRight="@dimen/x20"
             android:paddingTop="@dimen/x10"
-            android:text="姓名：" />
+            android:text="姓名:" />
 
         <TextView
             android:id="@+id/tv_remark_name_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/iv_vip_remark"
+            android:layout_below="@+id/rl_img"
             android:layout_marginTop="@dimen/x10"
             android:layout_toRightOf="@+id/tv_remark_name"
             android:gravity="center"
@@ -299,7 +322,7 @@
             android:paddingLeft="@dimen/x20"
             android:paddingRight="@dimen/x20"
             android:paddingTop="@dimen/x10"
-            android:text="电话：" />
+            android:text="电话:" />
 
         <TextView
             android:id="@+id/tv_remark_phone_value"
@@ -327,7 +350,7 @@
             android:paddingLeft="@dimen/x20"
             android:paddingRight="@dimen/x20"
             android:paddingTop="@dimen/x10"
-            android:text="VIP级别：" />
+            android:text="VIP级别:" />
 
         <TextView
             android:id="@+id/tv_remark_viporder_value"
@@ -343,17 +366,21 @@
             android:paddingTop="@dimen/x10"
             android:text="" />
 
-        <Button
-            android:id="@+id/bt_detail"
-            android:layout_width="@dimen/x160"
-            android:layout_height="@dimen/x80"
-            android:layout_below="@+id/tv_remark_viporder_value"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/x10"
-            android:background="@drawable/bt_select"
-            android:text="详情"
-            android:textColor="@color/color_white">
-        </Button>
+        <TextView
+            android:id="@+id/tv_detail"
+            android:layout_alignRight="@+id/rl_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_remark_viporder"
+            android:layout_alignLeft="@+id/rl_img"
+            android:layout_marginTop="@dimen/x15"
+            android:background="@drawable/white_border"
+            android:drawableLeft="@mipmap/lookup"
+            android:drawablePadding="@dimen/x11"
+            android:gravity="center"
+            android:padding="@dimen/x8"
+            android:text="点击查看详情"
+            android:textColor="@color/color_line"></TextView>
 
     </RelativeLayout>
 
@@ -412,7 +439,7 @@
                 android:id="@+id/tv_catch_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:gravity="center"
                 android:text="VIP级别" />
 
@@ -429,7 +456,7 @@
                 android:id="@+id/tv_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:text="姓名" />
 

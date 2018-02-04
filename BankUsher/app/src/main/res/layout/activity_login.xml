@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:id="@+id/rl_logo"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
@@ -20,12 +20,13 @@
             android:layout_width="@dimen/x800"
             android:layout_height="@dimen/x190"
             android:layout_centerInParent="true"
-            android:src="@mipmap/black_logo" />
+            android:src="@mipmap/j_big_logo" />
     </RelativeLayout>
 
 
     <LinearLayout
         android:id="@+id/ll_top"
+        android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_logo"
@@ -45,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="36dp"
-                android:background="@mipmap/ic_account" />
+                android:background="@mipmap/j_ic_account" />
 
             <com.meiaomei.bankusher.view.ClearEditText
                 android:id="@+id/username"
@@ -56,13 +57,13 @@
                 android:layout_toRightOf="@+id/iv_account"
                 android:background="@null"
                 android:drawablePadding="10dp"
-                android:drawableRight="@mipmap/clear"
+                android:drawableRight="@mipmap/j_clear"
                 android:ems="10"
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:hint="请输入登录名"
                 android:singleLine="true"
-                android:textColor="@color/colortext_check"
+                android:textColor="@color/j_theme_color"
                 android:textColorHint="@color/color_login_white"
                 android:textCursorDrawable="@drawable/edit_cursor"
                 android:textSize="15dp" />
@@ -88,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="36dp"
-                android:background="@mipmap/ic_password" />
+                android:background="@mipmap/j_ic_password" />
 
             <com.meiaomei.bankusher.view.EtpEditText
                 android:id="@+id/password"
@@ -107,7 +108,7 @@
                 android:hint="请输入密码"
                 android:inputType="textPassword"
                 android:singleLine="true"
-                android:textColor="@color/colortext_check"
+                android:textColor="@color/j_theme_color"
                 android:textColorHint="@color/color_login_white"
                 android:textCursorDrawable="@drawable/edit_cursor"
                 android:textSize="15dp" />

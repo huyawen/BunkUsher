@@ -1,5 +1,6 @@
 package com.meiaomei.bankusher.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,6 +24,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -31,8 +34,13 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.lidroid.xutils.DbUtils;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.exception.DbException;
 import com.meiaomei.bankusher.R;
+import com.meiaomei.bankusher.dialog.MyProgressDialog;
 import com.meiaomei.bankusher.entity.MyResponse;
+import com.meiaomei.bankusher.entity.VipCustomerModel;
+import com.meiaomei.bankusher.entity.event.StringModel;
 import com.meiaomei.bankusher.manager.BankUsherDB;
 import com.meiaomei.bankusher.manager.OkHttpManager;
 import com.meiaomei.bankusher.utils.FileUtils;
@@ -44,10 +52,12 @@ import com.meiaomei.bankusher.utils.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -111,6 +121,10 @@ public class VipRegistActivity extends AppCompatActivity {
     @BindView(R.id.sv_base)
     ScrollView svBase;
     String baseUrl = "";
+    @BindView(R.id.tv_mind)
+    TextView tvMind;
+    @BindView(R.id.layout_content)
+    LinearLayout layoutContent;
 
     private Bitmap picbitmap;
     String imgFilePath = "";
@@ -120,6 +134,7 @@ public class VipRegistActivity extends AppCompatActivity {
     boolean isEditer = false;
     String useId = "";
     OkHttpManager okHttpManager = new OkHttpManager();
+    Dialog progressDialog;
 
     Handler handler = new Handler() {
 
@@ -133,9 +148,10 @@ public class VipRegistActivity extends AppCompatActivity {
             } else if (msg.what == 3) {
                 ToastUtils.showToast("上传服务器成功!", VipRegistActivity.this, Toast.LENGTH_SHORT);
             } else if (msg.what == 4) {
-                ToastUtils.showToast("上传服务失败!", VipRegistActivity.this, Toast.LENGTH_SHORT);
+                String msgss = (String) msg.obj;
+                ToastUtils.showToast(msgss, VipRegistActivity.this, Toast.LENGTH_SHORT);
             } else if (msg.what == 5) {
-                ToastUtils.showToast("服务器出错了，上传失败!", VipRegistActivity.this, Toast.LENGTH_SHORT);
+                ToastUtils.showToast("服务器无响应,请再次点击保存按钮!", VipRegistActivity.this, Toast.LENGTH_SHORT);
             } else if (msg.what == 6) {
                 ToastUtils.showToast("修改成功!", VipRegistActivity.this, Toast.LENGTH_SHORT);
             } else if (msg.what == 7) {
@@ -159,12 +175,19 @@ public class VipRegistActivity extends AppCompatActivity {
     private void initOther() {
         dbUtils = BankUsherDB.getDbUtils();
         tvTitle.setText("VIP 人员注册");
+        progressDialog = new MyProgressDialog().createLoadingDialog(VipRegistActivity.this, "正在保存，请稍后...");
+        editVipMessage();
+    }
+
+    private void editVipMessage() {
         Intent intent = getIntent();
         HashMap<String, String> linkedHashMap = (HashMap<String, String>) intent.getSerializableExtra("linkedHashMap");
         String path = intent.getStringExtra("imgPath");
-        if (linkedHashMap != null && !TextUtils.isEmpty(path)) {
+        if (linkedHashMap != null && !TextUtils.isEmpty(path)) {//修改人员信息
             isEditer = true;
+            tvMind.setText("编辑信息不允许修改头像！");
             tvTitle.setText("VIP 人员修改");
+            ivImg.setFocusable(false);
             Picasso.with(VipRegistActivity.this)
                     .load(path)
                     .resize(200, 200)
@@ -172,26 +195,36 @@ public class VipRegistActivity extends AppCompatActivity {
             etName.setText(linkedHashMap.get("姓名"));
             if ("男".equals(linkedHashMap.get("性别"))) {
                 radioBtnMale.setChecked(true);
+                radioBtnFemale.setVisibility(View.GONE);
             } else if ("女".equals(linkedHashMap.get("性别"))) {
                 radioBtnFemale.setChecked(true);
+                radioBtnMale.setVisibility(View.GONE);
             }
             useId = linkedHashMap.get("id");
-            etPhone.setText(linkedHashMap.get("电话"));
-            etCarNum.setText(linkedHashMap.get("工号").equals("未录入") ? "" : linkedHashMap.get("工号"));
+            etPhone.setText(linkedHashMap.get("电话").equals("未录入") ? "" : linkedHashMap.get("电话"));
+            etCarNum.setText(linkedHashMap.get("客户编号").equals("未录入") ? "" : linkedHashMap.get("客户编号"));
             etCardid.setText(linkedHashMap.get("身份证号").equals("未录入") ? "" : linkedHashMap.get("身份证号"));
             etRemark.setText(linkedHashMap.get("备注").equals("未录入") ? "" : linkedHashMap.get("备注"));
             switch (linkedHashMap.get("客户等级")) {
                 case "一级":
+                    level="一级";
                     radioBtnLevel4.setChecked(true);
                     break;
                 case "二级":
+                    level="二级";
                     radioBtnLevel3.setChecked(true);
                     break;
                 case "三级":
+                    level="三级";
                     radioBtnLevel2.setChecked(true);
                     break;
                 case "四级":
+                    level="四级";
                     radioBtnLevel1.setChecked(true);
+                    break;
+                case "普通":
+                    level="普通";
+                    radioBtnLevel5.setChecked(true);
                     break;
                 default:
                     break;
@@ -201,7 +234,7 @@ public class VipRegistActivity extends AppCompatActivity {
 
 
     @OnClick(R.id.btn_signin)
-    public void btn_regist() {
+    public void btn_regist() { //base64  导致app滞后
         getInput();
         final String base64 = ImageUtils.imgToBase64(null, picbitmap); //imgpath 和 bitmap 传一个即可
         if (isEmpty()) {//非空项校验
@@ -229,80 +262,74 @@ public class VipRegistActivity extends AppCompatActivity {
             baseUrl = "http://192.168.0.183:8580";
         }
 
+        progressDialog.show();//检验通过后show dialog
+        progressDialog.setCancelable(false);
         if (isEditer) {//编辑进来的
-            if (!TextUtils.isEmpty(imgFilePath)) {
-                //修改了图片，先把图片传至服务器
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String uploadUrl = OkHttpManager.getUrl(baseUrl, 9);//uploadUrl
-                        String s=UpLoadImage.uploadFile(new File(imgFilePath),uploadUrl);
-                        Log.e(TAG, "uploadFile: " + s);
-//                        String response = UpLoadImage.uploadFiletwo(new File(imgFilePath), uploadUrl);
-//                        Log.e(TAG, "uploadFiletwo: " + response);
-                        okHttpManager.upLoadFile(uploadUrl, imgFilePath, new OkHttpManager.ReqCallBack<String>() {
-                            @Override
-                            public void onReqSuccess(String result) {
-                                Log.e(TAG, "run: " + result);
-                            }
-
-                            @Override
-                            public void onReqFailed(String errorMsg) {
-                                Log.e(TAG, "run: " + errorMsg);
-                            }
-                        });
-
-                        String editUrl = OkHttpManager.getUrl(baseUrl, 3);
-                        JSONObject js = new JSONObject();
-                        try {
-                            if (UpLoadImage.SUCCESS.equals("")){
-                                js.put("updateModules", "10"); //更新基本信息就是 2  更新图片和基本信息就是 10
-                            } else {
-                                js.put("updateModules", "2");
-                            }
-                            js.put("appId", "user");
-                            js.put("appSecret", "12345");
-                            js.put("id", useId);
-                            js.put("cango", false);
-                            js.put("name", name);
-                            js.put("favourite", "");
-                            js.put("orgCode", "1000");
-                            js.put("telephone", phone);
-                            int le = getIntLevel(level);
-                            js.put("userLevel", le);
-                            js.put("userType", "2");
-                            js.put("workCode", workNum);//为工号
-                            js.put("idCard", idCard);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        okHttpManager.postJson(editUrl, js.toString(), new OkHttpManager.HttpCallBack() {
-                            @Override
-                            public void onSusscess(String data, String cookie) {
-                                Gson gson = new Gson();
-                                if (!TextUtils.isEmpty(data)) {
-                                    MyResponse myResponse = gson.fromJson(data, MyResponse.class);
-                                    if (myResponse != null) {
-                                        if ("200".equals(myResponse.getRespCode())) {
-                                            handler.obtainMessage(6).sendToTarget();
-                                        } else if ("500".equals(myResponse.getRespCode())) {
-                                            handler.obtainMessage(7).sendToTarget();
-                                        }
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onError(String meg) {
-                                super.onError(meg);
-                                handler.obtainMessage(5).sendToTarget();
-                            }
-                        });
-                    }
-                }).start();
+            String editUrl = OkHttpManager.getUrl(baseUrl, 3);
+            JSONObject js = new JSONObject();
+            try {
+                if (UpLoadImage.SUCCESS.equals("33")) {//走不到
+                    js.put("updateModules", "10"); //更新基本信息就是 2  更新图片和基本信息就是 10
+                } else {
+                    js.put("updateModules", "2");
+                }
+                js.put("appId", "user");
+                js.put("appSecret", "12345");
+                js.put("id", useId);
+                js.put("cango", false);
+                js.put("name", name);
+                js.put("favourite", "");
+                js.put("orgCode", "1000");
+                js.put("telephone", phone);
+                int le = getIntLevel(level);//0 是普通 在服务端为没有
+                js.put("userLevel", le);
+                js.put("userType", "2");
+                js.put("workCode", workNum);//为工号
+                js.put("idCard", idCard);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
+            okHttpManager.postJson(editUrl, js.toString(), new OkHttpManager.HttpCallBack() {
+                @Override
+                public void onSusscess(String data, String cookie) {
+                    progressDialog.dismiss();
+                    Gson gson = new Gson();
+                    if (!TextUtils.isEmpty(data)) {
+                        MyResponse myResponse = gson.fromJson(data, MyResponse.class);
+                        if (myResponse != null) {
+                            if ("200".equals(myResponse.getRespCode())) {//编辑上传服务器成功后  本地修改数据库
+                                VipCustomerModel vip = null;
+                                try {
+                                    vip = dbUtils.findFirst(Selector.from(VipCustomerModel.class).where("FaceId", "=", useId));
+                                    if (vip != null) {
+                                        vip.setName(name);
+                                        vip.setWorkNumber(workNum);
+                                        vip.setIdNumber(idCard);
+                                        vip.setPhoneNumber(phone);
+                                        vip.setVipOrder(level);
+                                        dbUtils.update(vip);
+                                        EventBus.getDefault().post(new StringModel("update", "VipRegistActivity"));//编辑完得更新本地列表
+                                    }
+                                } catch (DbException e) {
+                                    e.printStackTrace();
+                                }
+
+                                handler.obtainMessage(6).sendToTarget();
+                            } else if ("500".equals(myResponse.getRespCode())) {
+                                handler.obtainMessage(7).sendToTarget();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(String meg) {
+                    super.onError(meg);
+                    progressDialog.dismiss();
+                    handler.obtainMessage(5).sendToTarget();
+                }
+            });
         } else if (!isEditer) {//新添加vip进来的
             String url = OkHttpManager.getUrl(baseUrl, 5);
             JSONObject js = new JSONObject();
@@ -321,22 +348,23 @@ public class VipRegistActivity extends AppCompatActivity {
                 js.put("userType", "2");
                 js.put("workCode", workNum);//为工号
                 js.put("idCard", idCard);
-//            int ge = getIntGender(gender);
-//            js.put("gender", ge);//不传性别
+                int ge = getIntGender(gender); // 0 女 1男
+                js.put("gender", ge);//不传性别
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+
             okHttpManager.postJson(url, js.toString(), new OkHttpManager.HttpCallBack() {
                 @Override
                 public void onSusscess(String data, String cookie) {
+                    progressDialog.dismiss();
                     Gson gson = new Gson();
-                    if (!TextUtils.isEmpty(data)) {
-                        MyResponse myResponse = gson.fromJson(data, MyResponse.class);
+                    if (!TextUtils.isEmpty(data)) {MyResponse myResponse = gson.fromJson(data, MyResponse.class);
                         if (myResponse != null) {
                             if ("200".equals(myResponse.getRespCode())) {
                                 handler.obtainMessage(3).sendToTarget();
                             } else if ("500".equals(myResponse.getRespCode())) {
-                                handler.obtainMessage(4).sendToTarget();
+                                handler.obtainMessage(4, myResponse.getRespDesc()).sendToTarget();
                             }
                         }
                     }
@@ -345,31 +373,10 @@ public class VipRegistActivity extends AppCompatActivity {
                 @Override
                 public void onError(String meg) {
                     super.onError(meg);
+                    progressDialog.dismiss();
                     handler.obtainMessage(5).sendToTarget();
                 }
             });
-
-            //传服务器报存 本地不保存
-        /*
-        VipCustomerModel vip = new VipCustomerModel();
-        vip.setName(name);
-        vip.setCarNumber(carNun);
-        vip.setDelFlag("0");
-        vip.setFaceId(FileUtils.generateUuid());
-        vip.setIdNumber(cardid);
-        vip.setPhoneNumber(phone);
-        vip.setSex(gender);
-        vip.setVipOrder(level);
-        vip.setImgUrl(mFilePath);
-
-        try {
-            dbUtils.save(vip);
-            handler.obtainMessage(1).sendToTarget();
-        } catch (DbException e) {
-            handler.obtainMessage(2).sendToTarget();
-            e.printStackTrace();
-        }*/
-
         }
     }
 
@@ -378,7 +385,6 @@ public class VipRegistActivity extends AppCompatActivity {
         //清空checkBox
         if (!TextUtils.isEmpty(slevel)) {
             switch (slevel) {
-
                 case "四级":
                     intLevel = 4;
                     break;
@@ -392,8 +398,8 @@ public class VipRegistActivity extends AppCompatActivity {
                     intLevel = 1;
                     break;
 
-                case "普通":
-                    intLevel = 1;
+                case "普通"://没有的话不传了
+                    intLevel = 0;
                     break;
             }
         }
@@ -421,24 +427,38 @@ public class VipRegistActivity extends AppCompatActivity {
     @OnClick(R.id.iv_img)
     public void iv_Photo(View view) {
         File photoFile = FileUtils.createDir("photo");
-        imgFilePath = photoFile + "/" + "img" + ".jpg";// 指定路径
+        imgFilePath = photoFile + "/" + "img"+System.currentTimeMillis() + ".jpg";// 指定路径
         //系统相机调用
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);// 启动系统相机
-        Uri photoUri = Uri.fromFile(new File(imgFilePath)); // 传递路径
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);// 更改系统默认存储路径
-        startActivityForResult(intent, REQUEST_CAMERA_1);
+        Intent intent = new Intent();// 启动系统相机
+        /*获取当前系统的android版本号*/
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        Log.e("currentapiVersion","currentapiVersion====>"+currentapiVersion);
+        if (currentapiVersion<24){
+            Uri photoUri = Uri.fromFile(new File(imgFilePath)); // 传递路径
+            intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);// 更改系统默认存储路径
+            startActivityForResult(intent, REQUEST_CAMERA_1);
+        }else {
+            File file = new File(imgFilePath);
+            Uri imageUri = FileProvider.getUriForFile(VipRegistActivity.this, "com.meiaomei.bankusher.fileprovider", file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            startActivityForResult(intent,REQUEST_CAMERA_1);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {//返回成功
             if (requestCode == REQUEST_CAMERA_1) {
-                Bitmap bitmap = BitmapFactory.decodeFile(imgFilePath);
+                Bitmap bitmap = BitmapFactory.decodeFile(imgFilePath);//这个路径 华为有问题
                 picbitmap = bitmap;
                 if (bitmap != null) {
                     ivImg.setBackground(null);
                     Picasso.with(VipRegistActivity.this)
                             .load("file://" + imgFilePath)
+                            .centerCrop()
                             .resize(200, 200)
                             .transform(new CircleTransform()).into(ivImg);
                 }
@@ -563,7 +583,6 @@ public class VipRegistActivity extends AppCompatActivity {
     @OnClick({R.id.radioBtn_level1, R.id.radioBtn_level2, R.id.radioBtn_level3, R.id.radioBtn_level4, R.id.radioBtn_level5})
     public void level(View view) {
         switch (view.getId()) {
-
             case R.id.radioBtn_level1:
                 level = "四级"; //4
                 break;
@@ -590,23 +609,30 @@ public class VipRegistActivity extends AppCompatActivity {
     private boolean isEmpty() {
         //非空验证
         if (TextUtils.isEmpty(name.trim())) {
-            ToastUtils.showToast("姓名不能为空！", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            ToastUtils.showToast("请填入客户姓名！", VipRegistActivity.this, Toast.LENGTH_SHORT);
             return true;
         }
+
+        if (TextUtils.isEmpty(gender) && !isEditer) {//编辑的时候不用检查性别
+            ToastUtils.showToast("请选择客户性别！", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            return true;
+        }
+
         if (TextUtils.isEmpty(phone.trim())) {
-            ToastUtils.showToast("手机号不能为空！", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            ToastUtils.showToast("请填入客户手机号！", VipRegistActivity.this, Toast.LENGTH_SHORT);
             return true;
         }
 
         if (TextUtils.isEmpty(workNum.trim())) {
-            ToastUtils.showToast("工号不能为空！", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            ToastUtils.showToast("请填入客户编号！", VipRegistActivity.this, Toast.LENGTH_SHORT);
             return true;
         }
 
         if (TextUtils.isEmpty(idCard.trim()) && !isEditer) {//编辑的时候不用校验身份证号
-            ToastUtils.showToast("身份证号不能为空！", VipRegistActivity.this, Toast.LENGTH_SHORT);
+            ToastUtils.showToast("请填入客户身份证号！", VipRegistActivity.this, Toast.LENGTH_SHORT);
             return true;
         }
+
         return false;
     }
 

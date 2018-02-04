@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:id="@+id/ll_left"
-        android:background="@color/colorHintBackground"
+        android:background="@color/j_back_color"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -20,7 +20,7 @@
             android:layout_marginLeft="@dimen/x8"
             android:layout_marginRight="@dimen/x8"
             android:layout_marginTop="@dimen/x30"
-            android:src="@mipmap/ag_logo_b"
+            android:src="@mipmap/jag_logo_b"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

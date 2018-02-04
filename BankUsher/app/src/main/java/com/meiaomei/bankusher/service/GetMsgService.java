@@ -1,31 +1,21 @@
 package com.meiaomei.bankusher.service;
 
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
-import com.meiaomei.bankusher.R;
-import com.meiaomei.bankusher.activity.MainActivity;
-import com.meiaomei.bankusher.broadcastreceiver.AwakeMyServiceReceiver;
 import com.meiaomei.bankusher.entity.MyResponse;
 import com.meiaomei.bankusher.entity.PushMessage;
 import com.meiaomei.bankusher.entity.VipCustomerModel;
@@ -33,7 +23,6 @@ import com.meiaomei.bankusher.entity.VisitRecordModel;
 import com.meiaomei.bankusher.manager.BankUsherDB;
 import com.meiaomei.bankusher.manager.OkHttpManager;
 import com.meiaomei.bankusher.manager.WebsocketPushClient;
-import com.meiaomei.bankusher.utils.MD5Utils;
 import com.meiaomei.bankusher.utils.NotificationUtils;
 import com.meiaomei.bankusher.utils.SharedPrefsUtil;
 
@@ -43,14 +32,11 @@ import org.json.JSONObject;
 
 import java.net.URI;
 
-import static android.util.TypedValue.COMPLEX_UNIT_SP;
 
-
-public class MyService extends Service {
+public class GetMsgService extends Service {
     public static WebsocketPushClient client;
     private NotificationManager notificationManager;
     OkHttpManager okHttpManager;
-
     Context context;
     Draft_17 draft_17;
     int notifyId = 0;
@@ -61,6 +47,7 @@ public class MyService extends Service {
     int i = 0;
     String baseurl = "";
     DbUtils dbUtils;
+    final String TAG = "GetMsgService";
 
     Handler handler = new Handler();
 
@@ -83,26 +70,51 @@ public class MyService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Build bd = new Build();
-        final String hardware = bd.HARDWARE;
-        String hdNum = bd.SERIAL;
-        String id = hardware + hdNum;
-        String md5id = MD5Utils.md5(id);
-        String deviceID = md5id;
-        handler.postDelayed(new Runnable() {
+
+        handler.postDelayed(new Runnable() {//防止 WebsocketPushClient 对象无法重复开启
             @Override
             public void run() {
                 client.connect();
                 client.setOrgCode("1000");
                 client.setM_sOranization("");
-
             }
         }, 1000);
 
-        client.setCallback(new WebsocketPushClient.Callback() {
+        //如果意外断开 或者 服务器还没启动每隔5秒重连一次
+        reconnect();
+        return START_REDELIVER_INTENT;//系统会自动重启该服务，并将Intent的值传入
+    }
+
+    private void reconnect() {
+        client.setCallErroBack(new WebsocketPushClient.CallErroBack() {//递归后的新的client 再次监听错误接口
+            @Override
+            public void OnReciveError() {
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (null != client) {
+                            client = null;
+                            System.gc();
+                            client = new WebsocketPushClient(URI.create(ws), draft_17);
+                            client.connect();
+                            client.setOrgCode("1000");
+                            client.setM_sOranization("");
+                            reconnect();
+                        }
+                    }
+                }, timeper);
+
+                if (i <= 60) {//先6秒一次  之后一次加4秒  加到3分钟一次为止
+                    timeper += 3000;
+                    i++;
+                }
+            }
+        });
+
+        client.setCallback(new WebsocketPushClient.Callback() {//递归后的新的client 再次监听接受消息的接口
             @Override
             public void OnReciveData(String data) {
-                Log.e("得到数据", data);
+                Log.e("GetMsgService====", data);
                 PushMessage message;
                 try {
                     if (!TextUtils.isEmpty(data)) {
@@ -131,21 +143,16 @@ public class MyService extends Service {
                                         NotificationUtils notificationUtils = new NotificationUtils(context);
                                         notificationUtils.sendSysNotification(body.getUserName());
                                     }
-                                }, 600);
-
+                                }, 100);
                             }
                         }
                     }
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
-
             }
         });
 
-        //如果意外断开 或者 服务器还没启动每隔5秒重连一次
-        reconnect();
-        return START_REDELIVER_INTENT;//系统会自动重启该服务，并将Intent的值传入
     }
 
 
@@ -176,7 +183,7 @@ public class MyService extends Service {
                 try {
                     myResponse = gson.fromJson(data, MyResponse.class);
                 } catch (Exception e) {
-                    Toast.makeText(context, "发生了未知的错误！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "解析错误！", Toast.LENGTH_SHORT).show();
                 }
                 if (myResponse != null && "200".equals(myResponse.getRespCode())) {//响应成功
                     MyResponse.MyData myData = myResponse.getData();
@@ -189,33 +196,34 @@ public class MyService extends Service {
 
                         VipCustomerModel vipCustomerModel = new VipCustomerModel();
                         vipCustomerModel.setBirthday(body.getBithday());
-                        vipCustomerModel.setCarNumber("");
+                        vipCustomerModel.setWorkNumber(myData.getWorkCode());
                         vipCustomerModel.setDelFlag("0");
                         vipCustomerModel.setFaceId(userId);
                         vipCustomerModel.setFavorite(body.getFavourite());
                         vipCustomerModel.setIdNumber(idCard);
-                        vipCustomerModel.setImgUrl(header.getImgBaseUrl() + body.getPicName());
+                        String imgUrl = header.getImgBaseUrl() + body.getPicName();
+                        vipCustomerModel.setImgUrl(imgUrl.contains("127.0.0.1") ? imgUrl.replace("127.0.0.1", "192.168.0.183") : imgUrl);
                         vipCustomerModel.setName(body.getUserName());
                         vipCustomerModel.setPhoneNumber(telephone);
                         vipCustomerModel.setRemark(remark);
                         vipCustomerModel.setSex(gener == 0 ? "女" : "男");
-                        vipCustomerModel.setVipOrder(body.getUserLevelName());//vip等级的名成
+                        int level = body.getUserLevel();
+                        String levelName = getlevelName(level);
+                        vipCustomerModel.setVipOrder(levelName);//vip等级的名称
                         vipCustomerModel.setEmail(email);
+
                         try {
                             dbUtils.saveOrUpdate(vipCustomerModel);
                         } catch (DbException e) {
                             e.printStackTrace();
                         }
-
-
                     }
 
                 } else if (myResponse != null && "500".equals(myResponse.getRespCode())) {
                     Toast.makeText(context, "服务器错误！", Toast.LENGTH_SHORT).show();
-                } else {
+                } /*else {
                     Toast.makeText(context, "发生了未知的错误！", Toast.LENGTH_SHORT).show();
-                }
-
+                }*/
             }
 
             @Override
@@ -228,29 +236,32 @@ public class MyService extends Service {
         });
     }
 
-    private void reconnect() {
-        client.setCallErroBack(new WebsocketPushClient.CallErroBack() {
-            @Override
-            public void OnReciveError() {
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (null != client) {
-                            client = null;
-                            System.gc();
-                            client = new WebsocketPushClient(URI.create(ws), draft_17);
-                            client.connect();
-                            reconnect();
-                        }
-                    }
-                }, timeper);
+    public String getlevelName(int level) {
+        String sLevel = "";
+        //清空checkBox
+        switch (level) {
+            case 4:
+                sLevel = "四级";
+                break;
+            case 3:
+                sLevel = "三级";
+                break;
+            case 2:
+                sLevel = "二级";
+                break;
+            case 1:
+                sLevel = "一级";
+                break;
 
-                if (i <= 60) {//先6秒一次  之后一次加4秒  加到3分钟一次停止
-                    timeper += 5000;
-                    i++;
-                }
-            }
-        });
+            case 0://没有的话不传了
+                sLevel = "普通";
+                break;
+
+            default:
+                sLevel = "普通";
+                break;
+        }
+        return sLevel;
     }
 
     @Nullable
@@ -258,54 +269,6 @@ public class MyService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-
-    //自定义通知栏
-    public void sendMyNotification() {
-        //判断系统通知栏背景颜色
-        boolean darkNotiFicationBar = NotificationUtils.isDarkNotiFicationBar(context);
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.remoteview);
-        //设置通知栏背景
-        remoteViews.setTextColor(R.id.appNameTextView, darkNotiFicationBar == true ? Color.WHITE : Color.BLACK);
-        remoteViews.setTextColor(R.id.title_TextView, darkNotiFicationBar == true ? Color.WHITE : Color.BLACK);
-        remoteViews.setTextColor(R.id.content_TextView, darkNotiFicationBar == true ? Color.WHITE : Color.BLACK);
-        //设置文字大小
-        remoteViews.setTextViewTextSize(R.id.title_TextView, COMPLEX_UNIT_SP, 16);
-        remoteViews.setTextViewTextSize(R.id.content_TextView, COMPLEX_UNIT_SP, 14);
-        //添加内容
-        remoteViews.setImageViewResource(R.id.iconImageView, R.mipmap.ic_launcher);
-        remoteViews.setTextViewText(R.id.appNameTextView, "紫禁城");
-        remoteViews.setTextViewText(R.id.title_TextView, "紫禁城放假了");
-        remoteViews.setTextViewText(R.id.content_TextView, "紫禁城免费了");
-        //实例化通知栏构造器。
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-        //系统收到通知时，通知栏上面显示的文字。
-        mBuilder.setTicker("来通知了！");
-        mBuilder.setContent(remoteViews);//获得Notification定高
-        mBuilder.setCustomBigContentView(remoteViews);
-        //显示在通知栏上的小图标
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        //设置大图标，即通知条上左侧的图片（如果只设置了小图标，则此处会显示小图标）
-        mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
-        //添加声音
-        mBuilder.setDefaults(Notification.DEFAULT_VIBRATE);//默认的声音和铃声 吱吱
-        Intent intent = new Intent(context, MainActivity.class);//点击通知，进入应用
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        mBuilder.setContentIntent(pendingIntent);//点击通知栏后的意图
-        mBuilder.setAutoCancel(true);//设置这个标志当用户单击面板就可以让通知将自动取消
-        //设置为不可清除模式
-//        mBuilder.setOngoing(true);
-        //显示通知，id必须不重复，否则新的通知会覆盖旧的通知（利用这一特性，可以对通知进行更新）
-        NotificationManager mm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = mBuilder.build();
-        mm.notify(notifyId++, notification);
-//        Picasso.with(this).load("")//message 就是图片链接地址
-//                .resize(200, 200)
-//                .centerCrop()
-//                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-//                .into(remoteViews, R.id.ImageView, 1, notification);
-    }
-
 
     /**
      * 检查当前网络是否可用
@@ -336,9 +299,10 @@ public class MyService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        Intent intent = new Intent(this, AwakeMyServiceReceiver.class);
+        Intent intent = new Intent("com.meiaomei.bankusher.AwakeMyServiceReceiver");
         intent.putExtra("startService", "true");
+        Log.e("MyService", "onDestroy: " + "startService");
         sendBroadcast(intent);
+        super.onDestroy();
     }
 }

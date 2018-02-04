@@ -25,7 +25,7 @@
             android:layout_marginTop="@dimen/x80"
             android:layout_marginLeft="@dimen/x30"
             android:scaleType="centerCrop"
-            android:src="@mipmap/liu" />
+            android:src="@mipmap/backimg" />
 
         <TextView
             android:id="@+id/tv_al_tishi"
@@ -50,7 +50,7 @@
             android:layout_alignParentBottom="true"
             android:gravity="center"
             android:text="69"
-            android:textColor="@color/colortext_check"
+            android:textColor="@color/j_theme_color"
             android:layout_width="@dimen/x60"
             android:layout_height="@dimen/x60" />
 

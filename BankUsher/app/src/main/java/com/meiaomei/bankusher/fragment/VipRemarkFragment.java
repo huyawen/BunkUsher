@@ -106,12 +106,12 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
             Button bt_export_all;
     @ViewInject(R.id.rl_root)
     RelativeLayout rl_root;
-    @ViewInject(R.id.bt_detail)
-    Button bt_detail;
+    @ViewInject(R.id.tv_detail)
+    TextView tv_detail;
 
     String[] title = {"抓拍时间", "抓拍地点", "姓名", "电话", "性别", "VIP级别", "身份证号"};
     ArrayList<String> vipArryaList = new ArrayList<>();
-    LinkedHashMap<Integer, HashMap<String, String>> linkedHashMap = new LinkedHashMap<>();
+    LinkedHashMap<Integer, HashMap<String, String>> linkedHashMap = new LinkedHashMap<>();//此hashmap是往 excel表格裏的
     private DatePickerDialog dpd;//日期选择控件
     private TimePickerDialog tpd;//时间选择控件
     String date = "";
@@ -130,7 +130,7 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
     String qendTime;
     String qName;
     String qOrder;
-    int detail_position = -1;
+    int detail_position = -1;//点击详情要显示的item 的位置
     DetailPopuWindow popuWindow;
 
     @Override
@@ -148,7 +148,7 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
         dbUtils = BankUsherDB.getDbUtils();
         dao = new CommonDaoImpl(getActivity(), dbUtils);
         EventBus.getDefault().register(this);
-        String sql = getActivity().getString(R.string.getAllVisitRecordByDelFlag);
+        String sql = getActivity().getString(R.string.getAllVisitRecordByDelFlagAndHandleFlag);
         sb = new StringBuffer(sql);
         MainActivity.MyTouchListener myTouchListener = new MainActivity.MyTouchListener() {
             @Override
@@ -170,7 +170,7 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
     public void getMessage(StringModel stringModel) {
         String key = stringModel.getKey();
         String msg = stringModel.getMsg();
-        if ("update".equals(msg) || "faceAdapter".equals(msg)) {
+        if ("VipServerFragment".equals(msg) || "faceAdapter".equals(msg) || "VipRegistActivity".equals(msg)) {
             Log.e(TAG, "getMessage: 接收到消息了");
             initeData();
             recycleAdapter.refresh(tenListStart);
@@ -178,7 +178,7 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
     }
 
     private void initeData() {
-        tenListStart = dao.getCommonListEntity(ThirteenParamModel.class, getActivity().getString(R.string.getAllVisitRecordByDelFlag), new String[]{"0"});
+        tenListStart = dao.getCommonListEntity(ThirteenParamModel.class, sb.toString(), new String[]{"0","1"});
         if (tenListStart.size() == 0) {
             recycle.setVisibility(View.GONE);
             rl_norecord.setVisibility(View.VISIBLE);
@@ -199,7 +199,8 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
                 getResources().getString(R.string.radioBtn_level2),
                 getResources().getString(R.string.radioBtn_level3),
                 getResources().getString(R.string.radioBtn_level4),
-                getResources().getString(R.string.radioBtn_level5)};
+                getResources().getString(R.string.radioBtn_level5),
+                getResources().getString(R.string.all_level)};
         for (int i = 0; i < names2.length; i++) {
             vipArryaList.add(names2[i]);
         }
@@ -225,6 +226,7 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
                     String path = ImageUtils.base64ToBitmapPath(base64, new Date().getTime() + ".jpg");
                     Picasso.with(getActivity()).load(path).error(R.mipmap.backimg).into(iv_vip_remark);
                 } else {
+                    Log.e(TAG, "=imgPath="+base64 );
                     Picasso.with(getActivity()).load(base64).error(R.mipmap.backimg).into(iv_vip_remark);
                 }
             }
@@ -253,14 +255,14 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
         tv_start_time2.setOnClickListener(new MyClickListener());
         tv_end_time2.setOnClickListener(new MyClickListener());
         rl_all.setOnClickListener(new MyClickListener());
-        cb_all.setOnCheckedChangeListener(new MyCheckBoxCheckedListener());
         bt_export_aline.setOnClickListener(new MyClickListener());
         bt_export_all.setOnClickListener(new MyClickListener());
         bt_quary.setOnClickListener(new MyClickListener());
         et_name.addTextChangedListener(new MyTextWher());
         tv_start_time2.addTextChangedListener(new MyTextWher());
         tv_end_time2.addTextChangedListener(new MyTextWher());
-        bt_detail.setOnClickListener(new MyClickListener());
+        tv_detail.setOnClickListener(new MyClickListener());
+        cb_all.setOnCheckedChangeListener(new MyCheckBoxCheckedListener());
 
         et_name.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -282,10 +284,10 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (buttonView.getId() == R.id.cb_all) {
                 if (isChecked) {
-                    Log.e("cb_all", "onCheckedChanged: 全部的checkbox被选中了");
+                    Log.e("============cb_all", "onCheckedChanged: 全部的checkbox被选中了");
                     recycleAdapter.refreshCheckBox(true, true);
                 } else {
-                    Log.e("cb_all", "onCheckedChanged: 不选了");
+                    Log.e("============cb_all", "onCheckedChanged: 不选了");
                     recycleAdapter.refreshCheckBox(false, true);
                 }
             }
@@ -363,14 +365,14 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.bt_detail:
+                case R.id.tv_detail:
                     if (detail_position >= 0) {
                         LinkedHashMap<String, String> detlinkHashMap = new LinkedHashMap<>();
                         detlinkHashMap.put("id", tenListStart.get(detail_position).getThirdPara());
                         detlinkHashMap.put("姓名", TextUtils.isEmpty(tenListStart.get(detail_position).getFourthPara()) ? "未录入" : tenListStart.get(detail_position).getFourthPara());
                         detlinkHashMap.put("性别", TextUtils.isEmpty(tenListStart.get(detail_position).getSixthPara()) ? "未录入" : tenListStart.get(detail_position).getSixthPara());
                         detlinkHashMap.put("电话", TextUtils.isEmpty(tenListStart.get(detail_position).getFifthPara()) ? "未录入" : tenListStart.get(detail_position).getFifthPara());
-                        detlinkHashMap.put("工号", TextUtils.isEmpty(tenListStart.get(detail_position).getTwelfthPara()) ? "未录入" : tenListStart.get(detail_position).getTwelfthPara());
+                        detlinkHashMap.put("客户编号", TextUtils.isEmpty(tenListStart.get(detail_position).getTwelfthPara()) ? "未录入" : tenListStart.get(detail_position).getTwelfthPara());
                         detlinkHashMap.put("身份证号", TextUtils.isEmpty(tenListStart.get(detail_position).getSeventhPara()) ? "未录入" : tenListStart.get(detail_position).getSeventhPara());
                         detlinkHashMap.put("客户等级", TextUtils.isEmpty(tenListStart.get(detail_position).getEighthPara()) ? "未录入" : tenListStart.get(detail_position).getEighthPara());
                         detlinkHashMap.put("备注", TextUtils.isEmpty(tenListStart.get(detail_position).getNinthPara()) ? "未录入" : tenListStart.get(detail_position).getNinthPara());
@@ -397,7 +399,7 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
                     }
                     break;
 
-                case R.id.bt_export_aline:
+                case R.id.bt_export_aline://单个导出只导出选中的条目
                     if (linkedHashMap != null && !linkedHashMap.isEmpty()) {
                         ExcelUtil.writeExcel(getActivity(), linkedHashMap, "excel-vip" + System.currentTimeMillis(), title, "所选条目导出成功！文件在sd卡目录下xls文件夹下。");
                     } else {
@@ -405,7 +407,7 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
                     }
                     break;
 
-                case R.id.bt_export_all:
+                case R.id.bt_export_all://批量导出  不管选不选都是导出全部数据
                     LinkedHashMap<Integer, HashMap<String, String>> linkedMap = new LinkedHashMap<>();
                     for (int i = 0; i < tenListStart.size(); i++) {
                         HashMap<String, String> messageMap = new HashMap<>();
@@ -427,173 +429,183 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
                     }
                     break;
 
-                case R.id.bt_quary:
-                    //将之前选中的checkbox清空 清空已点击过的item
-                    cb_all.setChecked(false);
-                    tv_remark_name_value.setText("");
-                    tv_remark_phone_value.setText("");
-                    tv_remark_viporder_value.setText("");
-
-                    //开始时间单独校验
-                    if (!TextUtils.isEmpty(tv_start_time2.getText())) {
-                        try {//不能选择未来时间
-                            if (format.parse(tv_start_time2.getText().toString()).getTime() > System.currentTimeMillis()) {
-                                new AlertDialogCommon
-                                        .Builder(getActivity())
-                                        .setContents(new String[]{"查询时间不能选择未来时间!"})
-                                        .build()
-                                        .createAlertDialog();
-                                break;
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                case R.id.bt_quary://当没有选中的checkbox存在时才能进行查询
+                    if (linkedHashMap.size() == 0) {
+                        if (cb_all.isChecked()) {//此事件后面没有事件才可以执行完毕
+                            cb_all.setChecked(false);
                         }
-                    }
-                    //结束时间单独校验
-                    if (!TextUtils.isEmpty(tv_end_time2.getText())) {
-                        try {//不能选择未来时间
-                            if (format.parse(tv_end_time2.getText().toString()).getTime() > System.currentTimeMillis()) {
-                                new AlertDialogCommon
-                                        .Builder(getActivity())
-                                        .setContents(new String[]{"查询时间不能选择未来时间!"})
-                                        .build()
-                                        .createAlertDialog();
-                                break;
+                        //点查询后将之前选中的checkbox清空 清空已点击过的item 将选中的集合以及点击位置清空 图片设置为默认的图片
+                        linkedHashMap.clear();
+                        num.setText("0");
+                        detail_position = -1;
+                        iv_vip_remark.setImageDrawable(getResources().getDrawable(R.mipmap.default_img));
+                        tv_remark_name_value.setText("");
+                        tv_remark_phone_value.setText("");
+                        tv_remark_viporder_value.setText("");
+
+                        //开始时间单独校验
+                        if (!TextUtils.isEmpty(tv_start_time2.getText())) {
+                            try {//不能选择未来时间
+                                if (format.parse(tv_start_time2.getText().toString()).getTime() > System.currentTimeMillis()) {
+                                    new AlertDialogCommon
+                                            .Builder(getActivity())
+                                            .setContents(new String[]{"查询时间不能选择未来时间!"})
+                                            .build()
+                                            .createAlertDialog();
+                                    break;
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
                         }
-                    }
-
-                    if (!TextUtils.isEmpty(tv_start_time2.getText()) && !TextUtils.isEmpty(tv_end_time2.getText())) {
-                        try {
-                            //不能选择未来时间
-                            if (format.parse(tv_start_time2.getText().toString()).getTime() > System.currentTimeMillis()
-                                    || format.parse(tv_end_time2.getText().toString()).getTime() > System.currentTimeMillis()) {
-                                new AlertDialogCommon
-                                        .Builder(getActivity())
-                                        .setContents(new String[]{"查询时间不能选择未来时间!"})
-                                        .build()
-                                        .createAlertDialog();
-                                break;
+                        //结束时间单独校验
+                        if (!TextUtils.isEmpty(tv_end_time2.getText())) {
+                            try {//不能选择未来时间
+                                if (format.parse(tv_end_time2.getText().toString()).getTime() > System.currentTimeMillis()) {
+                                    new AlertDialogCommon
+                                            .Builder(getActivity())
+                                            .setContents(new String[]{"查询时间不能选择未来时间!"})
+                                            .build()
+                                            .createAlertDialog();
+                                    break;
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-
-
-                            //开始时间应该小于结束时间
-                            if (format.parse(tv_start_time2.getText().toString()).getTime() > format.parse(tv_end_time2.getText().toString()).getTime()) {
-                                new AlertDialogCommon
-                                        .Builder(getActivity())
-                                        .setContents(new String[]{"查询开始时间应该小于结束时间!"})
-                                        .build()
-                                        .createAlertDialog();
-                                break;
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
                         }
-                    }
 
-                    if (!TextUtils.isEmpty(et_name.getText())) {
-                        if (sb.toString().contains(" and vip.Name=")) {
-                            int start = sb.indexOf(" and vip.Name=");
-                            int lenth = (" and vip.Name=\'" + qName + "\'").length();
-                            sb.replace(start, start + lenth, " and vip.Name=\'" + et_name.getText() + "\'");
+                        if (!TextUtils.isEmpty(tv_start_time2.getText()) && !TextUtils.isEmpty(tv_end_time2.getText())) {
+                            try {
+                                //不能选择未来时间
+                                if (format.parse(tv_start_time2.getText().toString()).getTime() > System.currentTimeMillis()
+                                        || format.parse(tv_end_time2.getText().toString()).getTime() > System.currentTimeMillis()) {
+                                    new AlertDialogCommon
+                                            .Builder(getActivity())
+                                            .setContents(new String[]{"查询时间不能选择未来时间!"})
+                                            .build()
+                                            .createAlertDialog();
+                                    break;
+                                }
+
+
+                                //开始时间应该小于结束时间
+                                if (format.parse(tv_start_time2.getText().toString()).getTime() > format.parse(tv_end_time2.getText().toString()).getTime()) {
+                                    new AlertDialogCommon
+                                            .Builder(getActivity())
+                                            .setContents(new String[]{"查询开始时间应该小于结束时间!"})
+                                            .build()
+                                            .createAlertDialog();
+                                    break;
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if (!TextUtils.isEmpty(et_name.getText())) {
+                            if (sb.toString().contains(" and vip.Name=")) {
+                                int start = sb.indexOf(" and vip.Name=");
+                                int lenth = (" and vip.Name=\'" + qName + "\'").length();
+                                sb.replace(start, start + lenth, " and vip.Name=\'" + et_name.getText() + "\'");
+                            } else {
+                                sb.append(" and vip.Name=\'" + et_name.getText() + "\'");
+                            }
+                        }
+
+                        if (!TextUtils.isEmpty(spitemStr)) {
+                            if (sb.toString().contains(" and vip.VipOrder=")) {//binary replace
+                                int start = sb.indexOf(" and vip.VipOrder=");
+                                int lenth = (" and vip.VipOrder=\'" + qOrder + "\'").length();
+                                if ("全部".equals(spitemStr)) {//此次为无限制，删除上条限制
+                                    sb.delete(start, start + lenth);
+                                } else {
+                                    sb.replace(start, start + lenth, " and vip.VipOrder=\'" + spitemStr + "\'");
+                                }
+                            } else {//once  add
+                                if (!"全部".equals(spitemStr)) {
+                                    sb.append(" and vip.VipOrder=\'" + spitemStr + "\'");
+                                }
+                            }
+                        }
+
+                        if (!TextUtils.isEmpty(tv_start_time2.getText()) && TextUtils.isEmpty(tv_end_time2.getText())) {//只有开始时间
+                            try {
+                                long slong = format.parse(tv_start_time2.getText().toString()).getTime();//选中日期
+                                if (sb.toString().contains(" and vis.VisitTime >=")) {//binary replace
+                                    int start = sb.indexOf(" and vis.VisitTime >=");
+                                    long qslong = format.parse(qstartTime).getTime();//last search starttime
+                                    int lenth = (" and vis.VisitTime >=" + qslong).length();
+                                    sb.replace(start, start + lenth, " and vis.VisitTime >=" + slong);
+                                } else {
+                                    sb.append(" and vis.VisitTime >=" + slong); //库 >=输入
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else if (TextUtils.isEmpty(tv_start_time2.getText()) && !TextUtils.isEmpty(tv_end_time2.getText())) {//只有结束时间
+                            try {//选中日期
+                                long elong = format.parse(tv_end_time2.getText().toString()).getTime();
+                                if (sb.toString().contains(" and vis.VisitTime <=")) {//binary replace
+                                    int start = sb.indexOf(" and vis.VisitTime <=");
+                                    long qelong = format.parse(qendTime).getTime();//last search endtime
+                                    int lenth = (" and vis.VisitTime <=" + qelong).length();
+                                    sb.replace(start, start + lenth, " and vis.VisitTime <=" + elong);
+                                } else {
+                                    sb.append(" and vis.VisitTime <=" + elong); //库< 输入
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else if (!TextUtils.isEmpty(tv_start_time2.getText()) && !TextUtils.isEmpty(tv_end_time2.getText())) {//all
+                            try {//选中日期
+                                long elong = format.parse(tv_end_time2.getText().toString()).getTime();
+                                long slong = format.parse(tv_start_time2.getText().toString()).getTime();
+                                if (sb.toString().contains(" and vis.VisitTime >=") && sb.toString().contains(" and vis.VisitTime <=")) {
+                                    int start = sb.indexOf(" and vis.VisitTime >=");
+                                    long qslong = format.parse(qstartTime).getTime();//last search starttime
+                                    long qelong = format.parse(qendTime).getTime();//last search endtime
+                                    int lenth = (" and vis.VisitTime >=" + qslong + " and vis.VisitTime <=" + qelong).length();
+                                    sb.replace(start, start + lenth, " and vis.VisitTime >=" + slong + " and vis.VisitTime <=" + elong);
+                                } else {
+                                    sb.append(" and vis.VisitTime >=" + slong + " and vis.VisitTime <=" + elong);
+                                }
+
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        //更新数据源
+                        if (sb.toString().contains(" order by vis.VisitTime desc")) {
+                            int st = sb.indexOf(" order by vis.VisitTime desc");
+                            int len = (" order by vis.VisitTime desc").length();
+                            sb.delete(st, st + len);
+                            sb.append(" order by vis.VisitTime desc");//保证加在尾巴
                         } else {
-                            sb.append(" and vip.Name=\'" + et_name.getText() + "\'");
+                            sb.append(" order by vis.VisitTime desc");//保证加在尾巴
                         }
-                    }
-
-                    if (!TextUtils.isEmpty(spitemStr)) {
-                        if (sb.toString().contains(" and vip.VipOrder=")) {//binary replace
-                            int start = sb.indexOf(" and vip.VipOrder=");
-                            int lenth = (" and vip.VipOrder=\'" + qOrder + "\'").length();
-                            if ("无限制".equals(spitemStr)) {//此次为无限制，删除上条限制
-                                sb.delete(start, start + lenth);
-                            } else {
-                                sb.replace(start, start + lenth, " and vip.VipOrder=\'" + spitemStr + "\'");
-                            }
-                        } else {//once  add
-                            if (!"无限制".equals(spitemStr)) {
-                                sb.append(" and vip.VipOrder=\'" + spitemStr + "\'");
-                            }
-                        }
-                    }
-
-                    if (!TextUtils.isEmpty(tv_start_time2.getText()) && TextUtils.isEmpty(tv_end_time2.getText())) {//只有开始时间
-                        try {
-                            long slong = format.parse(tv_start_time2.getText().toString()).getTime();//选中日期
-                            if (sb.toString().contains(" and vis.VisitTime >=")) {//binary replace
-                                int start = sb.indexOf(" and vis.VisitTime >=");
-                                long qslong = format.parse(qstartTime).getTime();//last search starttime
-                                int lenth = (" and vis.VisitTime >=" + qslong).length();
-                                sb.replace(start, start + lenth, " and vis.VisitTime >=" + slong);
-                            } else {
-                                sb.append(" and vis.VisitTime >=" + slong); //库 >=输入
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                        Log.e(TAG, "sql-vipremark= " + sb.toString());
+                        tenList = dao.getCommonListEntity(ThirteenParamModel.class, sb.toString(), new String[]{"0","1"});
+                        tenListStart = tenList;//查过之后就要把查过的数据源给初始的list
+                        if (tenList.size() == 0) {
+                            recycle.setVisibility(View.GONE);
+                            rl_norecord.setVisibility(View.VISIBLE);
+                        } else {
+                            recycle.setVisibility(View.VISIBLE);
+                            rl_norecord.setVisibility(View.GONE);
+                            recycleAdapter.refresh(tenList);
                         }
 
-                    } else if (TextUtils.isEmpty(tv_start_time2.getText()) && !TextUtils.isEmpty(tv_end_time2.getText())) {//只有结束时间
-                        try {//选中日期
-                            long elong = format.parse(tv_end_time2.getText().toString()).getTime();
-                            if (sb.toString().contains(" and vis.VisitTime <=")) {//binary replace
-                                int start = sb.indexOf(" and vis.VisitTime <=");
-                                long qelong = format.parse(qendTime).getTime();//last search endtime
-                                int lenth = (" and vis.VisitTime <=" + qelong).length();
-                                sb.replace(start, start + lenth, " and vis.VisitTime <=" + elong);
-                            } else {
-                                sb.append(" and vis.VisitTime <=" + elong); //库< 输入
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                    } else if (!TextUtils.isEmpty(tv_start_time2.getText()) && !TextUtils.isEmpty(tv_end_time2.getText())) {//all
-                        try {//选中日期
-                            long elong = format.parse(tv_end_time2.getText().toString()).getTime();
-                            long slong = format.parse(tv_start_time2.getText().toString()).getTime();
-                            if (sb.toString().contains(" and vis.VisitTime >=") && sb.toString().contains(" and vis.VisitTime <=")) {
-                                int start = sb.indexOf(" and vis.VisitTime >=");
-                                long qslong = format.parse(qstartTime).getTime();//last search starttime
-                                long qelong = format.parse(qendTime).getTime();//last search endtime
-                                int lenth = (" and vis.VisitTime >=" + qslong + " and vis.VisitTime <=" + qelong).length();
-                                sb.replace(start, start + lenth, " and vis.VisitTime >=" + slong + " and vis.VisitTime <=" + elong);
-                            } else {
-                                sb.append(" and vis.VisitTime >=" + slong + " and vis.VisitTime <=" + elong);
-                            }
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    //更新数据源
-                    if (sb.toString().contains(" order by vis.VisitTime desc")) {
-                        int st = sb.indexOf(" order by vis.VisitTime desc");
-                        int len = (" order by vis.VisitTime desc").length();
-                        sb.delete(st, st + len);
-                        sb.append(" order by vis.VisitTime desc");//保证加在尾巴
+                        //保存数据
+                        qendTime = tv_end_time2.getText().toString();
+                        qstartTime = tv_start_time2.getText().toString();
+                        qName = et_name.getText().toString();
+                        qOrder = spitemStr;
                     } else {
-                        sb.append(" order by vis.VisitTime desc");//保证加在尾巴
+                        ToastUtils.showToast("请先取消单选框的选中状态，在进行查询！", getActivity(), Toast.LENGTH_SHORT);
                     }
-                    Log.e(TAG, "sql-vipremark= " + sb.toString());
-                    tenList = dao.getCommonListEntity(ThirteenParamModel.class, sb.toString(), new String[]{"0"});
-                    tenListStart = tenList;//查过之后就要把查过的数据源给初始的list
-                    if (tenList.size() == 0) {
-                        recycle.setVisibility(View.GONE);
-                        rl_norecord.setVisibility(View.VISIBLE);
-                    } else {
-                        recycle.setVisibility(View.VISIBLE);
-                        rl_norecord.setVisibility(View.GONE);
-                        recycleAdapter.refresh(tenList);
-                    }
-
-                    //保存数据
-                    qendTime = tv_end_time2.getText().toString();
-                    qstartTime = tv_start_time2.getText().toString();
-                    qName = et_name.getText().toString();
-                    qOrder = spitemStr;
                     break;
             }
         }
@@ -641,8 +653,6 @@ public class VipRemarkFragment extends BaseFragment implements DatePickerDialog.
                         e.printStackTrace();
                     }
                 }
-
-
             }
         }
     }

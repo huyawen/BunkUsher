@@ -43,6 +43,7 @@ public class PushMessage {
         String cameraName; //摄像头名称
         String deviceId;//设备id
 
+
         public String getCameraName() {
             return cameraName;
         }

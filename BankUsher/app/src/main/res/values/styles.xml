@@ -18,6 +18,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--1px的activity的样式-->
+    <style name="LiveStyle">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
     <!-- 自定义加载的进度 dialog -->
     <style name="loading_dialog" parent="android:Theme.Dialog">
         <item name="android:windowFrame">@null</item>       <!-- Dialog的windowFrame框为无 -->

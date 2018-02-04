@@ -13,24 +13,32 @@
     <!--
     1 visitTime 2 visitAddress 4 name 5 PhoneNumber 6 sex  7 idnumber 8 viporder 9 remark 10 imgurl
      -->
-    <string name="getAllVisitRecordByDelFlag">
-      select vis.VisitTime as firstPara,vis.VisitAddress as secondPara,
+
+    <!--查询所有的来访记录  根据是否删除的标记-->
+    <string name="getAllVisitRecordByDelFlagAndHandleFlag">
+          select vis.VisitTime as firstPara,vis.VisitAddress as secondPara,
              vip.FaceId as thirdPara,vip.Name as fourthPara,vip.PhoneNumber as fifthPara,
              vip.Sex as sixthPara, vip.IdNumber as seventhPara,vip.VipOrder as eighthPara,
              vip.Remark as ninthPara,vip.ImgUrl as tenthPara ,vis.VisitId as eleventhPara,
              vip.WorkNumber as twelfthPara
           from VipCustomerModel vip inner join VisitRecordModel vis
-          on vip.FaceId = vis.FaceId where vip.DelFlag=? order by vis.VisitTime desc
+          on vip.FaceId = vis.FaceId where vip.DelFlag=? and vis.HandleFlag=? order by vis.VisitTime desc
 
     </string>
 
+    <!--查询来访记录 根据是否处理分类
+        只显示系统当天的来访记录
+        and julianday(strftime(\'%Y-%m-%d\',date(\'now\',\'localtime\')))=julianday(strftime(\'%Y-%m-%d\', vis.VisitTime / 1000, \'unixepoch\'))
+     -->
     <string name="getAllVisitRecordByHandleFlag">
-      select vis.VisitTime as firstPara,vis.VisitAddress as secondPara,
+          select vis.VisitTime as firstPara,vis.VisitAddress as secondPara,
              vip.FaceId as thirdPara,vip.Name as fourthPara,vip.PhoneNumber as fifthPara,
              vip.Sex as sixthPara, vip.IdNumber as seventhPara,vip.VipOrder as eighthPara,
              vip.Remark as ninthPara,vip.ImgUrl as tenthPara,vis.VisitId as eleventhPara
           from VipCustomerModel vip inner join VisitRecordModel vis
-          on vip.FaceId = vis.FaceId where vis.HandleFlag=? order by vis.VisitTime desc
+          on vip.FaceId = vis.FaceId where vis.HandleFlag=?
+          and julianday(strftime(\'%Y-%m-%d\',date(\'now\',\'localtime\')))=julianday(strftime(\'%Y-%m-%d\', vis.VisitTime / 1000, \'unixepoch\'))
+          order by vis.VisitTime desc
 
     </string>
 

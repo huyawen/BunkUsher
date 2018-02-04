@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">农行迎宾系统</string>
+    <string name="app_name">建行迎宾系统</string>
 
     <!-- reg-->
     <string name="name">姓   名:</string>
@@ -24,6 +24,7 @@
     <string name="radioBtn_level3">二级</string>
     <string name="radioBtn_level4">一级</string>
     <string name="radioBtn_level5">普通</string>
+    <string name="all_level">全部</string>
 
     <string name="vip_reg">VIP注册</string>
     <string name="remark_hint">请输入备注信息</string>

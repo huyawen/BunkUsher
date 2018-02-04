@@ -30,14 +30,14 @@
             android:layout_height="fill_parent">
             <Button
                 android:background="@drawable/background_select"
-                android:id="@+id/t_down"
+                android:id="@+id/t_editer"
+                android:text="编辑"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
-                android:text="确定"
-                android:textColor="@color/colortext_check"
+                android:textColor="@color/j_theme_color"
                 android:textSize="14sp"  />
             <View
                 android:layout_width="0.5dp"
@@ -47,15 +47,14 @@
                 />
         </LinearLayout>
         <Button
-
+            android:text="确定"
+            android:id="@+id/t_down"
             android:layout_width="0dp"
-            android:id="@+id/t_editer"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="编辑"
             android:background="@drawable/background_select"
-            android:textColor="@color/colortext_check"
+            android:textColor="@color/j_theme_color"
             android:textSize="14sp" />
     </LinearLayout>
 

@@ -58,7 +58,6 @@ public class LoginActivity extends AppCompatActivity {
     String baseurl = "";
     boolean canLogin = false;
 
-    Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 
         manager = new OkHttpManager();
         progressDialog = new MyProgressDialog().createLoadingDialog(LoginActivity.this, "正在通讯，请稍后...");
+        progressDialog.setCancelable(false);
         baseurl = SharedPrefsUtil.getValue(LoginActivity.this, "serverAddress", "");
         if (TextUtils.isEmpty(baseurl)) {
             baseurl = "http://192.168.0.183:8580";
@@ -99,15 +99,6 @@ public class LoginActivity extends AppCompatActivity {
                 case R.id.login_imbtn:
                     String useName = et_username.getText().toString();
                     String passWord = et_password.getText().toString();
-
-                    //保存完成之后，发通知测试
-                  /*  handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            NotificationUtils notificationUtils = new NotificationUtils(LoginActivity.this);
-                            notificationUtils.sendSysNotification("胡亚文");
-                        }
-                    },10000);*/
                     login(useName, passWord);
                     break;
 
@@ -209,7 +200,6 @@ public class LoginActivity extends AppCompatActivity {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
             if (isShouldHideInput(v, ev)) {
-
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);

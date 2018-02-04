@@ -4,10 +4,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.widget.RadioButton;
@@ -22,10 +22,8 @@ import com.meiaomei.bankusher.fragment.SettingFragment;
 import com.meiaomei.bankusher.fragment.VipRemarkFragment;
 import com.meiaomei.bankusher.fragment.VipServerFragment;
 import com.meiaomei.bankusher.manager.BankUsherDB;
-import com.meiaomei.bankusher.manager.OkHttpManager;
-import com.meiaomei.bankusher.service.MyService;
+import com.meiaomei.bankusher.service.GetMsgService;
 import com.meiaomei.bankusher.utils.DeviceInfoUtils;
-import com.meiaomei.bankusher.utils.FileUtils;
 import com.meiaomei.bankusher.utils.SharedPrefsUtil;
 
 import java.util.ArrayList;
@@ -51,17 +49,23 @@ public class MainActivity extends AppCompatActivity {
     DbUtils dbUtils;
     final String TAG = getClass().getName();
     String baseurl = "";
-    OkHttpManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Log.e(TAG, "onCreate:=======MainActivity ");
         setContentView(R.layout.activity_main);
         ViewUtils.inject(this);
         initOther();
+        if (savedInstanceState != null) {//onSaveInstanceState保存了fragment对象  将fragment销毁重建防止重叠
+            // 如果tag为null，flags为0时，弹出回退栈中最上层的那个fragment。
+            // 如果tag为null ，flags为1时，弹出回退栈中所有fragment。
+            Log.e(TAG, "savedInstanceState != null");
+            FragmentManager manager = getFragmentManager();
+            manager.popBackStackImmediate(null, 1);
+        }
+
         initView();
     }
 
@@ -69,10 +73,13 @@ public class MainActivity extends AppCompatActivity {
     private void initOther() {
         dbUtils = BankUsherDB.getDbUtils();
         //        BankUsherDB.deletTable();
-        FileUtils.deleteFile(Environment.getExternalStorageDirectory());
 
-        if (!DeviceInfoUtils.isServiceWork(MainActivity.this, "com.meiaomei.bankusher.service.MyService")) {
-            Intent intent = new Intent(this, MyService.class);
+        //开启1px的服务 （实测 有问题）
+        //LiveService.toLiveService(MainActivity.this);
+
+        //开启websocket的服务
+        if (!DeviceInfoUtils.isServiceWork(MainActivity.this, "com.meiaomei.bankusher.service.GetMsgService")) {
+            Intent intent = new Intent(this, GetMsgService.class);
             startService(intent);
         }
 
@@ -80,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(baseurl)) {
             baseurl = "http://192.168.0.183:8580";
         }
-        manager = new OkHttpManager();
-
     }
 
     public void initView() {
@@ -198,5 +203,27 @@ public class MainActivity extends AppCompatActivity {
             listener.onTouchEvent(ev);
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+
+    //将此应用转入后台运行 方法1 不能写在父类方法之后
+//    @Override
+//    public void onBackPressed() {
+//        //ture 在任何Activity中按下返回键都退出并进入后台运行， false 只有在根Activity中按下返回键才会退向后台运行
+//        moveTaskToBack(false);  //方式一：将此任务转向后台
+//    }
+
+
+    //将此应用转入后台运行 方法2 监听回退键
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {//主页按返回键
+            Intent home = new Intent(Intent.ACTION_MAIN);
+            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            home.addCategory(Intent.CATEGORY_HOME);
+            startActivity(home);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

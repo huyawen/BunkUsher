@@ -17,10 +17,10 @@
 
         <ImageView
             android:id="@+id/iv_settingloge"
-            android:layout_width="@dimen/x500"
-            android:layout_height="@dimen/x100"
+            android:layout_width="@dimen/x530"
+            android:layout_height="@dimen/x130"
             android:layout_centerInParent="true"
-            android:src="@mipmap/black_logo" />
+            android:src="@mipmap/j_big_logo" />
     </RelativeLayout>
 
     <LinearLayout
@@ -176,11 +176,11 @@
         <TextView
             android:id="@+id/tv_checkUpdate"
             android:layout_marginTop="@dimen/x16"
-            android:padding="@dimen/x5"
+            android:padding="@dimen/x8"
             android:text="检查更新"
             android:textSize="15sp"
             android:background="@drawable/background_select"
-            android:textColor="@color/colortext_check"
+            android:textColor="@color/j_theme_color"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

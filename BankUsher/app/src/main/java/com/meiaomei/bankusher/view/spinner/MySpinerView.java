@@ -91,7 +91,7 @@ public class MySpinerView extends LinearLayout implements View.OnClickListener, 
     public void showSpinWindow() {
         /**这里还有一步要做，就是让右边箭头向上。自己替换掉ivSpiner图片**/
         mSpinerPopWindow.setWidth(spiner.getWidth());
-        ivSpiner.setImageResource(R.mipmap.up);
+        ivSpiner.setImageResource(R.mipmap.j_up);
 //        mSpinerPopWindow.setWidth(((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getWidth());
         mSpinerPopWindow.showAsDropDown(spiner);//将目标view传进去
 //        mSpinerPopWindow.showAtLocation();//改变popuwindow的位置
@@ -103,7 +103,7 @@ public class MySpinerView extends LinearLayout implements View.OnClickListener, 
      */
     @Override
     public void onItemClick(int pos) {
-        ivSpiner.setImageResource(R.mipmap.down);
+        ivSpiner.setImageResource(R.mipmap.j_down);
         /**这里还有一步要做，就是让右边箭头还原向下。自己替换掉ivSpiner图片**/
         if (pos >= 0 && pos <= nameList.size()) { // pos为-1就是弹窗消失，不管他
             String value = nameList.get(pos);

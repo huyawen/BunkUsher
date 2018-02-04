@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <!-- 内部颜色 -->
-    <solid android:color="@color/colortext_check" />
+    <solid android:color="@color/j_theme_color" />
 
     <!-- 圆角的幅度 -->
     <corners

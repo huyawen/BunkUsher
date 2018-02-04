@@ -41,12 +41,13 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
     Context context;
     DbUtils dbUtils;
     int inflateLayout;
-    private int max_count = 20;//最大显示数
+    private int max_count = 10;//最大显示数
     private Boolean isFootView = false;//是否添加了FootView
     private String footViewText = "";//FootView的内容
     //三个final int类型表示ViewType的两种类型
     private final int NORMAL_TYPE = 0;//正常
     private final int FOOT_TYPE = 1;//足视图
+    private List<Integer> checkPositionlist = new ArrayList<>();
 
     boolean isCheckAll = false;//点击全选的checkbox
     boolean isCheckClick = false;//点击全选触发的事件
@@ -128,7 +129,7 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    max_count += 5;
+                    max_count += 10;
                     notifyDataSetChanged();
                 }
             }, 2000);
@@ -140,20 +141,54 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
             holder.tv_name.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getFourthPara()) ? "未录入" : thirteenParamModelList.get(position).getFourthPara());// name
             holder.tv_viporder.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getFourthPara()) ? "未录入" : thirteenParamModelList.get(position).getEighthPara());//vip order
 
-
             //单选checkbox的点击监听
             holder.rl_item_cb.setOnClickListener(new View.OnClickListener() {//参照是相对布局
                 @Override
                 public void onClick(View v) {
-                    if (holder.cb_item.isChecked()) {//是选中的
+                    if (holder.cb_item.isChecked()) {
                         Log.e("VipRemarkAdapter", "rl_item_cb:==" + position + "==" + holder.cb_item.isChecked() + "-remove");
-                        //ui界面
-                        holder.cb_item.setChecked(false);
-                        //操作数据
-                        excelMap.remove(position);
+                        if (checkPositionlist.contains(holder.cb_item.getTag())) {
+                            holder.cb_item.setChecked(false);  //ui界面
+                            excelMap.remove(position);//操作数据
+                            checkPositionlist.remove(new Integer(position));
+                        }
                     } else {//没有被选中
                         Log.e("VipRemarkAdapter", "rl_item_cb:==" + position + "==" + holder.cb_item.isChecked() + "-add");
-                        holder.cb_item.setChecked(true);//ui界面
+                        if (!checkPositionlist.contains(holder.cb_item.getTag())) {
+                            holder.cb_item.setChecked(true);//ui界面
+                            messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));//操作数据
+                            messageMap.put("visitAddress", thirteenParamModelList.get(position).getSecondPara());
+                            messageMap.put("faceId", faceId);
+                            messageMap.put("name", thirteenParamModelList.get(position).getFourthPara());
+                            messageMap.put("idNumber", thirteenParamModelList.get(position).getSeventhPara());
+                            messageMap.put("age", thirteenParamModelList.get(position).getFifthPara());
+                            messageMap.put("sex", thirteenParamModelList.get(position).getSixthPara());
+                            messageMap.put("vipOrder", thirteenParamModelList.get(position).getEighthPara());
+                            excelMap.put(position, messageMap);
+                            checkPositionlist.add(new Integer(position));
+                        }
+
+                    }
+
+                    if (checkItemClickListener != null) {
+                        checkItemClickListener.onCheckClik(excelMap);//设置监听
+                    }
+                }
+            });
+
+            holder.cb_item.setTag(new Integer(position));//设置tag 否则划回来时选中消失
+            //checkbox  复用问题
+            if (checkPositionlist != null) {
+                holder.cb_item.setChecked((checkPositionlist.contains(new Integer(position)) ? true : false));
+            } else {
+                holder.cb_item.setChecked(false);
+            }
+
+            //全部选中的按钮的点击事件操作
+            if (isCheckClick) {
+                if (isCheckAll) {//选中的时候
+                    if (!checkPositionlist.contains(holder.cb_item.getTag())) {
+                        holder.cb_item.setChecked(true);
                         messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));//操作数据
                         messageMap.put("visitAddress", thirteenParamModelList.get(position).getSecondPara());
                         messageMap.put("faceId", faceId);
@@ -163,36 +198,19 @@ public class RecycleViewVipRemarkAdapter extends RecyclerView.Adapter<RecycleVie
                         messageMap.put("sex", thirteenParamModelList.get(position).getSixthPara());
                         messageMap.put("vipOrder", thirteenParamModelList.get(position).getEighthPara());
                         excelMap.put(position, messageMap);
+                        checkPositionlist.add(new Integer(position));
                     }
-
-                    if (checkItemClickListener != null) {
-                        checkItemClickListener.onCheckClik(excelMap);//设置监听
-                    }
-                }
-            });
-
-
-            //全部选中的按钮的点击事件操作
-            if (isCheckClick) {
-                if (isCheckAll) {//选中的时候
-                    holder.cb_item.setChecked(true);
-                    messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));//操作数据
-                    messageMap.put("visitAddress", thirteenParamModelList.get(position).getSecondPara());
-                    messageMap.put("faceId", faceId);
-                    messageMap.put("name", thirteenParamModelList.get(position).getFourthPara());
-                    messageMap.put("idNumber", thirteenParamModelList.get(position).getSeventhPara());
-                    messageMap.put("age", thirteenParamModelList.get(position).getFifthPara());
-                    messageMap.put("sex", thirteenParamModelList.get(position).getSixthPara());
-                    messageMap.put("vipOrder", thirteenParamModelList.get(position).getEighthPara());
-                    excelMap.put(position, messageMap);
                 } else {//取消的时候
-                    holder.cb_item.setChecked(false);
-                    if (excelMap.size() > 0) {
-                        excelMap.remove(position);//操作数据  remove
-                    }
+                    if (checkPositionlist.contains(holder.cb_item.getTag())) {
+                        holder.cb_item.setChecked(false);
+                        if (excelMap.size() > 0) {
+                            excelMap.remove(position);//操作数据
+                            checkPositionlist.remove(new Integer(position));
+                        }
 
-                    if (excelMap.size() == 0) {//防止全部的影响单个选中
-                        isCheckClick = false;
+                        if (excelMap.size() == 0) {//防止全部取消后 这个else已经激活  单选还会影响
+                            isCheckClick = false;
+                        }
                     }
                 }
 

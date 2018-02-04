@@ -4,7 +4,7 @@
     <!-- 设置边框的颜色 -->
     <stroke
         android:width="1px"
-        android:color="@color/colortext_check"
+        android:color="@color/j_theme_color"
         />
 
     <!-- 填充背景的白色-->

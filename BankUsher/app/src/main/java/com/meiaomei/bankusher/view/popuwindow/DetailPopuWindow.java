@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.meiaomei.bankusher.R;
 import com.meiaomei.bankusher.activity.VipRegistActivity;
-import com.meiaomei.bankusher.activity.VisitRegistActivity;
 import com.meiaomei.bankusher.adapter.Adapter;
 import com.meiaomei.bankusher.adapter.ViewHolder;
 
@@ -25,7 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
- *点击弹出的popuwindow弹窗
+ * 点击弹出的popuwindow弹窗
  */
 
 public class DetailPopuWindow extends BasePopupWindow {
@@ -90,7 +89,7 @@ public class DetailPopuWindow extends BasePopupWindow {
         pop_layout = (RelativeLayout) findViewById(R.id.pop_layout);
         t_down = (Button) findViewById(R.id.t_down);
         lv_content = (ListView) findViewById(R.id.lv_content);
-        t_editer=(Button)findViewById(R.id.t_editer);
+        t_editer = (Button) findViewById(R.id.t_editer);
     }
 
     @Override
@@ -121,9 +120,9 @@ public class DetailPopuWindow extends BasePopupWindow {
             case R.id.t_editer:
                 pop.dismiss();
                 Intent intent = new Intent(mAct, VipRegistActivity.class);
-                HashMap<String,String> hashMap=linkedHashMap;//可以传hashmap 不可以传linkedhashmap
-                intent.putExtra("linkedHashMap",hashMap);
-                intent.putExtra("imgPath",title);
+                HashMap<String, String> hashMap = linkedHashMap;//可以传hashmap 不可以传linkedhashmap
+                intent.putExtra("linkedHashMap", hashMap);
+                intent.putExtra("imgPath", title);
                 mAct.startActivity(intent);
                 break;
         }

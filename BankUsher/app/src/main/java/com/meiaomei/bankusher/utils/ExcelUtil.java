@@ -117,7 +117,7 @@ public class ExcelUtil {
 //
             new AlertDialogCommon
                     .Builder(context)
-                    .setTitleColor(R.color.colortext_check)
+                    .setTitleColor(R.color.j_theme_color)
                     .setContents(new String[]{hint})
                     .setIsShowCancelBtn(false)//是否显示取消按钮 不显示
                     .setSubmitBtnText("确定")
@@ -187,7 +187,7 @@ public class ExcelUtil {
 
             new AlertDialogCommon
                     .Builder(context)
-                    .setTitleColor(R.color.colortext_check)
+                    .setTitleColor(R.color.j_theme_color)
                     .setContents(new String[]{hint})
                     .setIsShowCancelBtn(false)//是否显示取消按钮 不显示
                     .setSubmitBtnText("确定")

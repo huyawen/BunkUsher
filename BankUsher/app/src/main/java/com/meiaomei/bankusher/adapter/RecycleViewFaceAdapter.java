@@ -42,11 +42,12 @@ public class RecycleViewFaceAdapter extends RecyclerView.Adapter<RecycleViewFace
     RecycleViewFaceAdapter.CheckItemClickListener checkItemClickListener;
     DbUtils dbUtils;
     int inflateLayout;
-    private int max_count = 20;//最大显示数
+    private int max_count = 10;//最大显示数
     private Boolean isFootView = false;//是否添加了FootView
     private String footViewText = "";//FootView的内容
     boolean isCheckAll = false;//点击全选的checkbox
     boolean isCheckClick = false;//点击全选触发的事件
+    private List<Integer> checkPositionlist = new ArrayList<>();
 
 
     private final int FOOT_TYPE = 1;//足视图
@@ -79,7 +80,6 @@ public class RecycleViewFaceAdapter extends RecyclerView.Adapter<RecycleViewFace
     @Override//将点击的位置暴露出去
     public void onClick(View v) {
         if (recycleviewItemOnclickListener != null) {
-//            v.setBackgroundColor(context.getResources().getColor(R.color.common_bg_press));
             recycleviewItemOnclickListener.onItemClik(v, (int) v.getTag());
         }
     }
@@ -124,7 +124,7 @@ public class RecycleViewFaceAdapter extends RecyclerView.Adapter<RecycleViewFace
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    max_count += 5;
+                    max_count += 10;
                     notifyDataSetChanged();
                 }
             }, 1000);
@@ -132,32 +132,46 @@ public class RecycleViewFaceAdapter extends RecyclerView.Adapter<RecycleViewFace
             final String faceId = thirteenParamModelList.get(position).getThirdPara();
             final HashMap<String, String> messageMap = new HashMap<>();
             holder.tv_face_catch_time.setText(DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yy-MM-dd HH:mm"));
-            holder.tv_face_catch_address.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getSecondPara())?"未录入":thirteenParamModelList.get(position).getSecondPara());
-            holder.tv_face_catch_sex.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getSixthPara())?"未录入":thirteenParamModelList.get(position).getSixthPara());
+            holder.tv_face_catch_address.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getSecondPara()) ? "未录入" : thirteenParamModelList.get(position).getSecondPara());
+            holder.tv_face_catch_sex.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getSixthPara()) ? "未录入" : thirteenParamModelList.get(position).getSixthPara());
+
+
+            holder.cb_face_item.setTag(new Integer(position));//设置tag 否则划回来时选中消失
+            //checkbox  复用问题
+            if (checkPositionlist != null) {
+                holder.cb_face_item.setChecked((checkPositionlist.contains(new Integer(position)) ? true : false));
+            } else {
+                holder.cb_face_item.setChecked(false);
+            }
+
             //单选checkbox的点击监听
             holder.rl_face_cb_item.setOnClickListener(new View.OnClickListener() {//参照是相对布局
                 @Override
                 public void onClick(View v) {
                     if (holder.cb_face_item.isChecked()) {//是选中的
-                        Log.e("RecycleViewFaceAdapter", "rl_item_cb:positin==" + position + "==" + holder.cb_face_item.isChecked() + "-remove");
-                        //ui界面
-                        holder.cb_face_item.setChecked(false);
-                        //操作数据
-                        excelMap.remove(position);
+                        if (checkPositionlist.contains(holder.cb_face_item.getTag())) {
+                            Log.e("RecycleViewFaceAdapter", "rl_item_cb:positin==" + position + "==" + holder.cb_face_item.isChecked() + "-remove");
+                            holder.cb_face_item.setChecked(false);     //ui界面
+                            excelMap.remove(position);  //操作数据
+                            checkPositionlist.remove(holder.cb_face_item.getTag());
+                        }
                     } else {//没有被选中
-                        Log.e("RecycleViewFaceAdapter", "rl_item_cb::positin==" + position + "==" + holder.cb_face_item.isChecked() + "-add");
-                        holder.cb_face_item.setChecked(true);//ui界面
-                        messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));//操作数据
-                        messageMap.put("visitAddress", thirteenParamModelList.get(position).getSecondPara());
-                        messageMap.put("faceId", faceId);
-                        messageMap.put("name", thirteenParamModelList.get(position).getFourthPara());
-                        messageMap.put("idNumber", thirteenParamModelList.get(position).getSeventhPara());
-                        messageMap.put("age", thirteenParamModelList.get(position).getFifthPara());
-                        messageMap.put("sex", thirteenParamModelList.get(position).getSixthPara());
-                        messageMap.put("vipOrder", thirteenParamModelList.get(position).getEighthPara());
-                        excelMap.put(position, messageMap);
-                    }
+                        if (!checkPositionlist.contains(holder.cb_face_item.getTag())) {
+                            Log.e("RecycleViewFaceAdapter", "rl_item_cb::positin==" + position + "==" + holder.cb_face_item.isChecked() + "-add");
+                            holder.cb_face_item.setChecked(true);//ui界面
+                            messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));//操作数据
+                            messageMap.put("visitAddress", thirteenParamModelList.get(position).getSecondPara());
+                            messageMap.put("faceId", faceId);
+                            messageMap.put("name", thirteenParamModelList.get(position).getFourthPara());
+                            messageMap.put("idNumber", thirteenParamModelList.get(position).getSeventhPara());
+                            messageMap.put("age", thirteenParamModelList.get(position).getFifthPara());
+                            messageMap.put("sex", thirteenParamModelList.get(position).getSixthPara());
+                            messageMap.put("vipOrder", thirteenParamModelList.get(position).getEighthPara());
+                            excelMap.put(position, messageMap);
+                            checkPositionlist.add(new Integer(position));
+                        }
 
+                    }
                     if (checkItemClickListener != null) {//最后一个值设置监听,改变进入状态
                         checkItemClickListener.onCheckClik(excelMap);//设置监听
                     }
@@ -168,24 +182,30 @@ public class RecycleViewFaceAdapter extends RecyclerView.Adapter<RecycleViewFace
             //全部选中的按钮的点击事件操作
             if (isCheckClick) {
                 if (isCheckAll) {
-                    holder.cb_face_item.setChecked(true);//ui界面
-                    messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));//操作数据
-                    messageMap.put("visitAddress", thirteenParamModelList.get(position).getSecondPara());
-                    messageMap.put("faceId", faceId);
-                    messageMap.put("name", thirteenParamModelList.get(position).getFourthPara());
-                    messageMap.put("idNumber", thirteenParamModelList.get(position).getSeventhPara());
-                    messageMap.put("age", thirteenParamModelList.get(position).getFifthPara());
-                    messageMap.put("sex", thirteenParamModelList.get(position).getSixthPara());
-                    messageMap.put("vipOrder", thirteenParamModelList.get(position).getEighthPara());
-                    excelMap.put(position, messageMap);
-                } else {
-                    holder.cb_face_item.setChecked(false);
-                    if (excelMap.size() > 0) {
-                        excelMap.remove(position);//操作数据  remove
+                    if (!checkPositionlist.contains(holder.cb_face_item.getTag())) {
+                        holder.cb_face_item.setChecked(true);//ui界面
+                        messageMap.put("visitTime", DateUtils.longFromatDate(thirteenParamModelList.get(position).getFirstPara(), "yyyy-MM-dd HH:mm"));//操作数据
+                        messageMap.put("visitAddress", thirteenParamModelList.get(position).getSecondPara());
+                        messageMap.put("faceId", faceId);
+                        messageMap.put("name", thirteenParamModelList.get(position).getFourthPara());
+                        messageMap.put("idNumber", thirteenParamModelList.get(position).getSeventhPara());
+                        messageMap.put("age", thirteenParamModelList.get(position).getFifthPara());
+                        messageMap.put("sex", thirteenParamModelList.get(position).getSixthPara());
+                        messageMap.put("vipOrder", thirteenParamModelList.get(position).getEighthPara());
+                        excelMap.put(position, messageMap);
+                        checkPositionlist.add(new Integer(position));
                     }
+                } else {
+                    if (checkPositionlist.contains(holder.cb_face_item.getTag())) {
+                        holder.cb_face_item.setChecked(false);
+                        if (excelMap.size() > 0) {
+                            excelMap.remove(position);//操作数据  remove
+                            checkPositionlist.remove(new Integer(position));
+                        }
 
-                    if (excelMap.size()==0){//防止全部的影响单个选中
-                        isCheckClick=false;
+                        if (excelMap.size() == 0) {//这个else已被激活  全选的会影响单个的
+                            isCheckClick = false;
+                        }
                     }
                 }
 
@@ -208,10 +228,10 @@ public class RecycleViewFaceAdapter extends RecyclerView.Adapter<RecycleViewFace
                                 public void cancleButtonClickListener() {
                                     try {
                                         VisitRecordModel visitRecordModel = dbUtils.findFirst(Selector.from(VisitRecordModel.class).where("FaceId", "=", faceId));
-                                        if (visitRecordModel!=null) {
+                                        if (visitRecordModel != null) {
                                             dbUtils.delete(visitRecordModel);
-                                            EventBus.getDefault().post( new StringModel("update", "faceAdapter"));//数据删除完更新界面
-                                        }else {
+                                            EventBus.getDefault().post(new StringModel("update", "faceAdapter"));//数据删除完更新界面
+                                        } else {
 
                                         }
                                     } catch (DbException e) {

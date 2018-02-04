@@ -1,14 +1,9 @@
 package com.meiaomei.bankusher.activity;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -61,7 +56,7 @@ public class VisitRegistActivity extends AppCompatActivity implements DatePicker
     String date = "";
     String time = "";
     DbUtils dbUtils;
-    int i=0;
+    int i = 0;
 
 
     @Override
@@ -75,8 +70,8 @@ public class VisitRegistActivity extends AppCompatActivity implements DatePicker
     }
 
     @OnClick(R.id.bt_send)
-    public void btnSend(){
-        NotificationUtils notificationUtils=new NotificationUtils(VisitRegistActivity.this);
+    public void btnSend() {
+        NotificationUtils notificationUtils = new NotificationUtils(VisitRegistActivity.this);
         notificationUtils.sendMyNotification("华怡雯");
     }
 
@@ -92,9 +87,9 @@ public class VisitRegistActivity extends AppCompatActivity implements DatePicker
         List<VipCustomerModel> list = null;
         try {
             list = dbUtils.findAll(VipCustomerModel.class);
-            if (list != null&&list.size()>0) {
+            if (list != null && list.size() > 0) {
                 Random random = new Random();
-                visit.setFaceId(list.get(list.size()==1?0:random.nextInt(list.size() - 1)).getFaceId());//随机取一个人  nextInt方法必须是>0的参数  否则会抛异常
+                visit.setFaceId(list.get(list.size() == 1 ? 0 : random.nextInt(list.size() - 1)).getFaceId());//随机取一个人  nextInt方法必须是>0的参数  否则会抛异常
                 visit.setVisitTime(lTime);
                 visit.setCameraName(et_cameraName.getText().toString());
                 visit.setVisitAddress(et_address.getText().toString());
@@ -103,7 +98,7 @@ public class VisitRegistActivity extends AppCompatActivity implements DatePicker
                 visit.setHardWareId(FileUtils.generateUuid());
                 dbUtils.save(visit);
                 ToastUtils.showToast("保存事件成功", VisitRegistActivity.this, Toast.LENGTH_SHORT);
-            }else {
+            } else {
                 ToastUtils.showToast("没有匹配的贵宾", VisitRegistActivity.this, Toast.LENGTH_SHORT);
             }
         } catch (DbException e) {
@@ -207,9 +202,9 @@ public class VisitRegistActivity extends AppCompatActivity implements DatePicker
         return onTouchEvent(ev);
     }
 
-    public  boolean isShouldHideInput(View v, MotionEvent event) {
+    public boolean isShouldHideInput(View v, MotionEvent event) {
         if (v != null && (v instanceof EditText)) {
-            int[] leftTop = { 0, 0 };
+            int[] leftTop = {0, 0};
             //获取输入框当前的location位置
             v.getLocationInWindow(leftTop);
             int left = leftTop[0];

@@ -1,38 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/back_list"
-    android:layout_height="wrap_content">
+    android:orientation="vertical">
 
     <!--待处理的界面-->
     <RelativeLayout
         android:id="@+id/rl_waithandle"
-        android:layout_centerInParent="true"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/x60"
-        android:layout_marginBottom="@dimen/x40"
         android:layout_height="@dimen/x600"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/x40"
         android:layout_marginLeft="@dimen/x40"
         android:layout_marginRight="@dimen/x40"
+        android:layout_marginTop="@dimen/x60"
         android:background="@drawable/card_background">
 
-        <ImageView
-            android:id="@+id/iv_vips_face"
+        <RelativeLayout
+            android:id="@+id/rl_img"
             android:layout_width="@dimen/x320"
             android:layout_height="@dimen/x220"
             android:layout_marginLeft="@dimen/x30"
-            android:layout_marginTop="@dimen/x80"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/liu" />
+            android:layout_marginTop="@dimen/x80">
+
+            <ImageView
+                android:id="@+id/iv_vips_face"
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/backimg" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tv_server_tishi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/iv_vips_face"
-            android:layout_alignRight="@+id/iv_vips_face"
-            android:layout_below="@+id/iv_vips_face"
+            android:layout_alignLeft="@id/rl_img"
+            android:layout_alignRight="@+id/rl_img"
+            android:layout_below="@+id/rl_img"
             android:gravity="center"
             android:paddingBottom="@dimen/x10"
             android:paddingLeft="@dimen/x20"
@@ -42,22 +49,22 @@
 
         <TextView
             android:id="@+id/tv_undis_page"
-            android:layout_marginLeft="@dimen/x30"
-            android:layout_marginBottom="@dimen/x30"
-            android:background="@drawable/num_circle"
-            android:layout_alignParentLeft="true"
+            android:layout_width="@dimen/x60"
+            android:layout_height="@dimen/x60"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="@dimen/x30"
+            android:layout_marginLeft="@dimen/x30"
+            android:background="@drawable/num_circle"
             android:gravity="center"
             android:text="69"
-            android:textColor="@color/colortext_check"
-            android:layout_width="@dimen/x60"
-            android:layout_height="@dimen/x60" />
+            android:textColor="@color/j_theme_color" />
 
         <RelativeLayout
             android:id="@+id/rl_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/iv_vips_face">
+            android:layout_toRightOf="@+id/rl_img">
 
             <!--表格全部的布局  改变表格的大小-->
             <RelativeLayout

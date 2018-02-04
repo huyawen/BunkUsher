@@ -6,7 +6,11 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorHintBackground">#2f2f2f</color>
-    <color name="colortext_check">#00d3c5</color>
+
+    <color name="j_back_color">#091B27</color>
+    <color name="n_theme_color">#00d3c5</color>
+    <color name="j_theme_color">#066eca</color>
+
     <color name="back_list">#e9e9e9</color>
     <color name="colortext_no_check">#a4a4a4</color>
 

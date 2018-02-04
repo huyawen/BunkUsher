@@ -13,7 +13,6 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.text.TextUtils;
@@ -93,7 +92,7 @@ public class NotificationUtils {
 
 
         //添加内容
-        remoteViews.setImageViewResource(R.id.iconImageView, R.mipmap.icon);
+        remoteViews.setImageViewResource(R.id.iconImageView, R.mipmap.n_icon);
         remoteViews.setTextViewText(R.id.appNameTextView, "紫禁城");//小的
 
         remoteViews.setTextViewText(R.id.title_TextView, "欢迎VIP : " + name + "");
@@ -109,8 +108,8 @@ public class NotificationUtils {
         mBuilder.setContent(remoteViews);//获得Notification定高
         mBuilder.setCustomBigContentView(remoteViews);
         //显示在通知栏上的小图标
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
-        mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
+        mBuilder.setSmallIcon(R.mipmap.n_icon);
+        mBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.n_icon));
 
         mBuilder.setAutoCancel(true);//设置这个标志当用户单击面板就可以让通知将自动取消
         mBuilder.setDefaults(Notification.DEFAULT_SOUND);//设置默认铃声
@@ -145,7 +144,7 @@ public class NotificationUtils {
                 .setDefaults(Notification.DEFAULT_LIGHTS)//设置三色灯
                 .setVibrate(new long[]{0, 300, 300, 300})//设置震动  实现效果：延迟0ms，然后振动300ms，在延迟300ms，接着在振动300ms。
                 .setLights(0xff0000ff, 300, 0)// .setLights(intledARGB ,intledOnMS ,intledOffMS 只有在设置了标志符Flags为Notification.FLAG_SHOW_LIGHTS的时候，才支持三色灯提醒。 这边的颜色跟设备有关，不是所有的颜色都可以，要看具体设备。
-                .setSmallIcon(R.mipmap.icon)//设置通知小ICON
+                .setSmallIcon(R.mipmap.n_icon)//设置通知小ICON
 
         ;
 
@@ -170,7 +169,7 @@ public class NotificationUtils {
         if (!TextUtils.isEmpty(Protocol.getCookedId())) {
             intent.setClass(context, MainActivity.class);
         } else {
-            intent.setClass(context, LoginActivity.class);
+            intent.setClass(context, LoginActivity.class);//cookie 为空 从新走登录
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, flags);
         return pendingIntent;

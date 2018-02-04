@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/listview_background"
-        android:divider="@color/colortext_check"
+        android:divider="@color/j_theme_color"
         android:dividerHeight="1px"
         android:scrollbars="none">
 

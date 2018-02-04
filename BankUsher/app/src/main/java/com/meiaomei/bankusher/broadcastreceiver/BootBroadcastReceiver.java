@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import com.meiaomei.bankusher.service.MyService;
+import com.meiaomei.bankusher.service.GetMsgService;
 import com.meiaomei.bankusher.utils.SharedPrefsUtil;
 
 /**
@@ -20,7 +20,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String address = SharedPrefsUtil.getValue(context, "serverAddress", "");//地址如果没有  第一次不应该自动启动服务
         if (intent.getAction().equals(ACTION) && !TextUtils.isEmpty(address)) {
-            Intent i = new Intent(context, MyService.class);
+            Intent i = new Intent(context, GetMsgService.class);
             context.startService(i);
         }
     }

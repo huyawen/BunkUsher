@@ -10,8 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/x50"
+        android:layout_marginTop="@dimen/x40"
         android:orientation="horizontal"
+        android:background="@color/background"
+        android:paddingTop="@dimen/x20"
         android:paddingBottom="@dimen/x20">
 
         <RelativeLayout
@@ -201,7 +203,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ll1"
-        android:layout_marginBottom="@dimen/x16">
+        android:layout_marginBottom="@dimen/x10"
+        android:layout_marginTop="@dimen/x10">
 
         <TextView
             android:id="@+id/tv"
@@ -228,11 +231,11 @@
 
             <TextView
                 android:id="@+id/face_num"
-                android:layout_width="@dimen/x44"
+                android:layout_width="@dimen/x50"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="0"
-                android:textColor="@color/colortext_check" />
+                android:textColor="@color/j_theme_color" />
 
             <TextView
                 android:id="@+id/tiao"
@@ -274,34 +277,53 @@
             android:textColor="@drawable/execl_select" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/iv_faceTake"
-        android:layout_width="@dimen/x360"
-        android:layout_height="@dimen/x200"
+    <RelativeLayout
+        android:id="@+id/rl_img"
         android:layout_below="@+id/rl1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/x10"
-        android:layout_marginTop="@dimen/x20"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/liu" />
+        android:layout_marginRight="@dimen/x10"
+        android:layout_marginTop="@dimen/x20">
+
+        <ImageView
+            android:id="@+id/iv_faceTake"
+            android:layout_centerHorizontal="true"
+            android:layout_width="@dimen/x360"
+            android:layout_height="@dimen/x200"
+            android:src="@mipmap/default_img" />
+
+        <TextView
+            android:id="@+id/tv_rl"
+            android:textColor="@color/j_theme_color"
+            android:paddingTop="@dimen/x5"
+            android:textSize="10sp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_faceTake"
+            android:text="(选中右侧列表项显示信息)" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_face_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/iv_faceTake"
+        android:layout_below="@+id/rl_img"
         android:layout_marginTop="@dimen/x10"
         android:gravity="center"
         android:paddingBottom="@dimen/x10"
         android:paddingLeft="@dimen/x20"
         android:paddingRight="@dimen/x20"
         android:paddingTop="@dimen/x10"
-        android:text="姓名：" />
+        android:text="姓名:" />
 
     <TextView
         android:id="@+id/tv_face_name_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/iv_faceTake"
+        android:layout_below="@+id/rl_img"
         android:layout_marginTop="@dimen/x10"
         android:layout_toRightOf="@+id/tv_face_name"
         android:gravity="center"
@@ -323,7 +345,7 @@
         android:paddingLeft="@dimen/x20"
         android:paddingRight="@dimen/x20"
         android:paddingTop="@dimen/x10"
-        android:text="性别：" />
+        android:text="性别:" />
 
     <TextView
         android:id="@+id/tv_face_sex_value"
@@ -350,7 +372,7 @@
         android:paddingLeft="@dimen/x20"
         android:paddingRight="@dimen/x20"
         android:paddingTop="@dimen/x10"
-        android:text="抓拍地点：" />
+        android:text="地点:" />
 
     <TextView
         android:id="@+id/tv_face_address_value"
@@ -372,10 +394,10 @@
         android:id="@+id/ll_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignTop="@+id/iv_faceTake"
+        android:layout_alignTop="@+id/rl_img"
         android:layout_below="@id/rl1"
         android:layout_marginLeft="@dimen/x16"
-        android:layout_toRightOf="@id/iv_faceTake"
+        android:layout_toRightOf="@id/rl_img"
         android:orientation="vertical">
 
         <LinearLayout

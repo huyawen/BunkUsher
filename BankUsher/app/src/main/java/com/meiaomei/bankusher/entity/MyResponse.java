@@ -61,8 +61,17 @@ public class MyResponse implements Serializable {
         private String idCard;//身份证号
         private String remark;//备注
         private String telephone;
-
         private String productUrl;
+
+        String workCode;//人员编号
+
+        public String getWorkCode() {
+            return workCode;
+        }
+
+        public void setWorkCode(String workCode) {
+            this.workCode = workCode;
+        }
 
         public String getProductUrl() {
             return productUrl;

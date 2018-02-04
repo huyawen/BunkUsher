@@ -5,9 +5,12 @@ import android.graphics.Bitmap;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -21,7 +24,9 @@ import com.meiaomei.bankusher.entity.ThirteenParamModel;
 import com.meiaomei.bankusher.entity.VisitRecordModel;
 import com.meiaomei.bankusher.utils.DateUtils;
 import com.meiaomei.bankusher.utils.ImageUtils;
+import com.meiaomei.bankusher.utils.ScreenUtils;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.Date;
 import java.util.List;
@@ -38,7 +43,7 @@ public class RecycleVipSerunDisposAdapter extends RecyclerView.Adapter<RecycleVi
     DbUtils dbUtils;
     int inflateLayout;
     List<ThirteenParamModel> thirteenParamModelList;
-    private int max_count = 20;//最大显示数
+    private int max_count = 10;//最大显示数
     private Boolean isFootView = false;//是否添加了FootView
     private String footViewText = "";//FootView的内容
     //三个final int类型表示ViewType的两种类型
@@ -79,6 +84,49 @@ public class RecycleVipSerunDisposAdapter extends RecyclerView.Adapter<RecycleVi
         }
     }
 
+    //picasso 自动缩放的内部类
+    public class PicassoTransformation implements Transformation {
+        int screenWidth;//屏幕宽
+        double targetWidth; //控件宽
+
+        /**
+         * @param view  为了得到contenxt对象获得屏幕宽度
+         */
+        public PicassoTransformation(View view){
+            WindowManager wm = (WindowManager) view.getContext().getSystemService(Context.WINDOW_SERVICE);
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(displayMetrics);
+            //获得屏幕宽度
+            screenWidth = displayMetrics.widthPixels;
+            targetWidth = R.dimen.x320;
+        }
+
+        @Override
+        public Bitmap transform(Bitmap bitmap) {
+            if (bitmap.getWidth() == 0 || bitmap.getHeight() == 0) {
+                return bitmap;
+            }
+
+            //得到图片宽高比,每个参数必须强转成double型
+            double ratio = (double) bitmap.getWidth() / (double) bitmap.getHeight();
+
+            Bitmap bitmapResult=null;
+            if(bitmap!=null){
+                bitmapResult = Bitmap.createScaledBitmap(bitmap, (int) (targetWidth+0.5), (int) ((targetWidth / ratio)+0.5), false);
+            }
+            if (bitmap != bitmapResult) {
+                bitmap.recycle();
+            }
+
+            return bitmapResult;
+        }
+        @Override
+        public String key() {
+            return "transformation" + screenWidth ;
+        }
+    }
+
+
     @Override
     public void onBindViewHolder(MyHolder holder, final int position) {
         if (isFootView && getItemViewType(position) == FOOT_TYPE) {
@@ -97,7 +145,9 @@ public class RecycleVipSerunDisposAdapter extends RecyclerView.Adapter<RecycleVi
                 Bitmap bitmap = ImageUtils.base64ToBitmap(base64);
                 holder.iv_vips_face.setImageBitmap(bitmap);
             }else {
-                Picasso.with(context).load(base64).error(R.mipmap.backimg).into(holder.iv_vips_face);//.error(R.mipmap.liu)
+                Log.e("SerunDis----imgPath=", ": "+base64+" "+(position+1) );
+                holder.iv_vips_face.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                Picasso.with(context).load(base64).error(R.mipmap.backimg).into(holder.iv_vips_face);//
             }
             holder.tv_vip_name.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getFourthPara())?"未录入":thirteenParamModelList.get(position).getFourthPara());
             holder.tv_vip_grade.setText(TextUtils.isEmpty(thirteenParamModelList.get(position).getEighthPara())?"未录入":thirteenParamModelList.get(position).getEighthPara());

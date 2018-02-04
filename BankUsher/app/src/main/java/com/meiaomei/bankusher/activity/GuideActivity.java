@@ -3,8 +3,6 @@ package com.meiaomei.bankusher.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +27,7 @@ public class GuideActivity extends AppCompatActivity {
         @Override
         public void onTick(long l) {
             Log.e("GuideActivity", " " + l);
-            spJumpBtn.setText("跳过(" +  l / 1000L + "s)");
+            spJumpBtn.setText("跳过(" + l / 1000L + "s)");
         }
 
         @Override

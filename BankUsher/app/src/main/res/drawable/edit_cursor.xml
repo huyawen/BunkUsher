@@ -3,5 +3,5 @@
 
     <!--输入框光标颜色-->
     <size android:width="1dp" />
-    <solid android:color="@color/colortext_check"  />
+    <solid android:color="@color/j_theme_color"  />
 </shape>

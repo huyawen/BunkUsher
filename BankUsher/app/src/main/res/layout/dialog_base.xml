@@ -77,7 +77,7 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
                 android:text="取消"
-                android:textColor="@color/colortext_check"
+                android:textColor="@color/j_theme_color"
                 android:textSize="14sp"  />
             <View
                 android:layout_width="0.5dp"
@@ -94,7 +94,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="确定"
-            android:textColor="@color/colortext_check"
+            android:textColor="@color/j_theme_color"
             android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

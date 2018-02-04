@@ -23,7 +23,7 @@
             android:layout_marginRight="6dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@mipmap/down" />
+            android:src="@mipmap/j_down" />
     </RelativeLayout>
 
 </RelativeLayout>

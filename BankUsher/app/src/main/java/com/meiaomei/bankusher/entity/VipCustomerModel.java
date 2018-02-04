@@ -49,6 +49,14 @@ public class VipCustomerModel implements Serializable {
     @Column(column = "PhoneNumber") // 对应云丛 telephone
             String phoneNumber;
 
+    public String getWorkNumber() {
+        return workNumber;
+    }
+
+    public void setWorkNumber(String workNumber) {
+        this.workNumber = workNumber;
+    }
+
     @Column(column = "WorkNumber")  //工号
             String workNumber;
 
@@ -75,13 +83,7 @@ public class VipCustomerModel implements Serializable {
         this.remark = remark;
     }
 
-    public String getCarNumber() {
-        return workNumber;
-    }
 
-    public void setCarNumber(String carNumber) {
-        this.workNumber = carNumber;
-    }
 
     public long getBirthday() {
         return birthday;

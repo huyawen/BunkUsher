@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/colortext_check">
+    android:background="@color/j_theme_color">
 
     <LinearLayout
         android:layout_width="@dimen/x1156"
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:drawableLeft="@mipmap/ico_list_logo"
+            android:drawableLeft="@mipmap/jag_logo_b"
             android:gravity="center"
             android:drawablePadding="15dp"
             android:text="系统设置"

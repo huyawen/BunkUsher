@@ -36,8 +36,8 @@ android {
         release {
             signingConfig signingConfigs.release  //在buildTypes中指定release时的signingConfigs对应的配置名
             zipAlignEnabled true    //Zipalign优化
-            shrinkResources false // 移除无用的resource文件
-            minifyEnabled false//是否混淆
+            shrinkResources true // 移除无用的resource文件
+            minifyEnabled true//是否混淆
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -79,4 +79,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.8.1'
     compile files('libs/sun.misc.BASE64Decoder.jar')
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }

@@ -38,7 +38,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:gravity="right"
-            android:src="@mipmap/icon" />
+            android:src="@mipmap/n_icon" />
 
         <RelativeLayout
             android:layout_toRightOf="@+id/ImageView"

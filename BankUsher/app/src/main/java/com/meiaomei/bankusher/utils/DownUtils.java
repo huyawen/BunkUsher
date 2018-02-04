@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Vibrator;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -84,8 +83,7 @@ public class DownUtils {
         NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
 
-        builder.setSmallIcon(R.mipmap.icon);
-        builder.setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.message));//获取Android多媒体库内的铃声
+        builder.setSmallIcon(R.mipmap.n_icon);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_remote);
         Log.e("DownUtils", "showNotification: " + progress);
         remoteViews.setProgressBar(R.id.progressBar_n, 100, progress, false);
@@ -109,9 +107,6 @@ public class DownUtils {
                     context, 100, intent, 0);
             builder.setContentIntent(p);
 
-
-            Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-            vibrator.vibrate(1000L);// 参数是震动时间(long类型)
             context.startActivity(intent);// 下载完成之后自动弹出安装界面
             manager.cancel(0);
         } else {

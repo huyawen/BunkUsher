@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/x5"
         android:layout_marginLeft="10dp"
-        android:src="@mipmap/icon" />
+        android:src="@mipmap/n_icon" />
 
     <TextView
         android:id="@+id/tv_n"

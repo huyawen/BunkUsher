@@ -105,7 +105,7 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
     @ViewInject(R.id.rb_null)
     RadioButton rb_null;
 
-    LinkedHashMap<Integer, HashMap<String, String>> linkedHashMap = new LinkedHashMap<>();
+    LinkedHashMap<Integer, HashMap<String, String>> linkedHashMap = new LinkedHashMap<>();//接选中的值
     private DatePickerDialog dpd;//日期选择控件
     private TimePickerDialog tpd;//时间选择控件
     String date = "";
@@ -142,7 +142,7 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
         dbUtils = BankUsherDB.getDbUtils();
         dao = new CommonDaoImpl(getActivity(), dbUtils);
         EventBus.getDefault().register(this);
-        String sql = getActivity().getString(R.string.getAllVisitRecordByDelFlag);
+        String sql = getActivity().getString(R.string.getAllVisitRecordByDelFlagAndHandleFlag);
         sb = new StringBuffer(sql);
         MainActivity.MyTouchListener myTouchListener = new MainActivity.MyTouchListener() {
             @Override
@@ -164,7 +164,7 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
     public void getMessage(StringModel stringModel){
         String key = stringModel.getKey();
         String msg =stringModel.getMsg();
-        if ("update".equals(msg) || "remarkAdapter".equals(msg)) {
+        if ("VipServerFragment".equals(msg) || "remarkAdapter".equals(msg)  || "VipRegistActivity".equals(msg)) {
             Log.e(TAG, "getMessage: 接收到消息了" );
             initeData();
             faceAdapter.refresh(tenListInit);
@@ -178,7 +178,7 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
         recycle_facetake.setLayoutManager(linermanager);
         faceAdapter = new RecycleViewFaceAdapter(getActivity(), tenListInit, dbUtils, R.layout.recycle_facetake_item);
         recycle_facetake.setAdapter(faceAdapter);
-        faceAdapter.setFootViewText("正在加载。");
+        faceAdapter.setFootViewText("正在加载...");
         faceAdapter.setRecycleviewItemOnclickListener(new RecycleViewFaceAdapter.RecycleviewItemOnclickListener() {
             @Override
             public void onItemClik(View view, int position) {
@@ -188,9 +188,10 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
                 String base64=tenListInit.get(position).getTenthPara();
                 if (base64.length()>150) {
                     String path = ImageUtils.base64ToBitmapPath(base64, new Date().getTime()+".jpg");
-                    Picasso.with(getActivity()).load("file://" + path).error(R.mipmap.backimg).into(iv_faceTake);
+                    Picasso.with(getActivity()).load( path).error(R.mipmap.backimg).into(iv_faceTake);
                 }else {
-                    Picasso.with(getActivity()).load("file://" + base64).error(R.mipmap.backimg).into(iv_faceTake);
+                    Log.e(TAG, "=imgPath="+base64 );
+                    Picasso.with(getActivity()).load( base64).error(R.mipmap.backimg).into(iv_faceTake);
                 }
             }
         });
@@ -234,7 +235,7 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
     }
 
     private void initeData() {
-        tenListInit = dao.getCommonListEntity(ThirteenParamModel.class, getActivity().getString(R.string.getAllVisitRecordByDelFlag), new String[]{"0"});
+        tenListInit = dao.getCommonListEntity(ThirteenParamModel.class, sb.toString(), new String[]{"0","1"});
         if (tenListInit.size() == 0) {
             recycle_facetake.setVisibility(View.GONE);
             rl_face_norecord.setVisibility(View.VISIBLE);
@@ -318,172 +319,178 @@ public class FaceTakeFragment extends BaseFragment implements DatePickerDialog.O
                     break;
 
                 case R.id.bt_face_quary:
-                    //将之前选中的checkbox清空 清空已点击过的item
-                    cb_face_all.setChecked(false);
-                    tv_face_name_value.setText("");
-                    tv_face_sex_value.setText("");
-                    tv_face_address_value.setText("");
+                    if (linkedHashMap.size()==0) {
+                        //将之前选中的checkbox清空 清空已点击过的item
+                        linkedHashMap.clear();
+                        face_num.setText("0");
+                        tv_face_name_value.setText("");
+                        tv_face_sex_value.setText("");
+                        tv_face_address_value.setText("");
+                        iv_faceTake.setImageDrawable(getResources().getDrawable(R.mipmap.default_img));
 
-                    //开始时间单独校验
-                    if (!TextUtils.isEmpty(tv_face_start_time.getText())) {
-                        try {//不能选择未来时间
-                            if (format.parse(tv_face_start_time.getText().toString()).getTime() > System.currentTimeMillis()) {
-                                new AlertDialogCommon
-                                        .Builder(getActivity())
-                                        .setContents(new String[]{"查询时间不能选择未来时间!"})
-                                        .build()
-                                        .createAlertDialog();
-                                break;
+                        //开始时间单独校验
+                        if (!TextUtils.isEmpty(tv_face_start_time.getText())) {
+                            try {//不能选择未来时间
+                                if (format.parse(tv_face_start_time.getText().toString()).getTime() > System.currentTimeMillis()) {
+                                    new AlertDialogCommon
+                                            .Builder(getActivity())
+                                            .setContents(new String[]{"查询时间不能选择未来时间!"})
+                                            .build()
+                                            .createAlertDialog();
+                                    break;
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
                         }
-                    }
-                    //结束时间单独校验
-                    if (!TextUtils.isEmpty(tv_face_end_time.getText())) {
-                        try {//不能选择未来时间
-                            if (format.parse(tv_face_end_time.getText().toString()).getTime() > System.currentTimeMillis()) {
-                                new AlertDialogCommon
-                                        .Builder(getActivity())
-                                        .setContents(new String[]{"查询时间不能选择未来时间!"})
-                                        .build()
-                                        .createAlertDialog();
-                                break;
+                        //结束时间单独校验
+                        if (!TextUtils.isEmpty(tv_face_end_time.getText())) {
+                            try {//不能选择未来时间
+                                if (format.parse(tv_face_end_time.getText().toString()).getTime() > System.currentTimeMillis()) {
+                                    new AlertDialogCommon
+                                            .Builder(getActivity())
+                                            .setContents(new String[]{"查询时间不能选择未来时间!"})
+                                            .build()
+                                            .createAlertDialog();
+                                    break;
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
                         }
-                    }
 
-                    if (!TextUtils.isEmpty(tv_face_start_time.getText()) && !TextUtils.isEmpty(tv_face_end_time.getText())) {
-                        try {
-                            //不能选择未来时间
-                            if (format.parse(tv_face_start_time.getText().toString()).getTime() > System.currentTimeMillis()
-                                    || format.parse(tv_face_end_time.getText().toString()).getTime() > System.currentTimeMillis()) {
-                                new AlertDialogCommon
-                                        .Builder(getActivity())
-                                        .setContents(new String[]{"查询时间不能选择未来时间!"})
-                                        .build()
-                                        .createAlertDialog();
-                                break;
-                            }
+                        if (!TextUtils.isEmpty(tv_face_start_time.getText()) && !TextUtils.isEmpty(tv_face_end_time.getText())) {
+                            try {
+                                //不能选择未来时间
+                                if (format.parse(tv_face_start_time.getText().toString()).getTime() > System.currentTimeMillis()
+                                        || format.parse(tv_face_end_time.getText().toString()).getTime() > System.currentTimeMillis()) {
+                                    new AlertDialogCommon
+                                            .Builder(getActivity())
+                                            .setContents(new String[]{"查询时间不能选择未来时间!"})
+                                            .build()
+                                            .createAlertDialog();
+                                    break;
+                                }
 
-                            //开始时间应该小于结束时间
-                            if (format.parse(tv_face_start_time.getText().toString()).getTime() > format.parse(tv_face_end_time.getText().toString()).getTime()) {
-                                new AlertDialogCommon
-                                        .Builder(getActivity())
-                                        .setContents(new String[]{"查询开始时间应该小于结束时间!"})
-                                        .build()
-                                        .createAlertDialog();
-                                break;
+                                //开始时间应该小于结束时间
+                                if (format.parse(tv_face_start_time.getText().toString()).getTime() > format.parse(tv_face_end_time.getText().toString()).getTime()) {
+                                    new AlertDialogCommon
+                                            .Builder(getActivity())
+                                            .setContents(new String[]{"查询开始时间应该小于结束时间!"})
+                                            .build()
+                                            .createAlertDialog();
+                                    break;
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
                             }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
                         }
-                    }
 
 
-                    if (!TextUtils.isEmpty(et_face_address.getText())) {
-                        if (sb.toString().contains(" and vis.VisitAddress=")) {
-                            int start = sb.indexOf(" and vis.VisitAddress=");
-                            int lenth = (" and vis.VisitAddress=\'" + qAddress + "\'").length();
-                            sb.replace(start, start + lenth, " and vis.VisitAddress=\'" + et_face_address.getText() + "\'");
+                        if (!TextUtils.isEmpty(et_face_address.getText())) {
+                            if (sb.toString().contains(" and vis.VisitAddress=")) {
+                                int start = sb.indexOf(" and vis.VisitAddress=");
+                                int lenth = (" and vis.VisitAddress=\'" + qAddress + "\'").length();
+                                sb.replace(start, start + lenth, " and vis.VisitAddress=\'" + et_face_address.getText() + "\'");
+                            } else {
+                                sb.append(" and vis.VisitAddress=\'" + et_face_address.getText() + "\'");
+                            }
+                        }
+
+                        if (!TextUtils.isEmpty(gender)) {
+                            if (sb.toString().contains(" and vip.Sex=")) {
+                                int st = sb.indexOf(" and vip.Sex=");
+                                int len = (" and vip.Sex=\'" + qSex + "\'").length();
+                                if ("不选".equals(gender)) {
+                                    sb.delete(st, st + len);
+                                } else {
+                                    sb.replace(st, len + st, " and vip.Sex=\'" + gender + "\'");
+                                }
+                            } else {
+                                if (!"不选".equals(gender)) {
+                                    sb.append(" and vip.Sex=\'" + gender + "\'");
+                                }
+                            }
+                        }
+
+                        if (!TextUtils.isEmpty(tv_face_start_time.getText()) && TextUtils.isEmpty(tv_face_end_time.getText())) {//只有开始时间
+                            try {
+                                long slong = format.parse(tv_face_start_time.getText().toString()).getTime();//选中日期
+                                if (sb.toString().contains(" and vis.VisitTime >=")) {//binary replace
+                                    int start = sb.indexOf(" and vis.VisitTime >=");
+                                    long qslong = format.parse(qstartTime).getTime();//last search starttime
+                                    int lenth = (" and vis.VisitTime >=" + qslong).length();
+                                    sb.replace(start, start + lenth, " and vis.VisitTime >=" + slong);
+                                } else {
+                                    sb.append(" and vis.VisitTime >=" + slong); //库 >=输入
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else if (TextUtils.isEmpty(tv_face_start_time.getText()) && !TextUtils.isEmpty(tv_face_end_time.getText())) {//只有结束时间
+                            try {//选中日期
+                                long elong = format.parse(tv_face_end_time.getText().toString()).getTime();
+                                if (sb.toString().contains(" and vis.VisitTime <=")) {//binary replace
+                                    int start = sb.indexOf(" and vis.VisitTime <=");
+                                    long qelong = format.parse(qendTime).getTime();//last search endtime
+                                    int lenth = (" and vis.VisitTime <=" + qelong).length();
+                                    sb.replace(start, start + lenth, " and vis.VisitTime <=" + elong);
+                                } else {
+                                    sb.append(" and vis.VisitTime <=" + elong); //库< 输入
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else if (!TextUtils.isEmpty(tv_face_start_time.getText()) && !TextUtils.isEmpty(tv_face_end_time.getText())) {//都有
+                            try {//选中日期
+                                long elong = format.parse(tv_face_end_time.getText().toString()).getTime();
+                                long slong = format.parse(tv_face_start_time.getText().toString()).getTime();
+                                if (sb.toString().contains(" and vis.VisitTime >=") && sb.toString().contains(" and vis.VisitTime <=")) {
+                                    int start = sb.indexOf(" and vis.VisitTime >=");
+                                    long qslong = format.parse(qstartTime).getTime();//last search starttime
+                                    long qelong = format.parse(qendTime).getTime();//last search endtime
+                                    int lenth = (" and vis.VisitTime >=" + qslong + " and vis.VisitTime <=" + qelong).length();
+                                    sb.replace(start, start + lenth, " and vis.VisitTime >=" + slong + " and vis.VisitTime <=" + elong);
+                                } else {
+                                    sb.append(" and vis.VisitTime >=" + slong + " and vis.VisitTime <=" + elong);
+                                }
+
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        //更新数据源
+                        if (sb.toString().contains(" order by vis.VisitTime desc")) {
+                            int st = sb.indexOf(" order by vis.VisitTime desc");
+                            int len = (" order by vis.VisitTime desc").length();
+                            sb.delete(st, st + len);
+                            sb.append(" order by vis.VisitTime desc");//保证加在尾巴
                         } else {
-                            sb.append(" and vis.VisitAddress=\'" + et_face_address.getText() + "\'");
+                            sb.append(" order by vis.VisitTime desc");//保证加在尾巴
                         }
-                    }
-
-                    if (!TextUtils.isEmpty(gender)) {
-                        if (sb.toString().contains(" and vip.Sex=")) {
-                            int st = sb.indexOf(" and vip.Sex=");
-                            int len = (" and vip.Sex=\'" + qSex + "\'").length();
-                            if ("不选".equals(gender)) {
-                                sb.delete(st, st + len);
-                            } else {
-                                sb.replace(st, len + st, " and vip.Sex=\'" + gender + "\'");
-                            }
+                        tenList = dao.getCommonListEntity(ThirteenParamModel.class, sb.toString(), new String[]{"0","1"});
+                        Log.e(TAG, "sql-facetake= " + sb.toString());
+                        tenListInit = tenList;//查过之后就要把查过的数据源给初始的list
+                        if (tenList.size() == 0) {
+                            recycle_facetake.setVisibility(View.GONE);
+                            rl_face_norecord.setVisibility(View.VISIBLE);
                         } else {
-                            if (!"不选".equals(gender)) {
-                                sb.append(" and vip.Sex=\'" + gender + "\'");
-                            }
-                        }
-                    }
-
-                    if (!TextUtils.isEmpty(tv_face_start_time.getText()) && TextUtils.isEmpty(tv_face_end_time.getText())) {//只有开始时间
-                        try {
-                            long slong = format.parse(tv_face_start_time.getText().toString()).getTime();//选中日期
-                            if (sb.toString().contains(" and vis.VisitTime >=")) {//binary replace
-                                int start = sb.indexOf(" and vis.VisitTime >=");
-                                long qslong = format.parse(qstartTime).getTime();//last search starttime
-                                int lenth = (" and vis.VisitTime >=" + qslong).length();
-                                sb.replace(start, start + lenth, " and vis.VisitTime >=" + slong);
-                            } else {
-                                sb.append(" and vis.VisitTime >=" + slong); //库 >=输入
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                            recycle_facetake.setVisibility(View.VISIBLE);
+                            rl_face_norecord.setVisibility(View.GONE);
+                            faceAdapter.refresh(tenList);
                         }
 
-                    } else if (TextUtils.isEmpty(tv_face_start_time.getText()) && !TextUtils.isEmpty(tv_face_end_time.getText())) {//只有结束时间
-                        try {//选中日期
-                            long elong = format.parse(tv_face_end_time.getText().toString()).getTime();
-                            if (sb.toString().contains(" and vis.VisitTime <=")) {//binary replace
-                                int start = sb.indexOf(" and vis.VisitTime <=");
-                                long qelong = format.parse(qendTime).getTime();//last search endtime
-                                int lenth = (" and vis.VisitTime <=" + qelong).length();
-                                sb.replace(start, start + lenth, " and vis.VisitTime <=" + elong);
-                            } else {
-                                sb.append(" and vis.VisitTime <=" + elong); //库< 输入
-                            }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                    } else if (!TextUtils.isEmpty(tv_face_start_time.getText()) && !TextUtils.isEmpty(tv_face_end_time.getText())) {//都有
-                        try {//选中日期
-                            long elong = format.parse(tv_face_end_time.getText().toString()).getTime();
-                            long slong = format.parse(tv_face_start_time.getText().toString()).getTime();
-                            if (sb.toString().contains(" and vis.VisitTime >=") && sb.toString().contains(" and vis.VisitTime <=")) {
-                                int start = sb.indexOf(" and vis.VisitTime >=");
-                                long qslong = format.parse(qstartTime).getTime();//last search starttime
-                                long qelong = format.parse(qendTime).getTime();//last search endtime
-                                int lenth = (" and vis.VisitTime >=" + qslong + " and vis.VisitTime <=" + qelong).length();
-                                sb.replace(start, start + lenth, " and vis.VisitTime >=" + slong + " and vis.VisitTime <=" + elong);
-                            } else {
-                                sb.append(" and vis.VisitTime >=" + slong + " and vis.VisitTime <=" + elong);
-                            }
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    //更新数据源
-                    if (sb.toString().contains(" order by vis.VisitTime desc")) {
-                        int st=sb.indexOf(" order by vis.VisitTime desc");
-                        int len=(" order by vis.VisitTime desc").length();
-                        sb.delete(st,st+len);
-                        sb.append(" order by vis.VisitTime desc");//保证加在尾巴
+                        //保存数据
+                        qAddress = et_face_address.getText().toString();
+                        qendTime = tv_face_end_time.getText().toString();
+                        qstartTime = tv_face_start_time.getText().toString();
+                        qSex = gender;
                     }else {
-                        sb.append(" order by vis.VisitTime desc");//保证加在尾巴
+                        ToastUtils.showToast("请先取消单选框的选中状态，在进行查询！", getActivity(), Toast.LENGTH_SHORT);
                     }
-                    tenList = dao.getCommonListEntity(ThirteenParamModel.class, sb.toString(), new String[]{"0"});
-                    Log.e(TAG, "sql-facetake= " + sb.toString());
-                    tenListInit = tenList;//查过之后就要把查过的数据源给初始的list
-                    if (tenList.size() == 0) {
-                        recycle_facetake.setVisibility(View.GONE);
-                        rl_face_norecord.setVisibility(View.VISIBLE);
-                    } else {
-                        recycle_facetake.setVisibility(View.VISIBLE);
-                        rl_face_norecord.setVisibility(View.GONE);
-                        faceAdapter.refresh(tenList);
-                    }
-
-                    //保存数据
-                    qAddress = et_face_address.getText().toString();
-                    qendTime = tv_face_end_time.getText().toString();
-                    qstartTime = tv_face_start_time.getText().toString();
-                    qSex = gender;
                     break;
             }
         }
